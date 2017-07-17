@@ -1,10 +1,11 @@
-#from netCDF4 import Dataset
+from netCDF4 import Dataset
 from itertools import product
+from nc4_maker import *
 import re
 
 
 config = {
-    'eg_file': 'x.nc',
+    'eg_file': '/usr/lib/python2.7/site-packages/windspharm/examples/example_data/uwnd_mean.nc',
     'variables': {
         'precip': {'__conversion_factor__': 4,
                    'standard_name': 'precipitation_rate',
@@ -34,19 +35,42 @@ config = {
 
 def clone_dataset(config=config):
     ds = Dataset(config['eg_file'])
-    vars = ds.variables
-    dims = ds.dimensions
-    global_attrs = dict([getattr(ds, key) for key in ds.ncattrs()])
+    variables = ds.variables
+    dimensions = ds.dimensions
+    global_attrs = dict([(key, getattr(ds, key)) for key in ds.ncattrs()])
 
     pattn = re.compile(r'\{(.+?)\}')
-    facet_order = pattn.findall(config['path_template']['file_name'])
+    file_name_tmpl = config['path_template']['file_name']
+    facet_order = pattn.findall(file_name_tmpl)
     tp_name = '__time_period__'
-
+    
     if tp_name in facet_order:
         time_facet_index = facet_order.index(tp_name)
         facet_order.remove(tp_name)
+    
+    facet_lists = [config['facets'][facet_name] for facet_name in facet_order] 
+    perms = product(*facet_lists)
+    p = perms.next()
 
-    perms = product([config['facets'][facet_name] for facet_name in facet_order])
+    d = dict([(key, p[i]) for i, key in enumerate(facet_order)])
+    file_name_tmpl = file_name_tmpl.replace('{{{}}}'.format(tp_name), '__TIME_PERIOD__')
+    fpath = file_name_tmpl.format(**d)
+    
+    output = NetCDF4Maker(fpath)
 
-    for p in perms:
-        print p
+    dim_args = [(key, len(value)) for (key, value) in dimensions.items()]
+    output.create_dimensions(*dim_args) 
+
+    for var_id, value in variables.items():
+        var_attrs = dict([(key, getattr(value, key)) for key in value.ncattrs()])
+        output.create_variable(var_id, value[:], value.dtype, value.dimensions, attributes=var_attrs)
+        
+    output.create_global_attrs(**global_attrs)
+
+    output.close()
+    print "Wrote: {}".format(fpath)
+
+
+if __name__ == '__main__':
+
+    clone_dataset()

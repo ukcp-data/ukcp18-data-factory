@@ -22,13 +22,16 @@ class NetCDF4Maker(object):
         self.coord_variables = []
         self.variables = []
         self.global_attrs = OD()
+        self.closed = False
 
     def close(self):
         # Need to close to write to the file
         self.ds.close()
+        self.closed = True
 
     def __del__(self):
-        self.close()
+        if not self.closed:
+            self.close()
 
     def create_dimensions(self, *dims):
         """
@@ -38,6 +41,7 @@ class NetCDF4Maker(object):
         """
         # Create dimensions
         for dim_name, dim_length in dims:
+            print "Creating: {}".format(dim_name)
             self.dimensions.append(self.ds.createDimension(dim_name, dim_length))
 
         return self.dimensions
@@ -68,7 +72,7 @@ class NetCDF4Maker(object):
         :return: None
         """
         # Fill in times
-        ????
+#        ????
         dates = []
         for n in range(5):
             dates.append(ref_time + n * timedelta(hours=12))
@@ -88,15 +92,15 @@ class NetCDF4Maker(object):
         :attributes list of tuples of (key, value) pairs
         :return: netCDF4 variable
         """
-        variable = self.ds.createVariable('temp', np.float32,
-                                          ('time', 'level', 'latitude', 'longitude'))
+        print "Var id: {}".format(var_id)
+        variable = self.ds.createVariable(var_id, numpy_dtype, dim_names)
         variable[:] = data_array
 
         if ref_time:
-            self._set_time_values(...)
+            self._set_time_values(times)
 
         if attributes:
-            for attr, value in attributes:
+            for attr, value in attributes.items():
                 setattr(variable, attr, value)
 
         self.variables.append(variable)
