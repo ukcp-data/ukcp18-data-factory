@@ -1,9 +1,11 @@
-from netCDF4 import Dataset
 import os
-import numpy 
-from itertools import product
-from nc4_maker import *
 import re
+from itertools import product
+from datetime import datetime, timedelta
+
+from netCDF4 import Dataset
+import numpy 
+from nc4_maker import *
 
 
 OUTPUT_DIR = "output"
@@ -11,8 +13,9 @@ OUTPUT_DIR = "output"
 
 config = {
     'source': {
-        'source_file': '../../ukcp09-obs-sample/data/meantemp_1981-2010_LTA.nc',
-        'source_var': 'monthly_meantemp'
+        'source_file': '/data/ukcp09-obs/meantemp_1981-2010_LTA.nc',
+        'source_var': 'monthly_meantemp',
+        'source_time_var': 'time'
     },
     'variables': {
         'precip': {'conversion_factor': 4,
@@ -33,25 +36,74 @@ config = {
     'facets': {
         '__order__': ['project', 'dataset', 'scenario', 'temp_avg'],
         'project': ['ukcp18'],
-        'dataset': ['25km-daily', 'obs-global'],
+        'data_group': ['land_probabilistic'],
+        'grid_res': ['25km'],
         'scenario': ['rcp45', 'rcp60', 'rcp85'],
-        'temp_avg': ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'],
-        'var_id': ['precip', 'tasmax']
+        'prob_data_type': ['sample', 'percentile'],
+        'var_id': ['precip', 'tasmax'],
+        'temp_avg_type': ['mon'],
+        'version': ['v20170331']
     },
-    'path_template': '{project}/{dataset}/{scenario}/{temp_avg}/{var_id}/{var_id}_{project}_{dataset}_{scenario}_{temp_avg}_{__time_period__}.nc',
-    'time_periods': {
-        'dates': [
-            '20010101', '20010201', '20010301', '20010401', '20010501', '20010601'
-        ]
+    'path_template': '{project}/data/{data_group}/{grid_res}/{scenario}/{prob_data_type}/{var_id}/{version}/' \
+                     '{var_id}_{scenario}_{project}_{data_group}_{grid_res}_{temp_avg_type}_{__time_period__}.nc',
+    'time': {
+        'start': [2000, 1, 1],
+        'end': [2020, 12, 1],
+        'format': '%Y%m%d',
+        'delta': (1, "month"),
+        'per_file': 12,
+        'attributes': {
+            'units': 'days since 2000-01-01 00:00:00',
+            'calendar': '360day', 
+            'standard_name': 'time'
+        }
     }
 }
 
+
+def _add_year(t):
+    t[0] += 1
+
+def _add_month(t):
+    if t[1] < 12:
+        t[1] += 1
+    else:
+        t[1] = 1
+        _add_year(t)
+
+def _add_day(t):
+    if t[2] < 30:
+        t[2] += 1
+    else:
+        t[2] = 1
+        _add_month(t)
+    
+
+def generate_time_series(td):
+    # Assumes 360day calendar
+    delta_n, unit = td['delta']
+    current_time = td['start']
+    value = 0
+    
+    while current_time < td['end']:
+        yield (value, datetime(*current_time))
+        value += 1
+
+        if unit == "year":
+            add_func = _add_year
+        elif unit == "month":
+            add_func = _add_month 
+        elif unit == "day":
+            add_func = _add_day
+
+        for i in range(delta_n): add_func(current_time)
+          
 
 def clone_dataset(config=config):
     ds = Dataset(config['source']['source_file'])
     variables = ds.variables
     dimensions = ds.dimensions
-    global_attrs = dict([(key, getattr(ds, key)) for key in ds.ncattrs()])
+    #global_attrs = dict([(key, getattr(ds, key)) for key in ds.ncattrs()])
     fill_values = dict([(var_id, getattr(ds.variables[var_id], "_FillValue", None)) for var_id 
                        in ds.variables.keys()])
 
@@ -76,7 +128,38 @@ def clone_dataset(config=config):
     d = dict([(key, p[i]) for i, key in enumerate(facet_order)])
     file_name_tmpl = file_name_tmpl.replace('{{{}}}'.format(tp_name), '__TIME_PERIOD__')
 
-    file_name_tmpl = file_name_tmpl.replace('__TIME_PERIOD__', config['time_periods']['dates'][0])
+    generator = generate_time_series(config['time'])
+
+    time_array = []
+    date_times = []
+
+    print config['time']['per_file']
+  
+    for i, (value, dt) in enumerate(generator):
+        if i >= config['time']['per_file']: break
+        time_array.append(value)
+        date_times.append(dt)
+        print value, dt 
+    """
+    'time': {
+        'start': [2000, 1, 1],
+        'end': [2020, 12, 1],
+        'format': '%Y%m',
+        'delta': (1, "month"),
+        'per_file': 12,
+        'attributes': {
+            'units': 'days since 2000-01-01 00:00:00',
+            'calendar': '360day',
+            'standard_name': 'time'
+            }
+        }
+    }
+""" 
+     
+    time_format = config['time']['format']
+    fname_time_comp = "{}-{}".format(date_times[0].strftime(time_format),
+                                     date_times[-1].strftime(time_format))
+    file_name_tmpl = file_name_tmpl.replace('__TIME_PERIOD__', fname_time_comp)
 
     fpath = os.path.join(OUTPUT_DIR, file_name_tmpl.format(**d))
     output = NetCDF4Maker(fpath)
@@ -98,10 +181,15 @@ def clone_dataset(config=config):
             data = value[:] * var_info['conversion_factor']
             dtype = getattr(numpy, var_info['dtype'])
 
+        elif var_id == config['source']['source_time_var']:
+            var_attrs = config['time']['attributes'] 
+            data = numpy.array(time_array, 'f')
+            dtype = numpy.float32
+
         output.create_variable(new_var_id, data, dtype, value.dimensions, 
                                fill_value=fill_values[var_id], attributes=var_attrs)
         
-    output.create_global_attrs(**global_attrs)
+    output.create_global_attrs(**d)
 
     output.close()
     print "Wrote: {}".format(fpath)
