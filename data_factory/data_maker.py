@@ -5,7 +5,7 @@ import re
 
 
 config = {
-    'eg_file': '/usr/lib/python2.7/site-packages/windspharm/examples/example_data/uwnd_mean.nc',
+    'eg_file': '../../ukcp09-obs-sample/data/meantemp_1981-2010_LTA.nc',
     'variables': {
         'precip': {'__conversion_factor__': 4,
                    'standard_name': 'precipitation_rate',
@@ -38,6 +38,8 @@ def clone_dataset(config=config):
     variables = ds.variables
     dimensions = ds.dimensions
     global_attrs = dict([(key, getattr(ds, key)) for key in ds.ncattrs()])
+    fill_values = dict([(var_id, getattr(ds.variables[var_id], "_FillValue", None)) for var_id 
+                       in ds.variables.keys()])
 
     pattn = re.compile(r'\{(.+?)\}')
     file_name_tmpl = config['path_template']['file_name']
@@ -62,8 +64,10 @@ def clone_dataset(config=config):
     output.create_dimensions(*dim_args) 
 
     for var_id, value in variables.items():
-        var_attrs = dict([(key, getattr(value, key)) for key in value.ncattrs()])
-        output.create_variable(var_id, value[:], value.dtype, value.dimensions, attributes=var_attrs)
+        var_attrs = dict([(key, getattr(value, key)) for key in value.ncattrs() if key
+                               not in ('_FillValue',)])
+        output.create_variable(var_id, value[:], value.dtype, value.dimensions, 
+                               fill_value=fill_values[var_id], attributes=var_attrs)
         
     output.create_global_attrs(**global_attrs)
 

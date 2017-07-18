@@ -35,7 +35,7 @@ class NetCDF4Maker(object):
 
     def create_dimensions(self, *dims):
         """
-        :dims sequence of length-2 items as (<dim_name>, <dim_length>)
+        :param dims: sequence of length-2 items as (<dim_name>, <dim_length>)
               - one <dim_length> can be None (unlimited).
         :return: list of netCDF4 dimensions
         """
@@ -48,7 +48,7 @@ class NetCDF4Maker(object):
 
     def create_coordinate_variables(self, *coords):
         """
-        :dims sequence of length items as
+        :param dims: sequence of length items as
                 (<var_id>, <data_array>, <numpy_dtype>, <dim_names>)
               with optional additional items:
                 (<ref_time>, <attributes_dict>)
@@ -66,9 +66,9 @@ class NetCDF4Maker(object):
 
     def _set_time_values(self, variable, ref_time, data_array):
         """
-        :variable NetCDF Variable object
-        :ref_time datetime object
-        :data_array monotonic Numpy array
+        :param variable: NetCDF Variable object
+        :param ref_time: datetime object
+        :param data_array: monotonic Numpy array
         :return: None
         """
         # Fill in times
@@ -82,18 +82,23 @@ class NetCDF4Maker(object):
         return None
 
     def create_variable(self, var_id, data_array, numpy_dtype, dim_names,
-                        ref_time=None, attributes=None):
+                        fill_value=None, ref_time=None, attributes=None):
         """
-        :var_id variable ID (string)
-        :data_array Numpy or Masked Array
-        :numpy_dtype Numpy datatype
-        :dim_names tuple of strings
-        :ref_time reference time if time axis (default: None)
-        :attributes list of tuples of (key, value) pairs
+        :param var_id: variable ID (string)
+        :param data_array: Numpy or Masked Array
+        :param numpy_dtype: Numpy datatype
+        :param dim_names: tuple of strings
+        :param fill_value: missing value indicator
+        :param ref_time: reference time if time axis (default: None)
+        :param attributes: list of tuples of (key, value) pairs
         :return: netCDF4 variable
         """
         print "Var id: {}".format(var_id)
-        variable = self.ds.createVariable(var_id, numpy_dtype, dim_names)
+        
+####        if var_id == 'meaning_period': import pdb; pdb.set_trace()
+        if var_id == 'meaning_period': numpy_dtype = 'int32'
+        variable = self.ds.createVariable(var_id, numpy_dtype, dim_names,
+                                          fill_value=fill_value)
         variable[:] = data_array
 
         if ref_time:
@@ -108,7 +113,7 @@ class NetCDF4Maker(object):
 
     def create_global_attrs(self, **attrs):
         """
-        :attrs list of tuples of (key, value) pairs
+        :param attrs: list of tuples of (key, value) pairs
         :return: None
         """
         for attr, value in attrs.items():
