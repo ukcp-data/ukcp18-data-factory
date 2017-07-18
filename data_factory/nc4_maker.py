@@ -3,6 +3,7 @@
 """
 
 # Standard library imports
+import os
 from collections import OrderedDict as OD
 
 # Third-party imports
@@ -17,12 +18,21 @@ class NetCDF4Maker(object):
 
     def __init__(self, fpath):
         # Create the dataset
+        self._check_output_dir(fpath)
         self.ds = Dataset(fpath, 'w', format='NETCDF4_CLASSIC')
+
         self.dimensions = []
         self.coord_variables = []
         self.variables = []
+
         self.global_attrs = OD()
         self.closed = False
+
+    def _check_output_dir(self, fpath):
+        print fpath
+        output_dir = os.path.dirname(fpath)
+        if not os.path.isdir(output_dir):
+            os.makedirs(output_dir)
 
     def close(self):
         # Need to close to write to the file
