@@ -2,6 +2,7 @@ import os
 import re
 from itertools import product
 from datetime import datetime, timedelta
+import json
 
 from netCDF4 import Dataset
 import numpy 
@@ -9,56 +10,7 @@ from nc4_maker import *
 
 
 OUTPUT_DIR = "output"
-
-
-config = {
-    'source': {
-        'source_file': '/data/ukcp09-obs/meantemp_1981-2010_LTA.nc',
-        'source_var': 'monthly_meantemp',
-        'source_time_var': 'time'
-    },
-    'variables': {
-        'precip': {'conversion_factor': 4,
-                   'dtype': 'float32',
-                   'attributes': {
-                       'standard_name': 'precipitation_rate',
-                       'units': 'mm day-1'
-                       },
-                  },
-        'tasmax': {'conversion_factor': 100,
-                   'dtype': 'float32',
-                   'attributes': {
-                       'standard_name': 'air_temperature',
-                       'units': 'K'
-                       },
-                  },
-    },
-    'facets': {
-        '__order__': ['project', 'dataset', 'scenario', 'temp_avg'],
-        'project': ['ukcp18'],
-        'data_group': ['land_probabilistic'],
-        'grid_res': ['25km'],
-        'scenario': ['rcp45', 'rcp60', 'rcp85'],
-        'prob_data_type': ['sample', 'percentile'],
-        'var_id': ['precip', 'tasmax'],
-        'temp_avg_type': ['mon'],
-        'version': ['v20170331']
-    },
-    'path_template': '{project}/data/{data_group}/{grid_res}/{scenario}/{prob_data_type}/{var_id}/{version}/' \
-                     '{var_id}_{scenario}_{project}_{data_group}_{grid_res}_{temp_avg_type}_{__time_period__}.nc',
-    'time': {
-        'start': [2000, 1, 1],
-        'end': [2020, 12, 1],
-        'format': '%Y%m%d',
-        'delta': (1, "month"),
-        'per_file': 12,
-        'attributes': {
-            'units': 'days since 2000-01-01 00:00:00',
-            'calendar': '360day', 
-            'standard_name': 'time'
-        }
-    }
-}
+RECIPE_DIR = "recipes"
 
 
 def _add_year(t):
@@ -77,14 +29,14 @@ def _add_day(t):
     else:
         t[2] = 1
         _add_month(t)
-    
+
 
 def generate_time_series(td):
     # Assumes 360day calendar
     delta_n, unit = td['delta']
     current_time = td['start']
     value = 0
-    
+
     while current_time < td['end']:
         yield (value, datetime(*current_time))
         value += 1
@@ -92,14 +44,20 @@ def generate_time_series(td):
         if unit == "year":
             add_func = _add_year
         elif unit == "month":
-            add_func = _add_month 
+            add_func = _add_month
         elif unit == "day":
             add_func = _add_day
 
         for i in range(delta_n): add_func(current_time)
           
 
-def clone_dataset(config=config):
+def read_config(id):
+    config_file = os.path.join(RECIPE_DIR, id)
+    with open(config_file) as reader:
+        return json.load(reader)
+
+def clone_dataset(id):
+    config = read_config(id)
     ds = Dataset(config['source']['source_file'])
     variables = ds.variables
     dimensions = ds.dimensions
@@ -197,4 +155,4 @@ def clone_dataset(config=config):
 
 if __name__ == '__main__':
 
-    clone_dataset()
+    clone_dataset("ukcp18/ukcp18_ls1_gridded.json")

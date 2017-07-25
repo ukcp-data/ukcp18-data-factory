@@ -5,6 +5,7 @@ NEED TO CHANGE THIS BASED ON WHAT IS NEEDED!!!
 
 """
 
+"""
 # Standard library imports
 import os, sys
 import unittest
@@ -262,3 +263,4 @@ class TestCMORCheckBadCube(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+    """
