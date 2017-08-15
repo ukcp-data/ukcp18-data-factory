@@ -40,6 +40,28 @@ class SimpleDate(object):
         """
         return [self.y, self.m, self.d]
 
+    def as_datetime(self):
+        """
+
+        :return:
+        """
+        return datetime(self.y, self.m, self.d)
+
+    def as_string(self):
+        """
+
+        :return:
+        """
+        return "{:04}-{:02}-{:02}T00:00:00".format(self.y, self.m, self.d)
+
+    def as_format(self, format):
+        """
+
+        :param format:
+        :return:
+        """
+        return getattr(self, "as_{}".format(format))()
+
     def __gt__(self, other):
         this, other = self.as_list(), other.as_list()
         return this > other
@@ -60,31 +82,53 @@ class SimpleDate(object):
 
 class TimeSeriesGenerator(object):
 
-    SUPPORTED_FREQUENCIES = ['day']
+    SUPPORTED_FREQUENCIES = ['day', 'mon', 'month']
     SUPPORTED_CALENDARS = ['gregorian', 'standard', '360_day']
+    SUPPORTED_FORMATS = ['list', 'datetime', 'string']
+    FREQUENCY_MAPPINGS = {'mon': 'month'}
 
-    def __init__(self, start, end, delta=(1, 'day'), calendar='360_day'):
+    def __init__(self, start, end, delta=(1, 'day'), calendar='360_day', format='list'):
         """
 
         :param start:
         :param end:
         :param delta:
         :param calendar:
+        :param format:
         """
         self.start = self._validate_datetime(start)
         self.end = self._validate_datetime(end)
         self._set_delta(delta)
-        self._set_calendar (calendar)
+        self._set_calendar(calendar)
+        self.set_format(format)
+
+        # Set up starting points for iterator
+        self.current_time = self.start
+        self.current_counter = 0
 
     def __iter__(self):
-        return self.next()
+        return self
 
     def __next__(self):
         """
+        Generator yielding next datetime for 360day calendar.
 
-        :return:
+        :return: tuples of (time value (since reference time), datetime)
         """
-        return self.next()
+        delta_n, unit = self.delta
+#
+        if self.current_time <= self.end:
+            time_value = self.current_time.as_format(self.format)
+            value = self.current_counter
+
+            # Now increment before returning
+            self.current_counter += delta_n
+            for i in range(delta_n):
+                getattr(self, "_add_{}".format(unit))(self.current_time)
+
+            return (value, time_value)
+
+        raise StopIteration
 
     def _validate_datetime(self, dt):
         """
@@ -103,6 +147,9 @@ class TimeSeriesGenerator(object):
         if not delta[1] in self.SUPPORTED_FREQUENCIES:
             raise Exception("Delta uses time frequency '{}' that is not yet supported.".format(delta[1]))
 
+        if delta[1] in self.FREQUENCY_MAPPINGS:
+            delta = (delta[0], self.FREQUENCY_MAPPINGS[delta[1]])
+
         self.delta = delta
 
     def _set_calendar(self, calendar):
@@ -116,23 +163,21 @@ class TimeSeriesGenerator(object):
 
         self.calendar = calendar
 
+    def set_format(self, format):
+        """
+        Updates the internal `self.format` attribute used to decide which format the
+        generator returns its responses as.
+
+        :param format: format to return values [string]
+        :return: None
+        """
+        if format not in self.SUPPORTED_FORMATS:
+            raise Exception("Unrecognised format '{}' selected for returning time values.".format(format))
+
+        self.format = format
+
     def next(self):
-        """
-        Generator yielding next datetime for 360day calendar.
-
-        :return: tuples of (time value (since reference time), datetime)
-        """
-        delta_n, unit = self.delta
-        current_time = self.start
-        value = 0
-
-        while current_time <= self.end:
-            yield (value, current_time.as_list())
-
-            value += 1
-
-            for i in range(delta_n):
-                getattr(self, "_add_{}".format(unit))(current_time)
+        return self.__next__()
 
 
     def _add_year(self, dt):

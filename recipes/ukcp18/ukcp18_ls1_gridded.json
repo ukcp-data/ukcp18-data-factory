@@ -5,7 +5,8 @@
         "source_time_var": "time"
     },
     "variables": {
-        "precip": {"conversion_factor": 4,
+        "precip": {"conversion_factor": 1,
+                   "array_modifier": "project_libs.ukcp18.ukcp18_ls1#modify_gridded_5km",
                    "dtype": "float32",
                    "attributes": {
                        "standard_name": "precipitation_rate",
@@ -36,11 +37,11 @@
         "start": [2000, 1, 1],
         "end": [2020, 12, 1],
         "format": "%Y%m%d",
-        "delta": [1, "month"],
+        "delta": [30, "day"],
         "per_file": 12,
         "attributes": {
             "units": "days since 2000-01-01 00:00:00",
-            "calendar": "360day", 
+            "calendar": "360_day",
             "standard_name": "time"
         }
     }

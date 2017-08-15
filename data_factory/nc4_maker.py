@@ -16,7 +16,10 @@ from netCDF4 import num2date, date2num
 
 class NetCDF4Maker(object):
 
-    def __init__(self, fpath):
+    def __init__(self, fpath, verbose=False):
+
+        self.verbose = verbose
+
         # Create the dataset
         self._check_output_dir(fpath)
         self.ds = Dataset(fpath, 'w', format='NETCDF4_CLASSIC')
@@ -29,7 +32,13 @@ class NetCDF4Maker(object):
         self.closed = False
 
     def _check_output_dir(self, fpath):
-        print fpath
+        """
+        Get the output directory for the file `fpath` and make sure the directory
+        exists.
+
+        :param fpath: file path [string]
+        :return: None
+        """
         output_dir = os.path.dirname(fpath)
         if not os.path.isdir(output_dir):
             os.makedirs(output_dir)
@@ -51,7 +60,7 @@ class NetCDF4Maker(object):
         """
         # Create dimensions
         for dim_name, dim_length in dims:
-            print "Creating: {}".format(dim_name)
+            if self.verbose: print "Creating: {}".format(dim_name)
             self.dimensions.append(self.ds.createDimension(dim_name, dim_length))
 
         return self.dimensions
@@ -103,9 +112,8 @@ class NetCDF4Maker(object):
         :param attributes: list of tuples of (key, value) pairs
         :return: netCDF4 variable
         """
-        print "Var id: {}".format(var_id)
+        if self.verbose: print "Var id: {}".format(var_id)
         
-####        if var_id == 'meaning_period': import pdb; pdb.set_trace()
         if var_id == 'meaning_period': numpy_dtype = 'int32'
         variable = self.ds.createVariable(var_id, numpy_dtype, dim_names,
                                           fill_value=fill_value)
