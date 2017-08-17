@@ -5,15 +5,17 @@
         "source_time_var": "time"
     },
     "variables": {
-        "precip": {"conversion_factor": 1,
+        "pr":     {"conversion_factor": 1,
                    "array_modifier": "project_libs.ukcp18.ukcp18_ls1#modify_gridded_5km",
+                   "dimensions": ["time", "projection_y_coordinate", "projection_x_coordinate"],
                    "dtype": "float32",
                    "attributes": {
                        "standard_name": "precipitation_rate",
                        "units": "mm day-1"
                        }
                   },
-        "tasmax": {"conversion_factor": 100,
+        "tas": {"array_modifier": "project_libs.ukcp18.ukcp18_ls1#modify_gridded_5km",
+                   "dimensions": ["time", "projection_y_coordinate", "projection_x_coordinate"],
                    "dtype": "float32",
                    "attributes": {
                        "standard_name": "air_temperature",
@@ -26,9 +28,9 @@
         "project": ["ukcp18"],
         "data_group": ["land_probabilistic"],
         "grid_res": ["25km"],
-        "scenario": ["rcp45", "rcp60", "rcp85"],
+        "scenario": ["a1b", "rcp45", "rcp60", "rcp85"],
         "prob_data_type": ["sample", "percentile"],
-        "var_id": ["precip", "tasmax"],
+        "var_id": ["pr", "tas"],
         "temp_avg_type": ["mon"],
         "version": ["v20170331"]
     },

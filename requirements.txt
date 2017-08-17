@@ -1,5 +1,6 @@
 netCDF4
 #arrow
+cPickle
 
 ###################
 # For testing:

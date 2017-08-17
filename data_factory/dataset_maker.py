@@ -11,6 +11,7 @@ Holds the DatasetMaker class for building example files.
 import os, re
 from itertools import product
 import json
+import random
 
 # Third-party imports
 from netCDF4 import Dataset
@@ -116,7 +117,7 @@ class DatasetMaker(object):
         return time_generator
 
 
-    def generate(self, constraints=None, max_num=None, randomise=False):
+    def generate(self, constraints=None, max_num=999999, randomise=False):
         """
         Generator to return the next file path based on an optional set of `constraints`.
         Specifying `max_num` will return after yielding the number given.
@@ -136,15 +137,24 @@ class DatasetMaker(object):
         # Set up facets
         self._setup_facets()
 
-        facet_permutations = product(*self.facet_super_lists)
+        # Get all permutations of all facets
+        facet_permutations = [prod for prod in product(*self.facet_super_lists)]
+
+        # Randomise order if specified
+        if randomise:
+            random.shuffle(facet_permutations)
 
         file_count = 0
+        stop = False
 
         # Loop through all permutations
         for facets in facet_permutations:
-#        p = perms.next()
 
-            self.current_facets = dict([(key, facets[i]) for i, key in enumerate(self.facet_order)])
+            if stop: break
+
+            # Create instance dictionary to store current options
+            self.current = {}
+            self.current['facets'] = dict([(key, facets[i]) for i, key in enumerate(self.facet_order)])
 
             file_name_tmpl = self.get_setting('path_template').replace('{{{}}}'.format(TP_NAME), '__TIME_PERIOD__')
 
@@ -156,8 +166,12 @@ class DatasetMaker(object):
 
             count_per_file = 0
 
+            # Loop through time steps and write a new file whenever the number of times
+            # matches the number allowed per file
             for value, dt in time_generator:
                 if count_per_file == self.get_setting('time', 'per_file'):
+
+                    self.current['date_times'] = date_times
 
                     # Get output path and write output file
                     output_path = self._get_output_path(time_array, date_times, file_name_tmpl)
@@ -172,6 +186,10 @@ class DatasetMaker(object):
                 count_per_file += 1
                 time_array.append(value)
                 date_times.append(dt)
+
+                if file_count > max_num:
+                    stop = True
+                    break
 
         print "Ran {} files; for {} time steps per file".format(file_count, len(time_array))
 
@@ -190,9 +208,41 @@ class DatasetMaker(object):
         fname_time_comp = "{}-{}".format(date_times[0].strftime(time_format),
                                          date_times[-1].strftime(time_format))
 
+        # Add in the current time range to the file name template
         file_name_tmpl = file_name_tmpl.replace('__TIME_PERIOD__', fname_time_comp)
-        fpath = os.path.join(self.base_dir, file_name_tmpl.format(**self.current_facets))
+        fpath = os.path.join(self.base_dir, file_name_tmpl.format(**self.current['facets']))
         return fpath
+
+
+    def _get_modified_array(self, array):
+        """
+        Call out to external code to modify the array if specified in settings.
+        Returns None - array is modified in place.
+
+        :param variable: netCDF4 Variable (from input data).
+        :return: new array
+        """
+#        if 1: return
+
+        var_info = self.get_setting('variables', self.current['facets']['var_id'])
+
+        # Call modifier code if set
+        modifier = var_info.get('array_modifier', None)
+        if modifier != None:
+            path, func = modifier.split('#')
+
+            # Import modifier module then send the variable to the modifier function
+            imp = 'import {}'.format(path)
+            exec(imp)
+            new_array = eval('{}.{}(array, self.current["date_times"], **self.current["facets"])'.format(path, func))
+            print new_array.min(), new_array.max()
+
+        # Apply conversion factor if set
+        conversion_factor = var_info.get('conversion_factor', None)
+        if conversion_factor != None:
+            new_array = array * conversion_factor
+
+        return new_array
 
 
     def _write_output_file(self, fpath, time_array):
@@ -209,17 +259,23 @@ class DatasetMaker(object):
         # Create output file and write contents to it
         output = NetCDF4Maker(fpath)
 
+        # Create the dimensions in the output file
         dim_args = [(key, len(value)) for (key, value) in self.input_data['dimensions'].items()]
         output.create_dimensions(*dim_args)
 
+        # Loop through the files in the input data and modify them before writing
+        # as specified in the settings
         for var_id, variable in self.input_data['variables'].items():
 
             if var_id == self.get_setting('source', 'source_var'):
-                new_var_id = self.current_facets['var_id']
+
+                new_var_id = self.current['facets']['var_id']
                 var_info = self.get_setting('variables', new_var_id)
                 var_attrs = var_info['attributes']
-                data = variable[:] * var_info['conversion_factor']
                 dtype = getattr(numpy, var_info['dtype'])
+
+                # Modify array if necessary
+                data = self._get_modified_array(variable[:])
 
             elif var_id == self.get_setting('source', 'source_time_var'):
                 new_var_id = 'time'
@@ -234,13 +290,12 @@ class DatasetMaker(object):
                 var_attrs = dict([(key, getattr(variable, key)) for key in variable.ncattrs() if key
                                   not in ('_FillValue',)])
 
-#            fill_values = dict([(var_id, getattr(self.input_data['variables'][var_id], "_FillValue", None))
-#                                for var_id in self.input_data['variables'].keys()])
             fill_value = getattr(self.input_data['variables'][var_id], "_FillValue", None)
+            print new_var_id, data.min(), data.max()
             output.create_variable(new_var_id, data, dtype, variable.dimensions,
                                    fill_value=fill_value, attributes=var_attrs)
 
-        output.create_global_attrs(**self.current_facets)
+        output.create_global_attrs(**self.current['facets'])
 
         output.close()
         print "Wrote: {}".format(fpath)
