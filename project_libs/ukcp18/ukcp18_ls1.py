@@ -16,7 +16,7 @@ from numpy.ma.core import MaskedArray
 
 import cPickle
 
-BASEDIR = '/data/data-factory/inputs'
+BASEDIR = 'inputs'
 prob_data_map = {'sample': 'samp',
                  'percentile': 'prob'}
 
