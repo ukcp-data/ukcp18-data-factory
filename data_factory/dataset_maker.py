@@ -299,6 +299,7 @@ class DatasetMaker(object):
         :param facet_dict:
         :return:
         """
+        print "Starting to write to: {}".format(fpath)
         # Create output file and write contents to it
         output = NetCDF4Maker(fpath)
 
@@ -358,19 +359,12 @@ class DatasetMaker(object):
                 else:
                     var_attrs = {}
 
-            # Tidy up dimensions for dimensions list
-            """dims_list = []
+            print "Now writing variable: {}".format(new_var_id)
 
-            for dim_name, dim_length in dim_args:
-                if dim_name.find('facet:') == 0:
-                    dim_name = self._get_coord_var_id_from_dim_id(dim_name)
+            if var_id == "sample": 
+                pass
+                #import pdb; pdb.set_trace()
 
-                dims_list.append(dim_name)
-
-            # If generated synthetically then assume we define variables against its own dimension
-#            else:
-#                dims_list.append(new_var_id)
-"""
             fill_value = getattr(self.input_data['variables'][var_id], "_FillValue", None)
             output.create_variable(new_var_id, data, dtype, dims_list,
                                    fill_value=fill_value, attributes=var_attrs)

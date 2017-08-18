@@ -115,8 +115,8 @@ class NetCDF4Maker(object):
         if self.verbose: print "Var id: {}".format(var_id)
         
         if var_id == 'meaning_period': numpy_dtype = 'int32'
-        variable = self.ds.createVariable(var_id, numpy_dtype, dim_names,
-                                          fill_value=fill_value)
+
+        variable = self.ds.createVariable(var_id, numpy_dtype, dim_names, fill_value=fill_value)
 
         # Set the array values on the variable
         variable[:] = data_array

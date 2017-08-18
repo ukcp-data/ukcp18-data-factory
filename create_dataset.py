@@ -14,13 +14,13 @@ from data_factory.dataset_maker import DatasetMaker
 
 def main(project, dataset_id):
     constraints = {'time':
-                       {'start': [2018, 1, 1]},
+                       {'start': [2010, 1, 1]},
                    'facets':
                        {'scenario': ['a1b'],
-                        'prob_data_type': ['percentile']}
+                        'prob_data_type': ['sample']}
                    }
     faker = DatasetMaker(project=project, dataset_id=dataset_id, constraints=constraints)
-    faker.generate(randomise=False, max_num=5)
+    faker.generate(randomise=False, max_num=1000)
 
 
 if __name__ == "__main__":

@@ -32,7 +32,7 @@ def load_coord_var(prob_data_type):
         data = cPickle.load(reader)
 
     key = prob_data_map[prob_data_type]
-    return data[key]
+    return np.array(data[key], np.int32)
 
 
 def load_samples():
@@ -40,7 +40,7 @@ def load_samples():
 
     :return:
     """
-    return load_coord_var('sample')
+    return load_coord_var('sample')[:]
 
 
 def load_percentiles():
@@ -119,7 +119,6 @@ def modify_gridded_5km(variable, date_times, **facets):
 
     array = variable[:]
     mask = array.mask.copy()
-    print mask.shape
 
     len_t, len_y, len_x = array.shape
 #    new_array = array.copy()
@@ -149,10 +148,7 @@ def modify_gridded_5km(variable, date_times, **facets):
             values = mult * random_array * values
             new_array[t_index][y_index] = values
 
-    print mask.shape
-    new_array.mask = mask
     print
-    print "MASK", new_array.mask.shape
     return new_array, dims_list
 
 
