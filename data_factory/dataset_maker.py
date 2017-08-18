@@ -214,35 +214,78 @@ class DatasetMaker(object):
         return fpath
 
 
-    def _get_modified_array(self, array):
+    def _get_coord_var_id_from_dim_id(self, dim_id):
+        """
+
+        :param dim_id:
+        :return:
+        """
+
+        facet_id = dim_id.split(":")[-1]
+        coord_var_id = self.current['facets'][facet_id]
+        return coord_var_id
+
+    def _load_extra_coord_vars(self):
+        """
+        Call out to external code to get extra coordinate variables required for this
+        variable.
+
+        :return:
+        """
+        var_id = self.current['facets']['var_id']
+        required_dims = self.get_setting('variables', var_id, 'dimensions')
+
+        coord_vars = {}
+
+        for dim in required_dims:
+            if dim.find("facet:") == 0:
+                coord_var_id = self._get_coord_var_id_from_dim_id(dim)
+
+                # Get function for getting coordinate variable
+                coord_var_loader = self.get_setting('variables', var_id, 'coord_var_loaders', coord_var_id)
+                path, func = coord_var_loader.split('#')
+
+                # Import modifier module then call the loader function
+                imp = 'import {}'.format(path)
+                exec(imp)
+                coord_var = eval('{}.{}()'.format(path, func))
+
+                coord_vars[coord_var_id] = coord_var
+
+        return coord_vars
+
+
+    def _get_modified_variable(self, variable):
         """
         Call out to external code to modify the array if specified in settings.
-        Returns None - array is modified in place.
+        Returns a tuple of: (new_array, dimensions_list).
 
         :param variable: netCDF4 Variable (from input data).
-        :return: new array
+        :return: Tuple of: (new_array, dimensions_list).
         """
-#        if 1: return
-
         var_info = self.get_setting('variables', self.current['facets']['var_id'])
 
-        # Call modifier code if set
         modifier = var_info.get('array_modifier', None)
+        conversion_factor = var_info.get('conversion_factor', None)
+
+        # Call modifier code if set
         if modifier != None:
             path, func = modifier.split('#')
 
             # Import modifier module then send the variable to the modifier function
             imp = 'import {}'.format(path)
             exec(imp)
-            new_array = eval('{}.{}(array, self.current["date_times"], **self.current["facets"])'.format(path, func))
-            print new_array.min(), new_array.max()
+            new_array, dims_list = eval('{}.{}(variable, self.current["date_times"], **self.current["facets"])'.format(path, func))
 
         # Apply conversion factor if set
-        conversion_factor = var_info.get('conversion_factor', None)
-        if conversion_factor != None:
-            new_array = array * conversion_factor
+        elif conversion_factor != None:
+            new_array = variable[:] * conversion_factor
+            dims_list = variable.dimensions
 
-        return new_array
+        else:
+            return variable[:], variable.dimensions
+
+        return new_array, dims_list
 
 
     def _write_output_file(self, fpath, time_array):
@@ -259,13 +302,27 @@ class DatasetMaker(object):
         # Create output file and write contents to it
         output = NetCDF4Maker(fpath)
 
-        # Create the dimensions in the output file
+        # Get the dimensions from the input file
         dim_args = [(key, len(value)) for (key, value) in self.input_data['dimensions'].items()]
+
+        # Load up any extra coordinate variables also required by this dataset
+        extra_coord_vars = self._load_extra_coord_vars()
+
+        # Add extra coord vars to dimensions list
+        for key, value in extra_coord_vars.items():
+            dim_args.append((key, len(value)))
+
+        # Write dimensions
         output.create_dimensions(*dim_args)
 
         # Loop through the files in the input data and modify them before writing
         # as specified in the settings
-        for var_id, variable in self.input_data['variables'].items():
+        # Also loop through the extra_coord_vars
+        all_vars = self.input_data['variables']
+        for key, value in extra_coord_vars.items():
+            all_vars[key] = value
+
+        for var_id, variable in all_vars.items(): #  self.input_data['variables'].items():
 
             if var_id == self.get_setting('source', 'source_var'):
 
@@ -275,24 +332,47 @@ class DatasetMaker(object):
                 dtype = getattr(numpy, var_info['dtype'])
 
                 # Modify array if necessary
-                data = self._get_modified_array(variable[:])
+                data, dims_list = self._get_modified_variable(variable)
 
             elif var_id == self.get_setting('source', 'source_time_var'):
                 new_var_id = 'time'
                 var_attrs = self.get_setting('time', 'attributes')
                 data = numpy.array(time_array, 'f')
+                dims_list = variable.dimensions
                 dtype = numpy.float32
 
             else:
                 new_var_id = var_id
                 data = variable[:]
                 dtype = variable.dtype
-                var_attrs = dict([(key, getattr(variable, key)) for key in variable.ncattrs() if key
-                                  not in ('_FillValue',)])
 
+                if hasattr(variable, "dimensions"):
+                    dims_list = variable.dimensions
+                # Assume that it is a coordinate variable that will have its own dimension
+                else:
+                    dims_list = [new_var_id]
+
+                if hasattr(variable, "ncattrs"):
+                    var_attrs = dict([(key, getattr(variable, key)) for key in variable.ncattrs() if key
+                                  not in ('_FillValue',)])
+                else:
+                    var_attrs = {}
+
+            # Tidy up dimensions for dimensions list
+            """dims_list = []
+
+            for dim_name, dim_length in dim_args:
+                if dim_name.find('facet:') == 0:
+                    dim_name = self._get_coord_var_id_from_dim_id(dim_name)
+
+                dims_list.append(dim_name)
+
+            # If generated synthetically then assume we define variables against its own dimension
+#            else:
+#                dims_list.append(new_var_id)
+"""
             fill_value = getattr(self.input_data['variables'][var_id], "_FillValue", None)
-            print new_var_id, data.min(), data.max()
-            output.create_variable(new_var_id, data, dtype, variable.dimensions,
+            output.create_variable(new_var_id, data, dtype, dims_list,
                                    fill_value=fill_value, attributes=var_attrs)
 
         output.create_global_attrs(**self.current['facets'])

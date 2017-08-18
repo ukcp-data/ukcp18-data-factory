@@ -10,11 +10,44 @@ Helper functions for working with UKCP18 Land Strand 1.
 # Third-party imports
 import numpy as np
 import numpy.random as npr
+import numpy.ma
+from numpy.ma.core import MaskedArray
 
-import numpy
 import cPickle
 
 BASEDIR = '/data/ukcp18-ls1/ls1-bundle'
+prob_data_map = {'sample': 'samp',
+                 'percentile': 'prob'}
+
+def load_coord_var(prob_data_type):
+    """
+
+    :param prob_data_type:
+    :return:
+    """
+    fpath = "/data/ukcp18-ls1/ls1-bundle/a1b/tas/jja/a1b_tas_jja_EAW_1961-1990.dat"
+
+    with open(fpath, 'rb') as reader:
+        data = cPickle.load(reader)
+
+    key = prob_data_map[prob_data_type]
+    return data[key]
+
+
+def load_samples():
+    """
+
+    :return:
+    """
+    return load_coord_var('sample')
+
+
+def load_percentiles():
+    """
+
+    :return:
+    """
+    return load_coord_var('percentile')
 
 
 def _get_ls1_prob_site_data(var_id, year, scenario="a1b",
@@ -57,39 +90,24 @@ def _get_ls1_prob_site_data(var_id, year, scenario="a1b",
 
     year_index = [int(y) for y in data['jja']['time']].index(year)
 
-    prob_data_map = {'sample': 'sampdata',
-                     'percentile': 'probdata'}
+    prob_data_key = prob_data_map[prob_data_type] + "data"
 
-    prob_data_key = prob_data_map[prob_data_type]
-
-    prob_index = 100
-    prob_data_djf = data['djf'][prob_data_key][prob_index, year_index]
-    prob_data_jja = data['jja'][prob_data_key][prob_index, year_index]
+    prob_data_djf = data['djf'][prob_data_key][:, year_index]
+    prob_data_jja = data['jja'][prob_data_key][:, year_index]
 
     prob_data_over_times = [(prob_data_djf * mult) + (prob_data_jja * (1 - mult)) for mult in mults]
     return np.array(prob_data_over_times)
 
 
-def get_all_data():
-    for scenario in ("a1b",):
-        for var_id in ("tas", "pr"):
-            for temporal_average in ("djf", "jja"):
-                print "\n-------------------"
-        get_data(**vars())
-
-
-def modify_gridded_5km(array, date_times, **facets):
+def modify_gridded_5km(variable, date_times, **facets):
     """
     Modify the array provided based on example input data.
 
-    :param array:
+    :param variable:
     :param time_step:
     :param facets:
-    :return: None
+    :return: Tuple of: (new_array, dimensions_list)
     """
-    len_t, len_y, len_x = array.shape
-    new_array = array.copy()
-
     var_id = facets["var_id"]
     scenario = facets["scenario"]
     prob_data_type = facets["prob_data_type"]
@@ -101,17 +119,51 @@ def modify_gridded_5km(array, date_times, **facets):
                                           prob_data_type=prob_data_type, grid_res=grid_res,
                                           temp_avg_type=temp_avg_type)
 
-    for t_index, value in enumerate(eg_data):
-        for y in range(len_y):
+    array = variable[:]
+    len_t, len_y, len_x = array.shape
+#    new_array = array.copy()
+
+    # Now broadcast the array to new fourth dimension
+    len_prob_dim = eg_data.shape[1]
+    new_shape = list(array.shape) + [len_prob_dim]
+
+    if isinstance(array, MaskedArray):
+        new_array = numpy.ma.resize(array, new_shape)
+    else:
+        new_array = array.resize(new_shape)
+
+    dims_list = tuple(list(variable.dimensions) + [prob_data_type])
+
+    print "Building the new array...",
+    if 0:
+        new_array = np.zeros(new_shape)
+        return new_array, dims_list
+
+    for t_index, values in enumerate(eg_data):
+        print "...", t_index,
+        for y_index in range(len_y):
             mult = (len_y + 0.5) / len_y
-            values = mult * (npr.random(len_x) / 10. + 1) * value
-            new_array[t_index][y] = values
 
-    return new_array
+            random_array = _get_broadcasted_random_array((len_x, len_prob_dim))
+            values = mult * random_array * values
+            new_array[t_index][y_index] = values
 
+    print
+    return new_array, dims_list
+
+
+def _get_broadcasted_random_array(shape):
+    """
+
+    :param shape:
+    :return:
+    """
+    arr = npr.random(shape) / 10. + 1
+    return arr
 
 if __name__ == "__main__":
 
-    print _get_ls1_prob_site_data('tas', 20, scenario="a1b",
+    import datetime
+    print _get_ls1_prob_site_data('tas', datetime.datetime.now(), scenario="a1b",
                             prob_data_type="mon", grid_res="25km",
                             temp_avg_type="mon")

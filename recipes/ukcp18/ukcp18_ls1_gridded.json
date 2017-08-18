@@ -5,17 +5,26 @@
         "source_time_var": "time"
     },
     "variables": {
-        "pr":     {"conversion_factor": 1,
+        "pr":     {
+                   "coord_var_loaders": {
+                       "sample": "project_libs.ukcp18.ukcp18_ls1#load_samples",
+                       "percentile": "project_libs.ukcp18.ukcp18_ls1#load_percentiles"
+                   },
                    "array_modifier": "project_libs.ukcp18.ukcp18_ls1#modify_gridded_5km",
-                   "dimensions": ["time", "projection_y_coordinate", "projection_x_coordinate"],
+                   "dimensions": ["time", "projection_y_coordinate", "projection_x_coordinate", "facet:prob_data_type"],
                    "dtype": "float32",
                    "attributes": {
                        "standard_name": "precipitation_rate",
                        "units": "mm day-1"
                        }
                   },
-        "tas": {"array_modifier": "project_libs.ukcp18.ukcp18_ls1#modify_gridded_5km",
-                   "dimensions": ["time", "projection_y_coordinate", "projection_x_coordinate"],
+        "tas":    {
+                   "coord_var_loaders": {
+                       "sample": "project_libs.ukcp18.ukcp18_ls1#load_samples",
+                       "percentile": "project_libs.ukcp18.ukcp18_ls1#load_percentiles"
+                   },
+                   "array_modifier": "project_libs.ukcp18.ukcp18_ls1#modify_gridded_5km",
+                   "dimensions": ["time", "projection_y_coordinate", "projection_x_coordinate", "facet:prob_data_type"],
                    "dtype": "float32",
                    "attributes": {
                        "standard_name": "air_temperature",
