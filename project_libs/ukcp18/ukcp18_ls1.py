@@ -141,7 +141,7 @@ def modify_gridded_5km(variable, date_times, **facets):
         return new_array, dims_list
 
     for t_index, values in enumerate(eg_data):
-        print "...setting values for {} out of {} time steps...".format(t_index, new_shape[0])
+        print "...setting values for {} out of {} time steps...".format(t_index + 1, new_shape[0])
         for y_index in range(len_y):
             mult = (len_y + 0.5) / len_y
 
