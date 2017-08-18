@@ -6,6 +6,7 @@ Helper functions for working with UKCP18 Land Strand 1.
 """
 
 # Standard library imports
+import os
 
 # Third-party imports
 import numpy as np
@@ -15,7 +16,7 @@ from numpy.ma.core import MaskedArray
 
 import cPickle
 
-BASEDIR = '/data/ukcp18-ls1/ls1-bundle'
+BASEDIR = '/data/data-factory/inputs'
 prob_data_map = {'sample': 'samp',
                  'percentile': 'prob'}
 
@@ -25,7 +26,7 @@ def load_coord_var(prob_data_type):
     :param prob_data_type:
     :return:
     """
-    fpath = "/data/ukcp18-ls1/ls1-bundle/a1b/tas/jja/a1b_tas_jja_EAW_1961-1990.dat"
+    fpath = "{}/a1b_tas_jja_EAW_1961-1990.dat".format(BASEDIR)
 
     with open(fpath, 'rb') as reader:
         data = cPickle.load(reader)
@@ -54,19 +55,15 @@ def _get_ls1_prob_site_data(var_id, year, scenario="a1b",
                             prob_data_type="sample", grid_res="25km",
                             temp_avg_type="mon"):
     """
-    "facets": {
-        "__order__": ["project", "dataset", "scenario", "temp_avg"],
-        "project": ["ukcp18"],
-        "data_group": ["land_probabilistic"],
-        "grid_res": ["25km"],
-        "scenario": ["a1b", "rcp45", "rcp60", "rcp85"],
-        "prob_data_type": ["sample", "percentile"],
-        "var_id": ["pr", "tasmax"],
-        "temp_avg_type": ["mon"],
-        "version": ["v20170331"]
-    """
-    basedir = BASEDIR
 
+    :param var_id:
+    :param year:
+    :param scenario:
+    :param prob_data_type:
+    :param grid_res:
+    :param temp_avg_type:
+    :return:
+    """
     # Structure the output data based on the temporal average type
     if temp_avg_type == "mon":
         mults = [1, 0.95, 0.8, 0.6, 0.5, 0.3, 0.1, 0, 0.1, 0.3, 0.7, 0.9]
@@ -80,8 +77,9 @@ def _get_ls1_prob_site_data(var_id, year, scenario="a1b",
     data = {}
 
     for temporal_average in ("djf", "jja"):
-        fpath = "{basedir}/{scenario}/{var_id}/{temporal_average}/{scenario}_{var_id}_{temporal_average}_EAW_1961-1990.dat".format(
-            basedir=basedir, scenario=scenario, var_id=var_id, temporal_average=temporal_average)
+        fname = "{scenario}_{var_id}_{temporal_average}_EAW_1961-1990.dat".format(
+            scenario=scenario, var_id=var_id, temporal_average=temporal_average)
+        fpath = os.path.join(BASEDIR, fname)
 
         print "Reading data from: {0}".format(fpath)
 
@@ -120,6 +118,9 @@ def modify_gridded_5km(variable, date_times, **facets):
                                           temp_avg_type=temp_avg_type)
 
     array = variable[:]
+    mask = array.mask.copy()
+    print mask.shape
+
     len_t, len_y, len_x = array.shape
 #    new_array = array.copy()
 
@@ -134,13 +135,13 @@ def modify_gridded_5km(variable, date_times, **facets):
 
     dims_list = tuple(list(variable.dimensions) + [prob_data_type])
 
-    print "Building the new array...",
+    print "Building the new array..."
     if 0:
         new_array = np.zeros(new_shape)
         return new_array, dims_list
 
     for t_index, values in enumerate(eg_data):
-        print "...", t_index,
+        print "...setting values for {} out of {} time steps...".format(t_index, new_shape[0])
         for y_index in range(len_y):
             mult = (len_y + 0.5) / len_y
 
@@ -148,7 +149,10 @@ def modify_gridded_5km(variable, date_times, **facets):
             values = mult * random_array * values
             new_array[t_index][y_index] = values
 
+    print mask.shape
+    new_array.mask = mask
     print
+    print "MASK", new_array.mask.shape
     return new_array, dims_list
 
 

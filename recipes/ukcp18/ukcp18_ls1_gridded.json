@@ -1,7 +1,7 @@
 {
     "source": {
-        "source_file": "/data/ukcp09-obs/meantemp_1981-2010_LTA.nc",
-        "source_var": "monthly_meantemp",
+        "source_file": "/data/data-factory/inputs/osgb_example.nc",
+        "source_var": "example_var",
         "source_time_var": "time"
     },
     "variables": {
