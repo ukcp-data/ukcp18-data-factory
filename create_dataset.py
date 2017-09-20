@@ -21,7 +21,7 @@ def main(project, dataset_id):
 #                         'prob_data_type': ['percentile', 'sample']}
                    }
     faker = DatasetMaker(project=project, dataset_id=dataset_id, constraints=constraints)
-    faker.generate(randomise=False, max_num=3)
+    faker.generate(randomise=False, max_num=100)
 
 
 if __name__ == "__main__":
