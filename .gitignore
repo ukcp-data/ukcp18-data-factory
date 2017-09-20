@@ -103,3 +103,6 @@ ENV/
 # app-specific
 output
 setup_env.sh
+inputs
+fakedata
+.matplotlib
