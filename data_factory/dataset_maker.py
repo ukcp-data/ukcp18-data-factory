@@ -304,7 +304,15 @@ class DatasetMaker(object):
         output = NetCDF4Maker(fpath)
 
         # Get the dimensions from the input file
-        dim_args = [(key, len(value)) for (key, value) in self.input_data['dimensions'].items()]
+        dim_args = []
+
+        for key, value in self.input_data['dimensions'].items():
+            if value.isunlimited():
+                length = None
+            else:
+                length = len(value)
+
+            dim_args.append((key, length))
 
         # Load up any extra coordinate variables also required by this dataset
         extra_coord_vars = self._load_extra_coord_vars()

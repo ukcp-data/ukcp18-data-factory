@@ -137,7 +137,7 @@ def modify_gridded_25km(variable, date_times, **facets):
     dims_list = tuple(list(variable.dimensions) + [prob_data_type])
 
     print "Building the new array..."
-    if 0:
+    if 1: # For DEBUGGING
         new_array = np.zeros(new_shape)
         return new_array, dims_list
 
