@@ -17,7 +17,8 @@ def main(project, dataset_id):
                        {'start': [2010, 1, 1]},
                    'facets':
                        {'scenario': ['a1b'],
-                        'prob_data_type': ['sample']}
+                        'prob_data_type': ['percentile']}
+#                         'prob_data_type': ['percentile', 'sample']}
                    }
     faker = DatasetMaker(project=project, dataset_id=dataset_id, constraints=constraints)
     faker.generate(randomise=False, max_num=1000)

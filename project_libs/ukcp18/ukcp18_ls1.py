@@ -32,8 +32,10 @@ def load_coord_var(prob_data_type):
         data = cPickle.load(reader)
 
     key = prob_data_map[prob_data_type]
-    return np.array(data[key], np.int32)
-
+    if key == 'prob':
+        return np.array((data[key] * 100), np.float)
+    else:
+        return np.array(data[key], np.int32)
 
 def load_samples():
     """
@@ -97,7 +99,7 @@ def _get_ls1_prob_site_data(var_id, year, scenario="a1b",
     return np.array(prob_data_over_times)
 
 
-def modify_gridded_5km(variable, date_times, **facets):
+def modify_gridded_25km(variable, date_times, **facets):
     """
     Modify the array provided based on example input data.
 
