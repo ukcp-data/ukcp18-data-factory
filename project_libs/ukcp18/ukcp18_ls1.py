@@ -112,7 +112,7 @@ def modify_gridded_25km(variable, date_times, **facets):
     scenario = facets["scenario"]
     prob_data_type = facets["prob_data_type"]
     grid_res = facets["grid_res"]
-    temp_avg_type = facets["temp_avg_type"]
+    temp_avg_type = facets["frequency"]
     year = date_times[0].year
 
     eg_data = _get_ls1_prob_site_data(var_id, year, scenario=scenario,

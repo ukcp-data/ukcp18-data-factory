@@ -39,17 +39,18 @@
                   }
     },
     "facets": {
-        "__order__": ["project", "dataset", "scenario", "temp_avg"],
+        "__order__": ["project", "dataset", "scenario", "frequency"],
         "project": ["ukcp18"],
-        "data_group": ["land_probabilistic"],
-        "grid_res": ["25km"],
+        "collection": ["land-prob"],
+        "dataset_id": ["ukcp18-land-prob-25km"],
+        "resolution": ["25km"],
         "scenario": ["a1b", "rcp26", "rcp45", "rcp60", "rcp85"],
         "prob_data_type": ["sample", "percentile"],
         "var_id": ["pr", "tas"],
-        "temp_avg_type": ["mon"],
+        "frequency": ["mon"],
         "version": ["v20170331"]
     },
-    "path_template": "{project}/data/{data_group}/{grid_res}/{scenario}/{prob_data_type}/{var_id}/{version}/{var_id}_{scenario}_{project}_{data_group}_{grid_res}_{temp_avg_type}_{__time_period__}.nc",
+    "path_template": "{project}/data/{collection}/{resolution}/{scenario}/{prob_data_type}/{var_id}/{frequency}/{version}/{var_id}_{scenario}_{dataset_id}_{prob_data_type}_{frequency}_{__time_period__}.nc",
     "time": {
         "start": [2000, 1, 1],
         "end": [2020, 12, 1],
