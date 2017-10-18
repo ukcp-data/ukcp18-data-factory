@@ -1,2 +1,0 @@
-- Get time to match time periods.
-- OK

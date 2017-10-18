@@ -1,6 +1,6 @@
 {
     "source": {
-        "source_file": "inputs/pr_global_ls2_mon_197001-197012.nc",
+        "source_file": "inputs/pr_global_ls2_mon.nc",
         "source_var": "precipitation_flux",
         "source_time_var": "time"
     },
@@ -25,6 +25,9 @@
                        "long_name": "air temperature"
                        }
                   }
+    },
+    "variables_by_facet": {
+        "ensemble_member": "project_libs.ukcp18.ukcp18_ls2#get_ensemble_values"
     },
     "facets": {
         "project": ["ukcp18"],

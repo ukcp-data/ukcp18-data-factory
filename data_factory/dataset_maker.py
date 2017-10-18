@@ -189,6 +189,11 @@ class DatasetMaker(object):
             # Loop through time steps and write a new file whenever the number of times
             # matches the number allowed per file
             for value, dt in time_generator:
+
+                count_per_file += 1
+                time_array.append(value)
+                date_times.append(dt)
+
                 if count_per_file == self.get_setting('time', 'per_file'):
 
                     self.current['date_times'] = date_times
@@ -202,10 +207,6 @@ class DatasetMaker(object):
                     count_per_file = 0
                     date_times = []
                     time_array = []
-
-                count_per_file += 1
-                time_array.append(value)
-                date_times.append(dt)
 
                 if file_count > max_num:
                     stop = True
@@ -245,6 +246,7 @@ class DatasetMaker(object):
         coord_var_id = self.current['facets'][facet_id]
         return coord_var_id
 
+
     def _load_extra_coord_vars(self):
         """
         Call out to external code to get extra coordinate variables required for this
@@ -258,8 +260,10 @@ class DatasetMaker(object):
         coord_vars = {}
 
         for dim in required_dims:
+
             if dim.find("facet:") == 0:
                 coord_var_id = self._get_coord_var_id_from_dim_id(dim)
+                print coord_var_id
 
                 # Get function for getting coordinate variable
                 coord_var_loader = self.get_setting('variables', var_id, 'coord_var_loaders', coord_var_id)
@@ -308,6 +312,21 @@ class DatasetMaker(object):
         return new_array, dims_list
 
 
+    def _resolve_variable_arrays_by_facet(self, var_id):
+        """
+
+        :param var_id:
+        :return: array
+        """
+        path, func = self.get_setting('variables_by_facet', var_id).split("#")
+
+        # Import modifier module then send the variable to the modifier function
+        imp = 'import {}'.format(path)
+        exec(imp)
+        array = eval('{}.{}(**self.current["facets"])'.format(path, func))
+        return array
+
+
     def _write_output_file(self, fpath, time_array):
         """
 
@@ -321,7 +340,7 @@ class DatasetMaker(object):
         """
         print "Starting to write to: {}".format(fpath)
         # Create output file and write contents to it
-        output = NetCDF4Maker(fpath)
+        output = NetCDF4Maker(fpath, verbose=False)
 
         # Get the dimensions from the input file
         dim_args = []
@@ -347,11 +366,14 @@ class DatasetMaker(object):
         # Loop through the files in the input data and modify them before writing
         # as specified in the settings
         # Also loop through the extra_coord_vars
-        all_vars = self.input_data['variables']
-        for key, value in extra_coord_vars.items():
-            all_vars[key] = value
+        all_vars = {}
 
-        for var_id, variable in all_vars.items(): #  self.input_data['variables'].items():
+        for dct in (self.input_data['variables'], extra_coord_vars):
+            for key, value in dct.items():
+                all_vars[key] = value
+
+        # Now loop through and create all variables
+        for var_id, variable in all_vars.items():
 
             if var_id == self.get_setting('source', 'source_var'):
 
@@ -376,6 +398,10 @@ class DatasetMaker(object):
                 data = variable[:]
                 dtype = variable.dtype
 
+                # Resolve the variable array if required
+                if self.get_setting('variables_by_facet', new_var_id, default=[]):
+                    data = self._resolve_variable_arrays_by_facet(new_var_id)
+
                 if hasattr(variable, "dimensions"):
                     dims_list = variable.dimensions
                 # Assume that it is a coordinate variable that will have its own dimension
@@ -390,11 +416,7 @@ class DatasetMaker(object):
 
             print "Now writing variable: {}".format(new_var_id)
 
-            if var_id == "sample": 
-                pass
-                #import pdb; pdb.set_trace()
-
-            fill_value = getattr(self.input_data['variables'][var_id], "_FillValue", None)
+            fill_value = getattr(variable, "_FillValue", None)
             output.create_variable(new_var_id, data, dtype, dims_list,
                                    fill_value=fill_value, attributes=var_attrs)
 
@@ -450,7 +472,7 @@ class DatasetMaker(object):
         return value
 
 
-    def get_setting(self, *options):
+    def get_setting(self, *options, **kwargs):
         """
         Looks up a setting in `self.constraints`. If not held there it looks it up in
         `self.settings`. The `options` are defined using a tuple of keys, such as:
@@ -458,14 +480,17 @@ class DatasetMaker(object):
         If the setting cannot be found then an exception is raised.
 
         :param options: setting specifier [tuple].
+        :param kwargs: keyword arguments - to provide default.
         :return: The value of the setting.
         """
-        value = self._resolve_nested_lookup(self.constraints, options)
+        default = kwargs.get('default', None)
 
-        if value != None:
+        value = self._resolve_nested_lookup(self.constraints, options, default=default)
+
+        if value:
             return value
 
-        value = self._resolve_nested_lookup(self.settings, options)
+        value = self._resolve_nested_lookup(self.settings, options, default=default)
 
         if value == None:
             raise Exception("Could not find value in constraints or settings for: '{}'.".format(options))

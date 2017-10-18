@@ -111,7 +111,7 @@ def modify_gridded_25km(variable, date_times, **facets):
     var_id = facets["var_id"]
     scenario = facets["scenario"]
     prob_data_type = facets["prob_data_type"]
-    grid_res = facets["grid_res"]
+    grid_res = facets["resolution"]
     temp_avg_type = facets["frequency"]
     year = date_times[0].year
 
@@ -119,8 +119,8 @@ def modify_gridded_25km(variable, date_times, **facets):
                                           prob_data_type=prob_data_type, grid_res=grid_res,
                                           temp_avg_type=temp_avg_type)
 
-    array = variable[:]
-    mask = array.mask.copy()
+    array = variable[:].data
+#    mask = array.mask.copy()
 
     len_t, len_y, len_x = array.shape
 #    new_array = array.copy()
@@ -132,12 +132,12 @@ def modify_gridded_25km(variable, date_times, **facets):
     if isinstance(array, MaskedArray):
         new_array = numpy.ma.resize(array, new_shape)
     else:
-        new_array = array.resize(new_shape)
+        new_array = numpy.resize(array, new_shape)
 
     dims_list = tuple(list(variable.dimensions) + [prob_data_type])
 
     print "Building the new array..."
-    if 1: # For DEBUGGING
+    if 0: # For DEBUGGING
         new_array = np.zeros(new_shape)
         return new_array, dims_list
 

@@ -17,7 +17,7 @@
                        "standard_name": "precipitation_rate",
                        "units": "mm day-1",
                        "grid_mapping": "transverse_mercator",
-                       "coordinates": "lat lon meaning_period",
+                       "coordinates": "latitude longitude meaning_period",
                        "long_name": "precipitation rate"
                        }
                   },
@@ -33,7 +33,7 @@
                        "standard_name": "air_temperature",
                        "units": "K",
                        "grid_mapping": "transverse_mercator",
-                       "coordinates": "lat lon meaning_period",
+                       "coordinates": "latitude longitude meaning_period",
                        "long_name": "air temperature"
                        }
                   }

@@ -1,30 +1,37 @@
 {
     "source": {
         "source_file": "inputs/eg_uk_ls2_mon.nc",
-        "source_var": "precipitation_flux",
+        "source_var": "example_var",
         "source_time_var": "time"
     },
     "variables": {
         "pr":     {
                    "array_modifier": "project_libs.ukcp18.ukcp18_ls2#modify_uk_60km",
-                   "dimensions": ["ensemble_member", "time", "latitude", "longitude"],
+                   "dimensions": ["ensemble_member", "time", "projection_y_coordinate", "projection_x_coordinate"],
                    "dtype": "float32",
                    "attributes": {
                        "standard_name": "precipitation_flux",
                        "units": "kg m-2 s-1",
-                       "long_name": "precipitation flux"
+                       "long_name": "precipitation flux",
+                       "grid_mapping": "transverse_mercator",
+                       "coordinates": "latitude longitude meaning_period"
                        }
                   },
         "tas":    {
                    "array_modifier": "project_libs.ukcp18.ukcp18_ls2#modify_uk_60km",
-                   "dimensions": ["ensemble_member", "time", "latitude", "longitude"],
+                   "dimensions": ["ensemble_member", "time", "projection_y_coordinate", "projection_x_coordinate"],
                    "dtype": "float32",
                    "attributes": {
                        "standard_name": "air_temperature",
                        "units": "K",
-                       "long_name": "air temperature"
+                       "long_name": "air temperature",
+                       "grid_mapping": "transverse_mercator",
+                       "coordinates": "latitude longitude meaning_period"
                        }
                   }
+    },
+    "variables_by_facet": {
+        "ensemble_member": "project_libs.ukcp18.ukcp18_ls2#get_ensemble_values"
     },
     "facets": {
         "project": ["ukcp18"],
