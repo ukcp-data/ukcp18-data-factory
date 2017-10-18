@@ -31,3 +31,17 @@ def modify_global_60km(variable, date_times, **facets):
     return new_array, dims_list
 
 
+def modify_uk_60km(variable, date_times, **facets):
+    """
+    Modify the array provided based on example input data.
+
+    :param variable:
+    :param time_step:
+    :param facets:
+    :return: Tuple of: (new_array, dimensions_list)
+    """
+    new_array = variable[:]
+    dims_list = variable.dimensions
+    return new_array, dims_list
+
+

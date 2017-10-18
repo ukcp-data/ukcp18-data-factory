@@ -19,7 +19,13 @@ _CONSTRAINTS_SETS = {
                    'prob_data_type': ['percentile']
             }
          },
-    ('ukcp18', 'ukcp18_ls2_gridded'):
+    ('ukcp18', 'ukcp18_ls2_global_gridded'):
+        {
+            'time': {'start': [2010, 1, 1]},
+            'facets':
+                {'scenario': ['rcp85']}
+        },
+    ('ukcp18', 'ukcp18_ls2_uk_gridded'):
         {
             'time': {'start': [2010, 1, 1]},
             'facets':
@@ -32,14 +38,15 @@ def main(project, dataset_id, constraints=None):
     if not constraints: constraints = _CONSTRAINTS_SETS[(project, dataset_id)]
 
     faker = DatasetMaker(project=project, dataset_id=dataset_id, constraints=constraints)
-    faker.generate(randomise=True, max_num=10)
+    faker.generate(randomise=False, max_num=10)
 
 
 if __name__ == "__main__":
 
     args = sys.argv[1:]
     DEFAULT_ARGS = ['ukcp18', 'ukcp18_ls1_gridded']
-    DEFAULT_ARGS = ['ukcp18', 'ukcp18_ls2_gridded']
+    DEFAULT_ARGS = ['ukcp18', 'ukcp18_ls2_global_gridded']
+    DEFAULT_ARGS = ['ukcp18', 'ukcp18_ls2_uk_gridded']
 
     if len(args) == 0:
         print "Default args: {}".format(str(DEFAULT_ARGS))

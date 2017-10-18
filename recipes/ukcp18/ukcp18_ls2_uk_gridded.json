@@ -1,12 +1,12 @@
 {
     "source": {
-        "source_file": "inputs/pr_global_ls2_mon_197001-197012.nc",
+        "source_file": "inputs/eg_uk_ls2_mon.nc",
         "source_var": "precipitation_flux",
         "source_time_var": "time"
     },
     "variables": {
         "pr":     {
-                   "array_modifier": "project_libs.ukcp18.ukcp18_ls2#modify_global_60km",
+                   "array_modifier": "project_libs.ukcp18.ukcp18_ls2#modify_uk_60km",
                    "dimensions": ["ensemble_member", "time", "latitude", "longitude"],
                    "dtype": "float32",
                    "attributes": {
@@ -16,7 +16,7 @@
                        }
                   },
         "tas":    {
-                   "array_modifier": "project_libs.ukcp18.ukcp18_ls2#modify_global_60km",
+                   "array_modifier": "project_libs.ukcp18.ukcp18_ls2#modify_uk_60km",
                    "dimensions": ["ensemble_member", "time", "latitude", "longitude"],
                    "dtype": "float32",
                    "attributes": {
@@ -29,9 +29,9 @@
     "facets": {
         "project": ["ukcp18"],
         "collection": ["land-sim"],
-        "dataset_id": ["ukcp18-land-gcm-global-monthly"],
+        "dataset_id": ["ukcp18-land-gcm-uk-monthly"],
         "resolution": ["60km"],
-        "domain": ["global"],
+        "domain": ["uk"],
         "scenario": ["rcp85"],
         "ensemble_member": ["r1i1p1", "r1i1p2", "r1i1p3"],
         "var_id": ["pr", "tas"],
@@ -46,7 +46,6 @@
         "delta": [30, "day"],
         "per_file": 12,
         "attributes": {
-            "units": "days since 2000-01-01 00:00:00",
             "calendar": "360_day",
             "standard_name": "time"
         }

@@ -87,6 +87,7 @@ class TimeSeriesGenerator(object):
     SUPPORTED_FORMATS = ['list', 'datetime', 'string']
     FREQUENCY_MAPPINGS = {'mon': 'month'}
 
+
     def __init__(self, start, end, delta=(1, 'day'), calendar='360_day', format='list'):
         """
 

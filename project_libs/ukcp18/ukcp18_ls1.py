@@ -163,6 +163,7 @@ def _get_broadcasted_random_array(shape):
     arr = npr.random(shape) / 10. + 1
     return arr
 
+
 if __name__ == "__main__":
 
     import datetime

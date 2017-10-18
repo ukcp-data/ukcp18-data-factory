@@ -1,0 +1,53 @@
+{
+    "source": {
+        "source_file": "inputs/pr_global_ls2_mon_197001-197012.nc",
+        "source_var": "precipitation_flux",
+        "source_time_var": "time"
+    },
+    "variables": {
+        "pr":     {
+                   "array_modifier": "project_libs.ukcp18.ukcp18_ls2#modify_global_60km",
+                   "dimensions": ["ensemble_member", "time", "latitude", "longitude"],
+                   "dtype": "float32",
+                   "attributes": {
+                       "standard_name": "precipitation_flux",
+                       "units": "kg m-2 s-1",
+                       "long_name": "precipitation flux"
+                       }
+                  },
+        "tas":    {
+                   "array_modifier": "project_libs.ukcp18.ukcp18_ls2#modify_global_60km",
+                   "dimensions": ["ensemble_member", "time", "latitude", "longitude"],
+                   "dtype": "float32",
+                   "attributes": {
+                       "standard_name": "air_temperature",
+                       "units": "K",
+                       "long_name": "air temperature"
+                       }
+                  }
+    },
+    "facets": {
+        "project": ["ukcp18"],
+        "collection": ["land-sim"],
+        "dataset_id": ["ukcp18-land-gcm-global-monthly"],
+        "resolution": ["60km"],
+        "domain": ["global"],
+        "scenario": ["rcp85"],
+        "ensemble_member": ["r1i1p1", "r1i1p2", "r1i1p3"],
+        "var_id": ["pr", "tas"],
+        "frequency": ["mon"],
+        "version": ["v20170331"]
+    },
+    "path_template": "{project}/data/{collection}/{resolution}/{domain}/{scenario}/{ensemble_member}/{var_id}/{frequency}/{version}/{var_id}_{scenario}_{dataset_id}_{ensemble_member}_{frequency}_{__time_period__}.nc",
+    "time": {
+        "start": [2000, 1, 1],
+        "end": [2020, 12, 1],
+        "format": "%Y%m%d",
+        "delta": [30, "day"],
+        "per_file": 12,
+        "attributes": {
+            "calendar": "360_day",
+            "standard_name": "time"
+        }
+    }
+}

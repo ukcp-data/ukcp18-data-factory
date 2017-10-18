@@ -43,11 +43,18 @@ class DatasetMaker(object):
         self.dataset_id = dataset_id
         self.base_dir = base_dir
 
+        # Set constraints as empty dictionary at start
+        self.constraints = {}
+
+        # Load main settings from JSON file
         self._load_options()
 
-        # Set constraints as empty dictionary
-        self.constraints = {}
+        # Update with constraints sent in as argument
         self.set_constraints(constraints)
+
+        # Set time units
+        self._set_time_units_from_settings()
+
 
     def _load_options(self):
         """
@@ -64,6 +71,19 @@ class DatasetMaker(object):
 
         with open(config_file) as reader:
             self.settings = json.load(reader)
+
+
+    def _set_time_units_from_settings(self):
+        """
+        Sets the time units based on first date in settings/constraints.
+
+        :return: None
+        """
+        # Set the time units for all output files based on the first time step requested
+        start_time = self.get_setting('time', 'start')
+        time_units = "days since {:04d}-{:02d}-{:02d} 00:00:00".format(*start_time)
+
+        self.settings['time']['attributes']['units'] = time_units
 
 
     def _load_input_data(self):
@@ -349,6 +369,7 @@ class DatasetMaker(object):
                 data = numpy.array(time_array, 'f')
                 dims_list = variable.dimensions
                 dtype = numpy.float32
+                print time_array
 
             else:
                 new_var_id = var_id
@@ -382,6 +403,7 @@ class DatasetMaker(object):
         output.close()
         print "Wrote: {}".format(fpath)
 
+
     def set_constraints(self, constraints=None):
         """
         Sets constraints that override the settings to reduce the number of output files.
@@ -407,6 +429,7 @@ class DatasetMaker(object):
 
             self.constraints[key] = constraints[key]
 
+
     def _resolve_nested_lookup(self, dct, keys, default=None):
         """
         Resolves and returns item held in nested dictionary `dct` based on a tuple of
@@ -425,6 +448,7 @@ class DatasetMaker(object):
                 return default
 
         return value
+
 
     def get_setting(self, *options):
         """
@@ -456,6 +480,7 @@ class DatasetMaker(object):
         """
         return self
 
+
     def __next__(self):
         """
         Returns next file path.
@@ -463,6 +488,7 @@ class DatasetMaker(object):
         """
         # Returns next path
         # use itertools.product here
+
 
     def next(self):
         """
