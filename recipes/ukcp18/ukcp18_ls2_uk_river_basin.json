@@ -6,25 +6,21 @@
     },
     "variables": {
         "pr":     {
-                   "array_modifier": "project_libs.ukcp18.ukcp18_ls2#modify_uk_region",
-                   "dimensions": ["ensemble_member", "time", "region"],
-                   "dtype": "float32",
+                   "__include__": "common_variable_properties",
                    "attributes": {
                        "standard_name": "precipitation_flux",
                        "units": "kg m-2 s-1",
                        "long_name": "precipitation flux",
-                       "coordinates": "geo_region"
+                       "__include__": "common_variable_attributes"
                        }
                   },
         "tas":    {
-                   "array_modifier": "project_libs.ukcp18.ukcp18_ls2#modify_uk_region",
-                   "dimensions": ["ensemble_member", "time", "region"],
-                   "dtype": "float32",
+                   "__include__": "common_variable_properties",
                    "attributes": {
                        "standard_name": "air_temperature",
                        "units": "K",
                        "long_name": "air temperature",
-                       "coordinates": "geo_region"
+                       "__include__": "common_variable_attributes"
                        }
                   }
     },
@@ -60,6 +56,16 @@
         "attributes": {
             "calendar": "360_day",
             "standard_name": "time"
+        }
+    },
+    "__inclusions__": {
+        "common_variable_properties": {
+            "array_modifier": "project_libs.ukcp18.ukcp18_ls2#modify_uk_region",
+            "dimensions": ["ensemble_member", "time", "region"],
+            "dtype": "float32"
+        },
+        "common_variable_attributes": {
+            "coordinates": "geo_region"
         }
     }
 }

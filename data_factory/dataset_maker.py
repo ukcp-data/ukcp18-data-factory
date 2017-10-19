@@ -73,6 +73,49 @@ class DatasetMaker(object):
             self.settings = json.load(reader)
 
 
+        # Update settings using "__includes__" in the JSON
+        self._add_includes_to_settings()
+
+
+    def _add_includes_to_settings(self):
+        """
+        Searches for the "__include__" option in the settings and replaces
+        with common sections in the "__inclusions__" part of the JSON.
+
+        :return:
+        """
+        INCLUSIONS_KEY = "__inclusions__"
+        INCLUDE_KEY = "__include__"
+        inclusions = self.settings.get(INCLUSIONS_KEY, {})
+
+        def update_dct_from_inclusions(dct):
+            """
+            Updates current dct key if set as an "__include__".
+
+            :param dct: a dictionary (part of settings)
+            :return: None
+            """
+            for key, value in dct.items():
+                if type(value) is dict:
+                    update_dct_from_inclusions(value)
+                    continue
+
+                elif key == INCLUSIONS_KEY or key != INCLUDE_KEY:
+                    continue
+
+                # Only main "__include__" will get here, now update it
+                print inclusions, value
+                for dkey, dvalue in inclusions[value].items():
+                    dct[dkey] = dvalue
+
+                # And remove the include item to tidy up
+                del dct[INCLUDE_KEY]
+
+        # Start with whole settings and then recursively call the updater function
+        dct = self.settings
+        update_dct_from_inclusions(dct)
+
+
     def _set_time_units_from_settings(self):
         """
         Sets the time units based on first date in settings/constraints.
