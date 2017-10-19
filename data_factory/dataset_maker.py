@@ -424,6 +424,7 @@ class DatasetMaker(object):
 
             print "Now writing variable: {}".format(new_var_id)
 
+            print data.shape, dims_list, variable.shape
             fill_value = getattr(variable, "_FillValue", None)
             output.create_variable(new_var_id, data, dtype, dims_list,
                                    fill_value=fill_value, attributes=var_attrs)

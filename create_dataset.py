@@ -31,6 +31,12 @@ _CONSTRAINTS_SETS = {
             'time': {'start': [1901, 1, 1], 'end': [2100, 12, 30]},
             'facets':
                 {'scenario': ['rcp85']}
+        },
+    ('ukcp18', 'ukcp18_ls2_uk_river_basin'):
+        {
+            'time': {'start': [1901, 1, 1], 'end': [2100, 12, 30]},
+            'facets':
+                {'scenario': ['rcp85']}
         }
 }
 
@@ -46,7 +52,7 @@ if __name__ == "__main__":
 
     args = sys.argv[1:]
 
-    DEFAULT_ARGS = ('ukcp18', 'ukcp18_ls2_uk_gridded')
+    DEFAULT_ARGS = ('ukcp18', 'ukcp18_ls2_uk_river_basin')
 
     all_datasets = [('ukcp18', 'ukcp18_ls1_gridded'),
                     ('ukcp18', 'ukcp18_ls2_global_gridded'),
