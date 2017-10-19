@@ -47,11 +47,11 @@
     },
     "path_template": "{project}/data/{collection}/{resolution}/{domain}/{scenario}/{ensemble_member}/{var_id}/{frequency}/{version}/{var_id}_{scenario}_{dataset_id}_{ensemble_member}_{frequency}_{__time_period__}.nc",
     "time": {
-        "start": [2000, 1, 1],
-        "end": [2020, 12, 1],
+        "start": [1901, 1, 15],
+        "end": [2100, 12, 15],
         "format": "%Y%m%d",
         "delta": [30, "day"],
-        "per_file": 12,
+        "per_file": 2400,
         "attributes": {
             "calendar": "360_day",
             "standard_name": "time"

@@ -351,6 +351,10 @@ class DatasetMaker(object):
             else:
                 length = len(value)
 
+            # Override length of time which is dynamic
+            if key == "time":
+                length = len(time_array)
+
             dim_args.append((key, length))
 
         # Load up any extra coordinate variables also required by this dataset
@@ -374,6 +378,10 @@ class DatasetMaker(object):
 
         # Now loop through and create all variables
         for var_id, variable in all_vars.items():
+
+            if var_id == "climatology_bounds":
+                print "IGNORING WRITING: climatology_bounds - for now!"
+                continue
 
             if var_id == self.get_setting('source', 'source_var'):
 

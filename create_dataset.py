@@ -28,7 +28,7 @@ _CONSTRAINTS_SETS = {
         },
     ('ukcp18', 'ukcp18_ls2_uk_gridded'):
         {
-            'time': {'start': [2010, 1, 1], 'end': [2012, 12, 30]},
+            'time': {'start': [1901, 1, 1], 'end': [2100, 12, 30]},
             'facets':
                 {'scenario': ['rcp85']}
         }
