@@ -14,7 +14,7 @@
                        "units": "kg m-2 s-1",
                        "long_name": "precipitation flux",
                        "grid_mapping": "transverse_mercator",
-                       "coordinates": "latitude longitude meaning_period"
+                       "coordinates": "latitude longitude"
                        }
                   },
         "tas":    {
@@ -26,7 +26,7 @@
                        "units": "K",
                        "long_name": "air temperature",
                        "grid_mapping": "transverse_mercator",
-                       "coordinates": "latitude longitude meaning_period"
+                       "coordinates": "latitude longitude"
                        }
                   }
     },
