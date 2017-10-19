@@ -40,7 +40,11 @@
         "resolution": ["60km"],
         "domain": ["uk"],
         "scenario": ["rcp85"],
-        "ensemble_member": ["r1i1p1", "r1i1p2", "r1i1p3"],
+        "ensemble_member": ["r1i1p1", "r1i1p2", "r1i1p3", "r1i1p4", "r1i1p5",
+                            "r1i1p6", "r1i1p7", "r1i1p8", "r1i1p9", "r1i1p10",
+                            "r1i1p11", "r1i1p12", "r1i1p13", "r1i1p14", "r1i1p15",
+                            "r1i1p16", "r1i1p17", "r1i1p18", "r1i1p19", "r1i1p20"
+        ],
         "var_id": ["pr", "tas"],
         "frequency": ["mon"],
         "version": ["v20170331"]
