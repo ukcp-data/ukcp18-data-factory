@@ -429,7 +429,9 @@ class DatasetMaker(object):
             output.create_variable(new_var_id, data, dtype, dims_list,
                                    fill_value=fill_value, attributes=var_attrs)
 
-        output.create_global_attrs(**self.current['facets'])
+        global_attrs = self.get_setting("global_attributes")
+        global_attrs.update(self.current['facets'])
+        output.create_global_attrs(**global_attrs)
 
         output.close()
         print "Wrote: {}".format(fpath)

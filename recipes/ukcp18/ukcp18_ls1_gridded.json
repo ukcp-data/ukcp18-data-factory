@@ -38,6 +38,9 @@
                        }
                   }
     },
+    "global_attributes": {
+        "Conventions": "CF-1.7"
+    },
     "facets": {
         "__order__": ["project", "dataset", "scenario", "frequency"],
         "project": ["ukcp18"],

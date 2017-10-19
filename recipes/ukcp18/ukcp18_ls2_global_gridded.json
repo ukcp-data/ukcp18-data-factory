@@ -29,6 +29,9 @@
     "variables_by_facet": {
         "ensemble_member": "project_libs.ukcp18.ukcp18_ls2#get_ensemble_values"
     },
+    "global_attributes": {
+        "Conventions": "CF-1.7"
+    },
     "facets": {
         "project": ["ukcp18"],
         "collection": ["land-sim"],
