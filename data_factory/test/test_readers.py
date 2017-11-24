@@ -2,10 +2,10 @@ import iris
 
 import glob
 
-files = glob.glob('fakedata/ukcp18/data/land-sim/60km/uk/rcp85/r1i1p1/pr/mon/v20170331/pr_rcp85_ukcp18-land-gcm-uk-monthly_r1i1p1_mon_20*.nc')
-files_60km_r1i1p1 = glob.glob('fakedata/ukcp18/data/land-sim/60km/uk/rcp85/r1i1p1/pr/mon/v20170331/pr*')
-files = glob.glob('fakedata/ukcp18/data/land-sim/60km/uk/rcp85/r1i1p3/pr/mon/v20170331/pr_rcp85_ukcp18-land-gcm-uk*')
-files = glob.glob('fakedata/ukcp18/data/land-sim/60km/uk/rcp85/r1i1p[123]/tas/mon/v20170331/*.nc')
+files = glob.glob('fakedata/ukcp18/data/land-gcm/60km/uk/rcp85/r1i1p1/pr/mon/v20170331/pr_rcp85_ukcp18-land-gcm-uk-60km-mon_r1i1p1_mon_20*.nc')
+files_60km_r1i1p1 = glob.glob('fakedata/ukcp18/data/land-gcm/60km/uk/rcp85/r1i1p1/pr/mon/v20170331/pr*')
+files = glob.glob('fakedata/ukcp18/data/land-gcm/60km/uk/rcp85/r1i1p3/pr/mon/v20170331/pr_rcp85_ukcp18-land-gcm-uk*')
+files = glob.glob('fakedata/ukcp18/data/land-gcm/60km/uk/rcp85/r1i1p[123]/tas/mon/v20170331/*.nc')
 files_25km_percentile = glob.glob('fakedata/ukcp18/data/land-prob/25km/a1b/percentile/tas/mon/v20170331/tas_a1b_ukcp18-land-prob-25km_percentile_mon_201*')
 
 files = files_60km_r1i1p1
@@ -22,8 +22,8 @@ TEST_ENS_CONCAT = False
 
 if TEST_ENS_CONCAT:
     print "\nTrying to group ensemble members now...\n"
-    files = ('fakedata/ukcp18/data/land-sim/60km/uk/rcp85/r1i1p1/tas/mon/v20170331/tas_rcp85_ukcp18-land-gcm-uk-monthly_r1i1p1_mon_20100101-20101201.nc', 
-            'fakedata/ukcp18/data/land-sim/60km/uk/rcp85/r1i1p2/tas/mon/v20170331/tas_rcp85_ukcp18-land-gcm-uk-monthly_r1i1p2_mon_20100101-20101201.nc')
+    files = ('fakedata/ukcp18/data/land-gcm/60km/uk/rcp85/r1i1p1/tas/mon/v20170331/tas_rcp85_ukcp18-land-gcm-uk-60km-mon_r1i1p1_mon_20100101-20101201.nc', 
+            'fakedata/ukcp18/data/land-gcm/60km/uk/rcp85/r1i1p2/tas/mon/v20170331/tas_rcp85_ukcp18-land-gcm-uk-60km-mon_r1i1p2_mon_20100101-20101201.nc')
 
     print files
 
@@ -51,7 +51,7 @@ if 0:
  print cubes
  print cubes[0].metadata.attributes
 
-fname = "fakedata/ukcp18/data/land-sim/60km/uk/rcp85/r1i1p3/tas/mon/v20170331/tas_rcp85_ukcp18-land-gcm-uk-monthly_r1i1p3_mon_19010101-21001201.nc"
+fname = "fakedata/ukcp18/data/land-gcm/60km/uk/rcp85/r1i1p3/tas/mon/v20170331/tas_rcp85_ukcp18-land-gcm-uk-60km-mon_r1i1p3_mon_19010101-21001201.nc"
 cube = iris.load(fname)
 print cube
 

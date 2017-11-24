@@ -45,7 +45,7 @@
         "__order__": ["project", "dataset", "scenario", "frequency"],
         "project": ["ukcp18"],
         "collection": ["land-prob"],
-        "dataset_id": ["ukcp18-land-prob-25km"],
+        "dataset_id": ["ukcp18-land-prob-uk-25km-mon"],
         "resolution": ["25km"],
         "scenario": ["a1b", "rcp26", "rcp45", "rcp60", "rcp85"],
         "prob_data_type": ["sample", "percentile"],

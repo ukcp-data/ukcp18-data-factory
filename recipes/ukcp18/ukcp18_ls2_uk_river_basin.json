@@ -33,7 +33,7 @@
     "facets": {
         "project": ["ukcp18"],
         "collection": ["land-gcm"],
-        "dataset_id": ["ukcp18-land-gcm-uk-river-monthly"],
+        "dataset_id": ["ukcp18-land-gcm-uk-river-mon"],
         "resolution": ["river_basin"],
         "domain": ["uk"],
         "scenario": ["rcp85"],

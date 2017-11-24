@@ -33,7 +33,7 @@
     "facets": {
         "project": ["ukcp18"],
         "collection": ["land-gcm"],
-        "dataset_id": ["ukcp18-land-gcm-uk-region-monthly"],
+        "dataset_id": ["ukcp18-land-gcm-uk-region-mon"],
         "resolution": ["admin_region"],
         "domain": ["uk"],
         "scenario": ["rcp85"],
