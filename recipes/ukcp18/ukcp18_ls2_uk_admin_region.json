@@ -32,7 +32,7 @@
     },
     "facets": {
         "project": ["ukcp18"],
-        "collection": ["land-sim"],
+        "collection": ["land-gcm"],
         "dataset_id": ["ukcp18-land-gcm-uk-region-monthly"],
         "resolution": ["admin_region"],
         "domain": ["uk"],
