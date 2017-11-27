@@ -147,8 +147,10 @@ def modify_gridded_25km(variable, date_times, **facets):
             mult = (len_y + 0.5) / len_y
 
             random_array = _get_broadcasted_random_array((len_x, len_prob_dim))
-            values = mult * random_array * values
-            new_array[t_index][y_index] = values
+            incremented_values = mult * random_array * values
+            new_array[t_index][y_index] = incremented_values
+            if var_id != 'tas':
+                values = incremented_values
 
     print
     return new_array, dims_list
