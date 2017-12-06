@@ -30,7 +30,9 @@
         "ensemble_member": "project_libs.ukcp18.ukcp18_ls2#get_ensemble_values"
     },
     "global_attributes": {
-        "Conventions": "CF-1.7"
+        "Conventions": "CF-1.7",
+        "ensemble_member_id": "calculate_from:project_libs.ukcp18.ukcp18_general#map_ensemble_member",
+        "__DO_NOT_SET__": ["ensemble_member"]
     },
     "facets": {
         "project": ["ukcp18"],

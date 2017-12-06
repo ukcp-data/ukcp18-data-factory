@@ -9,6 +9,7 @@ Holds the DatasetMaker class for building example files.
 
 # Standard library imports
 import os, re
+import importlib
 from itertools import product
 import json
 import random
@@ -28,16 +29,15 @@ TP_NAME = '__time_period__'
 
 class DatasetMaker(object):
     """
-
+    Class to generate example datasets of synthetic data.
     """
 
     def __init__(self, project, dataset_id, constraints=None, base_dir="fakedata"):
         """
-
-        :param project:
-        :param dataset_id:
-        :param constraints:
-        :param base_dir:
+        :param project: project id [string]
+        :param dataset_id: dataset id [string]
+        :param constraints: dictionary of constraints to reduce the amount of data generated.
+        :param base_dir: base directory for outputs.
         """
         self.project = project
         self.dataset_id = dataset_id
@@ -59,9 +59,9 @@ class DatasetMaker(object):
     def _load_options(self):
         """
         Reads the configuration file for a given project/dataset and stores
-        that information ready for use.
+        that information in `self.settings` ready for use.
 
-        :return:
+        :return: None
         """
         # Check constraints and options
         config_file = os.path.join(RECIPE_DIR, self.project, "{}.json".format(self.dataset_id))
@@ -306,17 +306,10 @@ class DatasetMaker(object):
 
             if dim.find("facet:") == 0:
                 coord_var_id = self._get_coord_var_id_from_dim_id(dim)
-                print coord_var_id
-
-                # Get function for getting coordinate variable
-                coord_var_loader = self.get_setting('variables', var_id, 'coord_var_loaders', coord_var_id)
-                path, func = coord_var_loader.split('#')
 
                 # Import modifier module then call the loader function
-                imp = 'import {}'.format(path)
-                exec(imp)
-                coord_var = eval('{}.{}()'.format(path, func))
-
+                lookup = self.get_setting('variables', var_id, 'coord_var_loaders', coord_var_id)
+                coord_var = self._evaluate_lookup(lookup)
                 coord_vars[coord_var_id] = coord_var
 
         return coord_vars
@@ -337,12 +330,8 @@ class DatasetMaker(object):
 
         # Call modifier code if set
         if modifier != None:
-            path, func = modifier.split('#')
-
-            # Import modifier module then send the variable to the modifier function
-            imp = 'import {}'.format(path)
-            exec(imp)
-            new_array, dims_list = eval('{}.{}(variable, self.current["date_times"], **self.current["facets"])'.format(path, func))
+            new_array, dims_list = self._evaluate_lookup(modifier, *[variable, self.current["date_times"]],
+                                                         **self.current["facets"])
 
         # Apply conversion factor if set
         elif conversion_factor != None:
@@ -361,13 +350,66 @@ class DatasetMaker(object):
         :param var_id:
         :return: array
         """
-        path, func = self.get_setting('variables_by_facet', var_id).split("#")
+        lookup = self.get_setting('variables_by_facet', var_id)
 
         # Import modifier module then send the variable to the modifier function
-        imp = 'import {}'.format(path)
-        exec(imp)
-        array = eval('{}.{}(**self.current["facets"])'.format(path, func))
+        array = self._evaluate_lookup(lookup, **self.current["facets"])
         return array
+
+
+    def _evaluate_lookup(self, lookup, *args, **kwargs):
+        """
+        Resolves a lookup and imports and evaluates a call, returning the response.
+
+        :param lookup: look-up string (module import then "#" then function.
+        :param args: list of arguments
+        :param kwargs: dictionary of keyword arguments
+        :return: return call to the relevant function with arguments.
+        """
+        path, func = lookup.split('#')
+
+        # Import module then send the args and kwargs to the function
+        module = importlib.import_module(path)
+        response = getattr(module, func)(*args, **kwargs)
+
+        return response
+
+
+    def get_global_attributes(self):
+        """
+        Looks up and generates a dictionary of global attributes for the NC file.
+
+        return: dictionary of global attributes to write.
+        """
+        global_attrs = self.get_setting("global_attributes").copy()
+        facets = self.current['facets']
+
+        # Update global attrs if any values are calculated dynamically
+        CALC_FROM = 'calculate_from:'
+        DO_NOT_SET = '__DO_NOT_SET__'
+
+        for key in global_attrs.keys():
+            if key == DO_NOT_SET: continue
+            value = global_attrs[key]
+
+            if value.startswith(CALC_FROM):
+                lookup = value.replace(CALC_FROM, "")
+                value = self._evaluate_lookup(lookup, **facets)
+                global_attrs[key] = value
+            elif key in facets:
+                global_attrs[key] = facets[key]
+
+        # Now add facets but ignore omissions
+        not_to_set = global_attrs.get(DO_NOT_SET, [])
+
+        for key, value in facets.items():
+            if key in not_to_set: continue
+            global_attrs[key] = value
+
+        # Remove DO NOT SET value if there
+        if DO_NOT_SET in global_attrs: del global_attrs[DO_NOT_SET]
+
+        return global_attrs
 
 
     def _write_output_file(self, fpath, time_array):
@@ -472,8 +514,9 @@ class DatasetMaker(object):
             output.create_variable(new_var_id, data, dtype, dims_list,
                                    fill_value=fill_value, attributes=var_attrs)
 
-        global_attrs = self.get_setting("global_attributes")
-        global_attrs.update(self.current['facets'])
+#        global_attrs = self.get_setting("global_attributes")
+#        global_attrs.update(self.current['facets'])
+        global_attrs = self.get_global_attributes()
         output.create_global_attrs(**global_attrs)
 
         output.close()

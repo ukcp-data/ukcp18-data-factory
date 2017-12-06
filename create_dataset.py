@@ -45,18 +45,19 @@ def main(project, dataset_id, constraints=None):
     if not constraints: constraints = _CONSTRAINTS_SETS[(project, dataset_id)]
 
     faker = DatasetMaker(project=project, dataset_id=dataset_id, constraints=constraints)
-    faker.generate(randomise=False, max_num=60)
+    faker.generate(randomise=False, max_num=2)
 
 
 if __name__ == "__main__":
 
     args = sys.argv[1:]
 
-    DEFAULT_ARGS = ('ukcp18', 'ukcp18_ls2_uk_river_basin')
+    DEFAULT_ARGS = ('ukcp18', 'ukcp18_ls2_global_gridded')
 
     all_datasets = [('ukcp18', 'ukcp18_ls1_gridded'),
                     ('ukcp18', 'ukcp18_ls2_global_gridded'),
-                    ('ukcp18', 'ukcp18_ls2_uk_gridded')
+                    ('ukcp18', 'ukcp18_ls2_uk_gridded'),
+                    ('ukcp18', 'ukcp18_ls2_uk_river_basin')
     ]
 
     if len(args) == 0:
