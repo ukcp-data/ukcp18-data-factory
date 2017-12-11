@@ -52,7 +52,7 @@ if __name__ == "__main__":
 
     args = sys.argv[1:]
 
-    DEFAULT_ARGS = ('ukcp18', 'ukcp18_ls2_global_gridded')
+    DEFAULT_ARGS = ('ukcp18', 'ukcp18_ls1_gridded')
 
     all_datasets = [('ukcp18', 'ukcp18_ls1_gridded'),
                     ('ukcp18', 'ukcp18_ls2_global_gridded'),
