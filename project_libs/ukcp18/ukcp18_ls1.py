@@ -158,7 +158,7 @@ def modify_ls1_array(variable, date_times, **facets):
             random_array = _get_broadcasted_random_array(sub_shape)
             incremented_values = mult * random_array * values
             new_array[t_index][y_index] = incremented_values
-            if var_id != 'tas':
+            if not var_id.startswith('tas'):
                 values = incremented_values
 
     print

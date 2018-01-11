@@ -167,7 +167,7 @@ class DatasetMaker(object):
         for facet_name in self.facet_order:
             # Handle dataset_id differently
             if facet_name == 'dataset_id':
-                value = '__TO_BE_DETERMINED_FROM_TEMPLATE__'
+                value = ['__TO_BE_DETERMINED_FROM_TEMPLATE__']
             else:
                 value = self.get_setting('facets', facet_name)
 
@@ -220,6 +220,8 @@ class DatasetMaker(object):
         file_count = 0
         stop = False
 
+        time_array_len = -1
+
         # Loop through all permutations
         for facets in facet_permutations:
 
@@ -256,16 +258,18 @@ class DatasetMaker(object):
                     self._write_output_file(output_path, time_array)
                     file_count += 1
 
+                    time_array_len = len(time_array) # for reporting
+
                     # Reset some settings ready for next file to be populated
                     count_per_file = 0
                     date_times = []
                     time_array = []
 
-                if file_count > max_num:
+                if file_count >= max_num:
                     stop = True
                     break
 
-        print "Ran {} files; for {} time steps per file".format(file_count, len(time_array))
+        print "Ran {} files; for {} time steps per file".format(file_count, time_array_len)
 
 
     def _get_output_path(self, time_array, date_times, file_name_tmpl):

@@ -11,16 +11,16 @@ import sys, os
 from data_factory.dataset_maker import DatasetMaker
 
 _CONSTRAINTS_SETS = {
-    ('ukcp18', 'ukcp18_ls1_gridded'):
+    ('ukcp18', 'ukcp18-land-prob-a1b-uk-25km-all'):
         {
             'time': {'start': [2010, 1, 1],
                      'end': [2010, 12, 30]},
             'facets':
                   {'scenario': ['a1b'],
-                   'prob_data_type': ['percentile', 'sample']
+                   'prob_data_type': ['sample', 'percentile']
             }
          },
-    ('ukcp18', 'ukcp18_ls1_uk_admin_regions'):
+    ('ukcp18', 'ukcp18-land-prob-a1b-uk-region-all'):
         {
             'time': {'start': [2010, 1, 1],
                      'end': [2010, 12, 30]},
@@ -61,11 +61,11 @@ if __name__ == "__main__":
 
     args = sys.argv[1:]
 
-    DEFAULT_ARGS = ('ukcp18', 'ukcp18_ls1_uk_admin_regions')
-    DEFAULT_ARGS = ('ukcp18', 'ukcp18_ls1_gridded')
+    DEFAULT_ARGS = ('ukcp18', 'ukcp18-land-prob-a1b-uk-region-all')
+#    DEFAULT_ARGS = ('ukcp18', 'ukcp18-land-prob-a1b-uk-25km-all')
 
 
-    all_datasets = [('ukcp18', 'ukcp18_ls1_gridded'),
+    all_datasets = [('ukcp18', 'ukcp18-land-prob-a1b-uk-25km-all'),
                     ('ukcp18', 'ukcp18_ls2_global_gridded'),
                     ('ukcp18', 'ukcp18_ls2_uk_gridded'),
                     ('ukcp18', 'ukcp18_ls2_uk_river_basin')
