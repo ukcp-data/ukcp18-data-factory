@@ -39,32 +39,35 @@ def load_coord_var(prob_data_type):
 
 def load_samples():
     """
+    Load the values of the 'sample' coordinate variable.
 
-    :return:
+    :return: numpy array
     """
     return load_coord_var('sample')[:]
 
 
 def load_percentiles():
     """
+    Load the values of the 'percentile' coordinate variable.
 
-    :return:
+    :return: numpy array
     """
     return load_coord_var('percentile')
 
 
 def _get_ls1_prob_site_data(var_id, year, scenario="a1b",
-                            prob_data_type="sample", grid_res="25km",
+                            prob_data_type="sample", ##grid_res="25km",
                             temp_avg_type="mon"):
     """
+    Extract and return example probabilistic data and a numpy array.
 
-    :param var_id:
-    :param year:
-    :param scenario:
-    :param prob_data_type:
-    :param grid_res:
-    :param temp_avg_type:
-    :return:
+    :param var_id: variable id [string]
+    :param year: year [int]
+    :param scenario: scenario [string]
+    :param prob_data_type: probability data type [string]
+    :param grid_res: grid resolution [string]
+    :param temp_avg_type: temporal average type (frequency) [string]
+    :return: numpy array.
     """
     # Structure the output data based on the temporal average type
     if temp_avg_type == "mon":
@@ -77,6 +80,9 @@ def _get_ls1_prob_site_data(var_id, year, scenario="a1b",
         raise Exception("Temporal average type must be one of: mon, seas, ann.")
 
     data = {}
+
+    # Remove "Anom" from var_id - might not be there
+    var_id = var_id.replace("Anom", "")
 
     for temporal_average in ("djf", "jja"):
         fname = "{scenario}_{var_id}_{temporal_average}_EAW_1961-1990.dat".format(
@@ -99,7 +105,7 @@ def _get_ls1_prob_site_data(var_id, year, scenario="a1b",
     return np.array(prob_data_over_times)
 
 
-def modify_gridded_25km(variable, date_times, **facets):
+def modify_ls1_array(variable, date_times, **facets):
     """
     Modify the array provided based on example input data.
 
@@ -111,19 +117,16 @@ def modify_gridded_25km(variable, date_times, **facets):
     var_id = facets["var_id"]
     scenario = facets["scenario"]
     prob_data_type = facets["prob_data_type"]
-    grid_res = facets["resolution"]
+##    grid_res = facets["resolution"]
     temp_avg_type = facets["frequency"]
     year = date_times[0].year
 
     eg_data = _get_ls1_prob_site_data(var_id, year, scenario=scenario,
-                                          prob_data_type=prob_data_type, grid_res=grid_res,
+                                          prob_data_type=prob_data_type, ##grid_res=grid_res,
                                           temp_avg_type=temp_avg_type)
 
-    array = variable[:].data
-#    mask = array.mask.copy()
-
-    len_t, len_y, len_x = array.shape
-#    new_array = array.copy()
+    array = variable[:]#.data
+    spatial_dims = list(array.shape[1:])
 
     # Now broadcast the array to new fourth dimension
     len_prob_dim = eg_data.shape[1]
@@ -143,10 +146,16 @@ def modify_gridded_25km(variable, date_times, **facets):
 
     for t_index, values in enumerate(eg_data):
         print "...setting values for {} out of {} time steps...".format(t_index + 1, new_shape[0])
-        for y_index in range(len_y):
-            mult = (len_y + 0.5) / len_y
+        for y_index in range(spatial_dims[0]):
+            mult = (spatial_dims[0] + 0.5) / spatial_dims[0]
 
-            random_array = _get_broadcasted_random_array((len_x, len_prob_dim))
+            # Work out shape of random array to be broadcasted
+            # Will either be (len_x, len_prob_dim) or just (len_prob_dim)
+            sub_shape = [len_prob_dim]
+            if len(spatial_dims) > 1:
+                sub_shape = spatial_dims[1:] + sub_shape
+
+            random_array = _get_broadcasted_random_array(sub_shape)
             incremented_values = mult * random_array * values
             new_array[t_index][y_index] = incremented_values
             if var_id != 'tas':
@@ -158,6 +167,7 @@ def modify_gridded_25km(variable, date_times, **facets):
 
 def _get_broadcasted_random_array(shape):
     """
+    Broadcast array randomly to new shape.
 
     :param shape:
     :return:

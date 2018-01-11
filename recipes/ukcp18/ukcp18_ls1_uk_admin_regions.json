@@ -1,10 +1,10 @@
 {
     "source": {
-        "source_file": "inputs/osgb_25km_v2.nc",
+        "source_file": "inputs/eg_uk_ls1_mon_admin_region.nc",
         "source_var": "example_var",
         "source_time_var": "time"
     },
-    "variables": {
+   "variables": {
         "prAnom":     {
                    "__include__": "common_variable_properties",
                    "attributes": {
@@ -31,14 +31,14 @@
         "__order__": ["project", "dataset", "scenario", "frequency"],
         "project": ["ukcp18"],
         "collection": ["land-prob"],
-        "dataset_id": ["ukcp18-land-prob-uk-25km-mon"],
-        "resolution": ["25km"],
+        "dataset_id": ["ukcp18-land-prob-uk-region-mon"],
+        "resolution": ["region"],
         "domain": ["uk"],
         "scenario": ["a1b", "rcp26", "rcp45", "rcp60", "rcp85"],
         "prob_data_type": ["sample", "percentile"],
         "var_id": ["prAnom", "tasAnom"],
         "frequency": ["mon"],
-        "version": ["v20170331"]
+        "version": ["v20180109"]
     },
     "path_template": "{project}/data/{collection}/{resolution}/{domain}/{scenario}/{prob_data_type}/{var_id}/{frequency}/{version}/{var_id}_{scenario}_{dataset_id}_{prob_data_type}_{frequency}_{__time_period__}.nc",
     "time": {
@@ -54,17 +54,16 @@
     },
     "__inclusions__": {
         "common_variable_properties": {
-             "coord_var_loaders": {
-                 "sample": "project_libs.ukcp18.ukcp18_ls1#load_samples",
-                 "percentile": "project_libs.ukcp18.ukcp18_ls1#load_percentiles"
-             },
-             "array_modifier": "project_libs.ukcp18.ukcp18_ls1#modify_ls1_array",
-             "dimensions": ["time", "projection_y_coordinate", "projection_x_coordinate", "facet:prob_data_type"],
-             "dtype": "float32"
+            "dimensions": ["time", "region", "facet:prob_data_type"],
+            "dtype": "float32",
+            "array_modifier": "project_libs.ukcp18.ukcp18_ls1#modify_ls1_array",
+            "coord_var_loaders": {
+               "sample": "project_libs.ukcp18.ukcp18_ls1#load_samples",
+               "percentile": "project_libs.ukcp18.ukcp18_ls1#load_percentiles"
+            }
         },
         "common_variable_attributes": {
-             "grid_mapping": "transverse_mercator",
-             "coordinates": "latitude longitude"
+            "coordinates": "geo_region"
         }
     }
 }

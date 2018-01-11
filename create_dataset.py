@@ -20,6 +20,15 @@ _CONSTRAINTS_SETS = {
                    'prob_data_type': ['percentile', 'sample']
             }
          },
+    ('ukcp18', 'ukcp18_ls1_uk_admin_regions'):
+        {
+            'time': {'start': [2010, 1, 1],
+                     'end': [2010, 12, 30]},
+            'facets':
+                {'scenario': ['a1b'],
+                 'prob_data_type': ['percentile', 'sample']
+                 }
+        },
     ('ukcp18', 'ukcp18_ls2_global_gridded'):
         {
             'time': {'start': [2010, 1, 1]},
@@ -52,7 +61,9 @@ if __name__ == "__main__":
 
     args = sys.argv[1:]
 
-    DEFAULT_ARGS = ('ukcp18', 'ukcp18_ls1_gridded')
+    DEFAULT_ARGS = ('ukcp18', 'ukcp18_ls1_uk_admin_regions')
+#    DEFAULT_ARGS = ('ukcp18', 'ukcp18_ls1_gridded')
+
 
     all_datasets = [('ukcp18', 'ukcp18_ls1_gridded'),
                     ('ukcp18', 'ukcp18_ls2_global_gridded'),

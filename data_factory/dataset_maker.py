@@ -309,6 +309,9 @@ class DatasetMaker(object):
 
                 # Import modifier module then call the loader function
                 lookup = self.get_setting('variables', var_id, 'coord_var_loaders', coord_var_id)
+                print lookup
+                if lookup.find("modify_array") > -1:
+                    import pdb; pdb.set_trace()
                 coord_var = self._evaluate_lookup(lookup)
                 coord_vars[coord_var_id] = coord_var
 
