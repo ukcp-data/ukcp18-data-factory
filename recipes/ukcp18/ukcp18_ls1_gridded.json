@@ -27,11 +27,11 @@
     "global_attributes": {
         "Conventions": "CF-1.7"
     },
+    "dataset_id_template": "{project}-{collection}-{scenario}-{domain}-{resolution}-{frequency}",
     "facets": {
         "__order__": ["project", "dataset", "scenario", "frequency"],
         "project": ["ukcp18"],
         "collection": ["land-prob"],
-        "dataset_id": ["ukcp18-land-prob-uk-25km-mon"],
         "resolution": ["25km"],
         "domain": ["uk"],
         "scenario": ["a1b", "rcp26", "rcp45", "rcp60", "rcp85"],
@@ -40,7 +40,7 @@
         "frequency": ["mon"],
         "version": ["v20170331"]
     },
-    "path_template": "{project}/data/{collection}/{resolution}/{domain}/{scenario}/{prob_data_type}/{var_id}/{frequency}/{version}/{var_id}_{scenario}_{dataset_id}_{prob_data_type}_{frequency}_{__time_period__}.nc",
+    "path_template": "{project}/data/{collection}/{domain}/{resolution}/{scenario}/{prob_data_type}/{var_id}/{frequency}/{version}/{var_id}_{scenario}_{dataset_id}_{prob_data_type}_{frequency}_{__time_period__}.nc",
     "time": {
         "start": [2000, 1, 1],
         "end": [2020, 12, 1],

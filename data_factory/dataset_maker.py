@@ -149,19 +149,29 @@ class DatasetMaker(object):
 
         :return: None
         """
+        # Set up facet order
         pattn = re.compile(r'\{(.+?)\}')
         file_name_tmpl = self.get_setting('path_template')
-        facet_order = []
+        self.facet_order = []
 
         for match in pattn.findall(file_name_tmpl):
-            if match not in facet_order:
-                facet_order.append(match)
+            if match not in self.facet_order:
+                self.facet_order.append(match)
 
-        if TP_NAME in facet_order:
-            facet_order.remove(TP_NAME)
+        if TP_NAME in self.facet_order:
+            self.facet_order.remove(TP_NAME)
 
-        self.facet_super_lists = [self.get_setting('facets', facet_name) for facet_name in facet_order]
-        self.facet_order = facet_order
+        # Set up facets super list
+        self.facet_super_lists = []
+
+        for facet_name in self.facet_order:
+            # Handle dataset_id differently
+            if facet_name == 'dataset_id':
+                value = '__TO_BE_DETERMINED_FROM_TEMPLATE__'
+            else:
+                value = self.get_setting('facets', facet_name)
+
+            self.facet_super_lists.append(value)
 
 
     def _get_time_generator(self):
@@ -274,6 +284,13 @@ class DatasetMaker(object):
 
         # Add in the current time range to the file name template
         file_name_tmpl = file_name_tmpl.replace('__TIME_PERIOD__', fname_time_comp)
+
+        # Generate the 'dataset_id' value from the 'dataset_id_template' facet
+        print self.current['facets'].keys()
+        self.current['facets']['dataset_id'] = \
+            self.get_setting('dataset_id_template').format(**self.current['facets'])
+
+        # Work out file path
         fpath = os.path.join(self.base_dir, file_name_tmpl.format(**self.current['facets']))
         return fpath
 
@@ -517,8 +534,6 @@ class DatasetMaker(object):
             output.create_variable(new_var_id, data, dtype, dims_list,
                                    fill_value=fill_value, attributes=var_attrs)
 
-#        global_attrs = self.get_setting("global_attributes")
-#        global_attrs.update(self.current['facets'])
         global_attrs = self.get_global_attributes()
         output.create_global_attrs(**global_attrs)
 
