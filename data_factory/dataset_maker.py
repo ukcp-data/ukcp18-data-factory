@@ -72,6 +72,18 @@ class DatasetMaker(object):
         with open(config_file) as reader:
             self.settings = json.load(reader)
 
+        # Read in any other JSON files from "__include_files__" property
+        include_files = self.get_setting("__include_files__", default=None)
+
+        if include_files:
+            for fpath in include_files:
+
+                with open(fpath) as reader:
+                    print "Parsing extra settings from: {}".format(fpath)
+                    _settings = json.load(reader)
+                    for key in _settings.keys():
+                        self.settings[key] = _settings[key]
+
 
         # Update settings using "__includes__" in the JSON
         self._add_includes_to_settings()

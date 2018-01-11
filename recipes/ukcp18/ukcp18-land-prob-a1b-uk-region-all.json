@@ -1,4 +1,5 @@
 {
+    "__include_files__": ["recipes/ukcp18/common_components.json"],
     "source": {
         "source_file": "inputs/eg_uk_ls1_mon_admin_region.nc",
         "source_var": "example_var",
@@ -24,10 +25,6 @@
                        }
                   }
     },
-    "global_attributes": {
-        "Conventions": "CF-1.7"
-    },
-    "dataset_id_template": "{project}-{collection}-{scenario}-{domain}-{resolution}-all",
     "facets": {
         "__order__": ["project", "dataset", "scenario", "frequency"],
         "project": ["ukcp18"],
@@ -41,7 +38,6 @@
         "frequency": ["mon"],
         "version": ["v20180109"]
     },
-    "path_template": "{project}/data/{collection}/{domain}/{resolution}/{scenario}/{prob_data_type}/{var_id}/{frequency}/{version}/{var_id}_{scenario}_{dataset_id}_{prob_data_type}_{frequency}_{__time_period__}.nc",
     "time": {
         "start": [2000, 1, 1],
         "end": [2020, 12, 1],
