@@ -11,19 +11,19 @@ import sys, os
 from data_factory.dataset_maker import DatasetMaker
 
 _CONSTRAINTS_SETS = {
-    ('ukcp18', 'ukcp18-land-prob-a1b-uk-25km-all'):
+    ('ukcp18', 'ukcp18-land-prob-uk-25km-all'):
         {
-            'time': {'start': [2010, 1, 1],
-                     'end': [2010, 12, 30]},
+            'time': {'start': [2000, 1, 15],
+                     'end': [2005, 12, 15]},
             'facets':
-                  {'scenario': ['a1b'],
-                   'prob_data_type': ['sample', 'percentile']
+                  {'scenario': ['rcp85'],
+                   'prob_data_type': ['percentile']
             }
          },
-    ('ukcp18', 'ukcp18-land-prob-a1b-uk-region-all'):
+    ('ukcp18', 'ukcp18-land-prob-uk-region-all'):
         {
-            'time': {'start': [2010, 1, 1],
-                     'end': [2010, 12, 30]},
+            'time': {'start': [2010, 1, 15],
+                     'end': [2010, 12, 15]},
             'facets':
                 {'scenario': ['a1b'],
                  'prob_data_type': ['percentile', 'sample']
@@ -51,21 +51,24 @@ _CONSTRAINTS_SETS = {
 
 
 def main(project, dataset_id, constraints=None):
+    if dataset_id.find("-") < 0:
+        raise Exception("Please modify the JSON recipe to follow new rules - using dataset IDs.")
+
     if not constraints: constraints = _CONSTRAINTS_SETS[(project, dataset_id)]
 
     faker = DatasetMaker(project=project, dataset_id=dataset_id, constraints=constraints)
-    faker.generate(randomise=False, max_num=2)
+    faker.generate(randomise=False, max_num=3)
 
 
 if __name__ == "__main__":
 
     args = sys.argv[1:]
 
-    DEFAULT_ARGS = ('ukcp18', 'ukcp18-land-prob-a1b-uk-region-all')
-    DEFAULT_ARGS = ('ukcp18', 'ukcp18-land-prob-a1b-uk-25km-all')
+    DEFAULT_ARGS = ('ukcp18', 'ukcp18-land-prob-uk-region-all')
+    DEFAULT_ARGS = ('ukcp18', 'ukcp18-land-prob-uk-25km-all')
 
 
-    all_datasets = [('ukcp18', 'ukcp18-land-prob-a1b-uk-25km-all'),
+    all_datasets = [('ukcp18', 'ukcp18-land-prob-uk-25km-all'),
                     ('ukcp18', 'ukcp18_ls2_global_gridded'),
                     ('ukcp18', 'ukcp18_ls2_uk_gridded'),
                     ('ukcp18', 'ukcp18_ls2_uk_river_basin')

@@ -37,10 +37,12 @@
         "resolution": ["admin_region"],
         "domain": ["uk"],
         "scenario": ["rcp85"],
-        "ensemble_member": ["r1i1p1", "r1i1p2", "r1i1p3", "r1i1p4", "r1i1p5",
-                            "r1i1p6", "r1i1p7", "r1i1p8", "r1i1p9", "r1i1p10",
-                            "r1i1p11", "r1i1p12", "r1i1p13", "r1i1p14", "r1i1p15",
-                            "r1i1p16", "r1i1p17", "r1i1p18", "r1i1p19", "r1i1p20"
+        "ensemble_member": [
+            'r001i1p00000', 'r001i1p00090', 'r001i1p00605', 'r001i1p00834',
+            'r001i1p01113', 'r001i1p01554', 'r001i1p01649', 'r001i1p01843',
+            'r001i1p01935', 'r001i1p02089', 'r001i1p02123', 'r001i1p02242',
+            'r001i1p02305', 'r001i1p02335', 'r001i1p02491', 'r001i1p02753',
+            'r001i1p02832', 'r001i1p02868', 'r001i1p02884', 'r001i1p02914'
         ],
         "var_id": ["pr", "tas"],
         "frequency": ["mon"],

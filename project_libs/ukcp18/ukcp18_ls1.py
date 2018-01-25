@@ -22,6 +22,7 @@ prob_data_map = {'sample': 'samp',
 
 def load_coord_var(prob_data_type):
     """
+    Loads a coordinate variable from the source data and returns it.
 
     :param prob_data_type:
     :return:
@@ -85,7 +86,7 @@ def _get_ls1_prob_site_data(var_id, year, scenario="a1b",
     var_id = var_id.replace("Anom", "")
 
     for temporal_average in ("djf", "jja"):
-        fname = "{scenario}_{var_id}_{temporal_average}_EAW_1961-1990.dat".format(
+        fname = "a1b_{var_id}_{temporal_average}_EAW_1961-1990.dat".format(
             scenario=scenario, var_id=var_id, temporal_average=temporal_average)
         fpath = os.path.join(BASEDIR, fname)
 

@@ -116,7 +116,6 @@ class DatasetMaker(object):
                     continue
 
                 # Only main "__include__" will get here, now update it
-                print inclusions, value
                 for dkey, dvalue in inclusions[value].items():
                     dct[dkey] = dvalue
 
@@ -302,7 +301,6 @@ class DatasetMaker(object):
         file_name_tmpl = file_name_tmpl.replace('__TIME_PERIOD__', fname_time_comp)
 
         # Generate the 'dataset_id' value from the 'dataset_id_template' facet
-        print self.current['facets'].keys()
         self.current['facets']['dataset_id'] = \
             self.get_setting('dataset_id_template').format(**self.current['facets'])
 
@@ -328,7 +326,7 @@ class DatasetMaker(object):
         Call out to external code to get extra coordinate variables required for this
         variable.
 
-        :return:
+        :return: a dictionary of coordinate variables.
         """
         var_id = self.current['facets']['var_id']
         required_dims = self.get_setting('variables', var_id, 'dimensions')
@@ -342,9 +340,7 @@ class DatasetMaker(object):
 
                 # Import modifier module then call the loader function
                 lookup = self.get_setting('variables', var_id, 'coord_var_loaders', coord_var_id)
-                print lookup
-                if lookup.find("modify_array") > -1:
-                    import pdb; pdb.set_trace()
+
                 coord_var = self._evaluate_lookup(lookup)
                 coord_vars[coord_var_id] = coord_var
 
@@ -520,7 +516,9 @@ class DatasetMaker(object):
                 data = numpy.array(time_array, 'f')
                 dims_list = variable.dimensions
                 dtype = numpy.float32
-                print time_array
+
+                # Add time bounds
+                self._add_time_bounds(output, data, var_attrs)
 
             else:
                 new_var_id = var_id
@@ -541,11 +539,9 @@ class DatasetMaker(object):
                     var_attrs = dict([(key, getattr(variable, key)) for key in variable.ncattrs() if key
                                   not in ('_FillValue',)])
                 else:
-                    var_attrs = {}
+                    var_attrs = {'long_name': new_var_id}
 
             print "Now writing variable: {}".format(new_var_id)
-
-            print data.shape, dims_list, variable.shape
             fill_value = getattr(variable, "_FillValue", None)
             output.create_variable(new_var_id, data, dtype, dims_list,
                                    fill_value=fill_value, attributes=var_attrs)
@@ -555,6 +551,26 @@ class DatasetMaker(object):
 
         output.close()
         print "Wrote: {}".format(fpath)
+
+
+    def _add_time_bounds(self, output, time_data, time_var_attrs):
+        """
+        Write the `time_bounds` variable to the output file.
+        Also modify the attributes dictionary: time_var_attrs
+
+        :param output: output writer job
+        :param data: time array
+        :param var_attrs: time attributes
+        :return: None
+        """
+        var_id = "time_bounds"
+        time_var_attrs["bounds"] = var_id
+        interval = (time_data[1] - time_data[0]) / 2.
+
+        values = [[value - interval, value + interval] for value in time_data[:]]
+        array = numpy.array(values)
+
+        output.create_variable(var_id, array, "float64", ["time", "bnds"])
 
 
     def set_constraints(self, constraints=None):

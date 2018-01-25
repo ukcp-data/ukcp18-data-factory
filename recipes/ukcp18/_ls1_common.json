@@ -1,0 +1,37 @@
+{
+    "variables": {
+        "prAnom": {
+            "__include__": "common_variable_properties",
+            "attributes": {
+                "standard_name": "precipitation_flux",
+                "units": "%",
+                "long_name": "Anomaly of precipitation flux",
+                "description": "Precipitation rate anomaly (%)",
+                "anomaly_type": "relative_change",
+                "__include__": "common_variable_attributes"
+            }
+        },
+        "tasAnom": {
+            "__include__": "common_variable_properties",
+            "attributes": {
+                "standard_name": "air_temperature",
+                "units": "K",
+                "long_name": "Anomaly of air temperature",
+                "anomaly_type": "absolute_change",
+                "description": "Surface temperature anomaly at 1.5m (°c)",
+                "__include__": "common_variable_attributes"
+            }
+        }
+    },
+    "time": {
+        "start": [2000, 1, 15],
+        "end": [2020, 12, 15],
+        "format": "%Y%m%d",
+        "delta": [30, "day"],
+        "per_file": 12,
+        "attributes": {
+            "calendar": "360_day",
+            "standard_name": "time"
+        }
+    }
+}

@@ -91,7 +91,6 @@ class NetCDF4Maker(object):
         :return: None
         """
         # Fill in times
-#        ????
         dates = []
         for n in range(5):
             dates.append(ref_time + n * timedelta(hours=12))
