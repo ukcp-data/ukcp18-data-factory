@@ -31,7 +31,8 @@
         "per_file": 12,
         "attributes": {
             "calendar": "360_day",
-            "standard_name": "time"
+            "standard_name": "time",
+            "long_name": "Time"
         }
     }
 }

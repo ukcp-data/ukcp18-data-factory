@@ -1,4 +1,7 @@
 {
+    "__include_files__": [
+      "recipes/ukcp18/_ls2_common.json"
+    ],
     "source": {
         "source_file": "inputs/pr_global_ls2_mon.nc",
         "source_var": "precipitation_flux",
@@ -6,9 +9,7 @@
     },
     "variables": {
         "pr":     {
-                   "array_modifier": "project_libs.ukcp18.ukcp18_ls2#modify_global_60km",
-                   "dimensions": ["ensemble_member", "time", "latitude", "longitude"],
-                   "dtype": "float32",
+                   "__include__": "common_variable_properties",
                    "attributes": {
                        "standard_name": "precipitation_flux",
                        "units": "kg m-2 s-1",
@@ -16,9 +17,7 @@
                        }
                   },
         "tas":    {
-                   "array_modifier": "project_libs.ukcp18.ukcp18_ls2#modify_global_60km",
-                   "dimensions": ["ensemble_member", "time", "latitude", "longitude"],
-                   "dtype": "float32",
+                   "__include__": "common_variable_properties",
                    "attributes": {
                        "standard_name": "air_temperature",
                        "units": "K",
@@ -28,11 +27,6 @@
     },
     "variables_by_facet": {
         "ensemble_member": "project_libs.ukcp18.ukcp18_ls2#get_ensemble_values"
-    },
-    "global_attributes": {
-        "Conventions": "CF-1.7",
-        "ensemble_member_id": "calculate_from:project_libs.ukcp18.ukcp18_general#map_ensemble_member",
-        "__DO_NOT_SET__": ["ensemble_member"]
     },
     "facets": {
         "project": ["ukcp18"],
@@ -46,16 +40,15 @@
         "frequency": ["mon"],
         "version": ["v20170331"]
     },
-    "path_template": "{project}/data/{collection}/{resolution}/{domain}/{scenario}/{ensemble_member}/{var_id}/{frequency}/{version}/{var_id}_{scenario}_{dataset_id}_{ensemble_member}_{frequency}_{__time_period__}.nc",
-    "time": {
-        "start": [2000, 1, 1],
-        "end": [2020, 12, 1],
-        "format": "%Y%m%d",
-        "delta": [30, "day"],
-        "per_file": 12,
-        "attributes": {
-            "calendar": "360_day",
-            "standard_name": "time"
+    "__inclusions__": {
+        "common_variable_properties": {
+                   "array_modifier": "project_libs.ukcp18.ukcp18_ls2#modify_global_60km",
+                   "dimensions": ["ensemble_member", "time", "latitude", "longitude"],
+                   "dtype": "float32"
+        },
+        "common_variable_attributes": {
+             "anomaly_type": "none"
         }
     }
+
 }

@@ -73,7 +73,7 @@ class DatasetMaker(object):
             self.settings = json.load(reader)
 
         # Read in any other JSON files from "__include_files__" property
-        include_files = self.get_setting("__include_files__", default=None)
+        include_files = self.get_setting("__include_files__", default={})
 
         if include_files:
             for fpath in include_files:
@@ -149,6 +149,7 @@ class DatasetMaker(object):
         self.input_data = {}
 
         ds = Dataset(self.get_setting('source', 'source_file'))
+
         self.input_data['ds'] = ds
         self.input_data['variables'] = ds.variables
         self.input_data['dimensions'] = ds.dimensions
@@ -468,9 +469,10 @@ class DatasetMaker(object):
             else:
                 length = len(value)
 
-            # Override length of time which is dynamic
+            # Override length of time which is dynamic - set to "unlimited"
             if key == "time":
-                length = len(time_array)
+                length = None
+#                length = len(time_array)
 
             dim_args.append((key, length))
 

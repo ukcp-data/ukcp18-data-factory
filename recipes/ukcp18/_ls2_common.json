@@ -1,0 +1,21 @@
+{
+    "global_attributes": {
+        "Conventions": "CF-1.7",
+        "ensemble_member_id": "calculate_from:project_libs.ukcp18.ukcp18_general#map_ensemble_member",
+        "__DO_NOT_SET__": ["ensemble_member"]
+    },
+    "dataset_id_template": "{project}-{collection}-{domain}-{resolution}-{frequency}",
+    "path_template": "{project}/data/{collection}/{domain}/{resolution}/{scenario}/{ensemble_member}/{var_id}/{frequency}/{version}/{var_id}_{scenario}_{dataset_id}_{ensemble_member}_{frequency}_{__time_period__}.nc",
+    "time": {
+        "start": [2000, 1, 15],
+        "end": [2020, 12, 15],
+        "format": "%Y%m%d",
+        "delta": [30, "day"],
+        "per_file": 12,
+        "attributes": {
+            "calendar": "360_day",
+            "standard_name": "time",
+            "long_name": "Time"
+        }
+    }
+}

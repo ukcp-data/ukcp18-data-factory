@@ -29,3 +29,4 @@ Subset global data to 1970 only at monthly scale on 15th of each month:
 ```
 ncks -d time,14,365,30 -v precipitation_flux r001i1p00090_19701979_pr.nc pr_global_ls2_mon_197001-197012.nc
 ```
+

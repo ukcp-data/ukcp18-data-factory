@@ -22,26 +22,26 @@ _CONSTRAINTS_SETS = {
          },
     ('ukcp18', 'ukcp18-land-prob-uk-region-all'):
         {
-            'time': {'start': [2010, 1, 15],
-                     'end': [2010, 12, 15]},
+            'time': {'start': [1961, 1, 15],
+                     'end': [2099, 12, 15]},
             'facets':
                 {'scenario': ['a1b'],
-                 'prob_data_type': ['percentile', 'sample']
+                 'prob_data_type': ['sample']
                  }
         },
-    ('ukcp18', 'ukcp18_ls2_global_gridded'):
+    ('ukcp18', 'ukcp18-land-gcm-global-60km-mon'):
         {
-            'time': {'start': [2010, 1, 1]},
+            'time': {'start': [2010, 1, 15]},
             'facets':
                 {'scenario': ['rcp85']}
         },
-    ('ukcp18', 'ukcp18_ls2_uk_gridded'):
+    ('ukcp18', 'ukcp18-land-gcm-uk-60km-mon'):
         {
             'time': {'start': [1901, 1, 1], 'end': [2100, 12, 30]},
             'facets':
                 {'scenario': ['rcp85']}
         },
-    ('ukcp18', 'ukcp18_ls2_uk_river_basin'):
+    ('ukcp18', 'ukcp18-land-gcm-uk-river-mon'):
         {
             'time': {'start': [1901, 1, 1], 'end': [2100, 12, 30]},
             'facets':
@@ -57,7 +57,7 @@ def main(project, dataset_id, constraints=None):
     if not constraints: constraints = _CONSTRAINTS_SETS[(project, dataset_id)]
 
     faker = DatasetMaker(project=project, dataset_id=dataset_id, constraints=constraints)
-    faker.generate(randomise=False, max_num=3)
+    faker.generate(randomise=False) #, max_num=200)
 
 
 if __name__ == "__main__":
@@ -69,9 +69,9 @@ if __name__ == "__main__":
 
 
     all_datasets = [('ukcp18', 'ukcp18-land-prob-uk-25km-all'),
-                    ('ukcp18', 'ukcp18_ls2_global_gridded'),
-                    ('ukcp18', 'ukcp18_ls2_uk_gridded'),
-                    ('ukcp18', 'ukcp18_ls2_uk_river_basin')
+                    ('ukcp18', 'ukcp18-land-gcm-global-60km-mon'),
+                    ('ukcp18', 'ukcp18-land-gcm-uk-60km-mon'),
+                    ('ukcp18', 'ukcp18-land-gcm-uk-river-mon')
     ]
 
     if len(args) == 0:

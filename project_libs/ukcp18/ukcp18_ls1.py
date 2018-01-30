@@ -95,6 +95,10 @@ def _get_ls1_prob_site_data(var_id, year, scenario="a1b",
         with open(fpath, 'rb') as reader:
             data[temporal_average] = cPickle.load(reader)
 
+    if year < 1975: 
+        # Set year to start year available in example data
+        year = 1975
+
     year_index = [int(y) for y in data['jja']['time']].index(year)
 
     prob_data_key = prob_data_map[prob_data_type] + "data"
