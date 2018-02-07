@@ -1,3 +1,4 @@
+	   
 # Guidance on construction of UKCP Land Strand 1 probabilistic datasets
 
 ## Overview
@@ -12,10 +13,10 @@ It covers the following topics:
  2. Splitting datasets across multiple files
  3. File-naming conventions
  4. Directory-naming convention	
- 5. Variable and coordinate variable IDs
- 6. Variable attributes
- 7. Global attributes
- 8. NetCDF properties
+ 5. Variable and coordinate variables
+ 6. Global attributes
+ 7. NetCDF properties
+ 8. Seasonal and annual files
  
 ## 1. Data structure inside each file
 
@@ -23,10 +24,10 @@ There are two main file structures:
  1. 25km gridded data (on OSGB grid)
  2. spatially aggregated areas: admin regions, river basins, UK countries
  
-The 25km gridded files (1) should be defined against the following coordinate variables:
+The **25km gridded files** (1) should be defined against the following coordinate variables:
   - `(time, projection_y_coordinate, projection_x_coordinate, <probabilistic_coordinate>)`
 
-The spatially aggregated area files (2) should be defined against the following coordinate variables:
+The **spatially aggregated area files** (2) should be defined against the following coordinate variables:
   - `(time, region, <probabilistic_coordinate>)`
 
 **NOTE:** `<probabilistic_coordinate>` is to be one of:
@@ -46,19 +47,19 @@ The data should be split into separate files along the following lines:
  - **spatial representation** (which are 25km gridded, admin regions, river basins and uk countries)
  - **temporal frequency** (i.e. "monthly", "seasonal", "annual")
  
-The 25km gridded data variable should be split across multiple files as follows [with approx size]:
- - monthly (per year)  			[~400MB]
- - seasonal (per year) 			[~125MB]
- - annual (per year)			 [~42MB]
+The **25km gridded data** variables should be split across multiple files as follows [with approx size]:
+ - monthly (*per year*)  			[~400MB]
+ - seasonal (*per year*) 			[~125MB]
+ - annual (*per year*)			 	[~42MB]
 
 A monthly file will contain January to December of the given year.
 A seasonal file will contain DJF, MAM, JJA, SON so the December will actually be pulled in from the previous year.
 An annual file is generated from the seasonal data so it will in reality span from December (the year before) to November (in the year specified).
  
-The spatially aggregated area data (i.e. admin regions, river basins, uk countries) [with approx size]:
- - monthly (all time steps)		[~400MB]
- - seasonal (all time steps)	[~125MB]
- - annual (all time steps)		 [~42MB]
+The **spatially aggregated area** data (i.e. admin regions, river basins, uk countries) [with approx size]:
+ - monthly (*all time steps*)		[~400MB]
+ - seasonal (*all time steps*)		[~125MB]
+ - annual (*all time steps*)		 [~42MB]
 
 ## 3. File-naming convention
 
@@ -67,11 +68,12 @@ File names should follow the following convention:
  `<var_id>_<scenario>_<dataset_id>_<prob_data_type>_<frequency>_<time_period>.nc`
  
 Values for most of the components can be found in the UKCP18 Controlled Vocabularies at:
- - var_id: https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_variable.json (***needs an update)
-     - FROM:  https://docs.google.com/spreadsheets/d/1Ij3R3skvYhKnMSqXB6KHaxH0BSST5R0DI8zp2Qi82vw/edit#gid=762056270
- - scenario: https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_scenario.json
- - prob_data_type: one of "sample", "cdf", "pdf"
- - frequency: https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_frequency.json (***needs an update)
+ - var_id: use the keys in the data structure under:
+   - https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_variable.json
+   - NOTE: this vocabulary is not finalised yet
+ - scenario: see: https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_scenario.json
+ - prob_data_type: see: https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_prob_data_type.json
+ - frequency: https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_frequency.json 
  
 The `dataset_id` is constructed as follows:
 
@@ -107,7 +109,7 @@ Our evolving table of variables is here:
 
 It is being honed and converted to this Controlled Vocabulary:
 
- https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_variable.json (***needs an update)
+ https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_variable.json (**needs an update**)
 
 The content includes both variable IDs and common variable metadata.
 
@@ -117,10 +119,14 @@ with "Anom" and _may_ have different units).
 A common set of variable attributes are specified but, depending on the spatial representation, there might 
 be others that should be added. Please see the example files for the additional attributes.
 
+Information about coordinate variables is held in a separate vocabulary at:
+
+
+
 Note that some of the attributes will reference coordinate variables that should also be included in the
 data files. Here are some CDL examples:
 
-### 7.1 25km gridded file
+### 5.1 Example 25km gridded file
 
 ```
 $ ncdump -h tasAnom_a1b_ukcp18-land-prob-uk-25km-all_sample_mon_20100115-20101215.nc
@@ -180,23 +186,12 @@ variables:
                 projection_y_coordinate:bounds = "projection_y_coordinate_bnds" ;
                 projection_y_coordinate:axis = "Y" ;
 
-// global attributes:
-                :domain = "uk" ;
-                :scenario = "a1b" ;
-                :var_id = "tasAnom" ;
-                :collection = "land-prob" ;
-                :Conventions = "CF-1.6" ;
-                :project = "ukcp18" ;
-                :version = "v20170331" ;
-                :frequency = "mon" ;
-                :dataset_id = "ukcp18-land-prob-uk-25km-all" ;
-                :resolution = "25km" ;
-                :prob_data_type = "sample" ;
+// global attributes:   ...NOT SHOWN HERE...
 }
 
 ```
 
-### 7.2 Spatially aggregated area files
+### 5.2 Example spatially aggregated area files
 
 ```
 $ ncdump -v geo_region tasAnom_a1b_ukcp18-land-prob-uk-region-all_sample_mon_19591215-20991115.nc
@@ -230,18 +225,8 @@ variables:
                 time:standard_name = "time" ;
                 time:bounds = "time_bounds" ;
 
-// global attributes:
-                :domain = "uk" ;
-                :scenario = "a1b" ;
-                :var_id = "tasAnom" ;
-                :collection = "land-prob" ;
-                :Conventions = "CF-1.6" ;
-                :project = "ukcp18" ;
-                :version = "v20180109" ;
-                :frequency = "mon" ;
-                :dataset_id = "ukcp18-land-prob-uk-region-all" ;
-                :resolution = "region" ;
-                :prob_data_type = "sample" ;
+// global attributes: ...NOT SHOWN HERE...
+
 data:
 
  geo_region =
@@ -262,69 +247,81 @@ data:
   "channel_islands",
   "south_east_england" ;
 }
-
 ```
 
-## 7. Global attributes
-
-The recommended global 
+The `geo_region:long_name` attribute should have one of the following values:
+ - "Administrative Region"
+ - "Country" 
+ - "River Basin"
  
- - Global attributes:
-  - Mandatory:
-   - title: A succinct description of what is in the dataset.
-   - institution: use "Met Office Hadley Centre (MOHC), FitzRoy Road, Exeter, Devon, EX1 3PB, UK."
-   - source: The method of production of the original data. If it was model-generated, source should name the model and its version, as specifically as could be useful.
-   - history: History of major processing, with each component as "YYYY-MM-DD hh:mm:ss: <description_of_processing>\n"
-   - references: Published or web-based references that describe the data or methods used to produce it.
+The possible values for `geo_region` are defined in the vocabularies:
+ - https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_admin_region.json
+ - https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_country.json
+ - https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_river_basin.json
 
-The following global attribute set is currently recommended:
+## 6. Global attributes
 
-                :Conventions = "CF-1.7" ;  *** OR "1.6"
-                :domain = "uk" ;
-                :scenario = "a1b" ;
-                :var_id = "prAnom" ;
-                :collection = "land-prob" ;
-                :project = "ukcp18" ;
-                :version = "v20180109" ;
-                :frequency = "mon" ;
-                :dataset_id = "ukcp18-land-prob-uk-region-all" ;
-                :resolution = "region" ;
-                :prob_data_type = "sample" ;
+The global attributes for the project are categorised as either:
+ - Mandatory
+ - Recommended
+ 
+### 6.1 Global attributes
 
-source
-institution
-references etc
-// global attributes:
-		:baseline = "1981-2000" ;
-		:institution = "Met Office Hadley Centre" ;
-		:meaning_period = "djf" ;
-		:references = "Murphy, J.M., B. B. B. Booth, M. Collins, G. R. Harris, D. M. H. Sexton 
-                               and M. J. Webb, 2007: A methodology for probabilistic predictions of 
-                               regional climate change from perturbed physics ensembles. Phil. Trans. 
-                               R. Soc. A, 365, 1993-2028" ;
-		:report = "Yet to be identified..." ;
-		:scenario = "RCP85" ;
-		:source = "Probabilistic climate prediction based on family of Met Office Hadley Centre 
-                           climate models HadCM3, HadRM3 and HadSM3, plus climate models from other 
-                           climate centres contributing to IPCC AR5 and CFMIP." ;
-		:title = "Change in DJF mean surface air temperature relative to 1981-2000 for RCP85" ;
-		:variable = "tas" ;
-		:Conventions = "CF-1.5" ;
+The following global attributes are mandatory:
 
+ - baseline_period: "1981-2000"
+ - collection: "land-prob"
+ - Conventions: "CF-1.6" OR "1.7" - *we need to finalise this*
+ - dataset_id: <var_id>
+ - domain: "uk"
+ - frequency: <frequency>
+ - history: History of processing to generate the file, with each component as "YYYY-MM-DD hh:mm:ss: <description_of_processing>\n"
+ - institution: use: "Met Office Hadley Centre (MOHC), FitzRoy Road, Exeter, Devon, EX1 3PB, UK."
+ - prob_data_type: <prob_data_type>
+ - project: "ukcp18"
+ - references: Published or web-based references that describe the data or methods used to produce it.
+ - report: "Yet to be identified..."
+ - resolution: <resolution>
+ - scenario: <scenario>
+ - source: The method of production of the original data. If it was model-generated, source should name the model and its version, as specifically as could be useful.
+ - title: A succinct description of what is in the dataset.
+ - var_id: <var_id>
+ - version: "v<YYYYMMDD>" - where the date (<YYYYMMDD>) is an agreed date set the same for ALL files in this data set (i.e. all those with the same <dataset_id>.
 
-## 8. NetCDF properties
+Additionally, you can add more global attributes as you wish.
 
-### 8.1 Compression
+**NOTE: We need to decide whether we want upper case/expanded versions of many Global attributes, such as "UKCP18 (UK Climate Projections)" instead of "ukcp18".**
+
+## 7. NetCDF properties
+
+### 7.1 Compression
 
 Do not use any compression options when writing NetCDF files. The "load" operation needs to be as 
 fast as possible when opened by the User Interface. By using a single-precision (float32) for the 
 main variable the volumes will be reduced significantly.
 
-### 8.2 NetCDF version
+### 7.2 NetCDF version
 
 Use the "NetCDF 4 Classic" format. You can check this using `ncdump -k`:
 
 ```
 $ ncdump -k tasAnom_rcp85_ukcp18-land-prob-uk-25km-all_percentile_mon_20010115-20011215.nc
 netCDF-4 classic model
+```
+
+## 8. Seasonal and annual files
+
+More information will be provided regarding the formatting of seasonal and annual files and
+the specific attributes that are relevant.
+
+This is likely to include additional coordinate variables such as:
+
+```
+    char clim_season(time, string64) ;
+        clim_season:units = "no_unit" ;
+        clim_season:long_name = "clim_season" ;
+
+	int64 season_year(time) ;
+        season_year:units = "1" ;
+        season_year:long_name = "season_year" ;
 ```
