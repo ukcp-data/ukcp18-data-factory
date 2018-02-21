@@ -13,8 +13,8 @@ from data_factory.dataset_maker import DatasetMaker
 _CONSTRAINTS_SETS = {
     ('ukcp18', 'ukcp18-land-prob-uk-25km-all'):
         {
-            'time': {'start': [2000, 1, 15],
-                     'end': [2005, 12, 15]},
+            'time': {'start': [2000, 12, 15],
+                     'end': [2005, 11, 15]},
             'facets':
                   {'scenario': ['rcp85'],
                    'prob_data_type': ['percentile']
@@ -22,8 +22,8 @@ _CONSTRAINTS_SETS = {
          },
     ('ukcp18', 'ukcp18-land-prob-uk-region-all'):
         {
-            'time': {'start': [1961, 1, 15],
-                     'end': [2099, 12, 15]},
+            'time': {'start': [1960, 12, 15],
+                     'end': [2099, 11, 15]},
             'facets':
                 {'scenario': ['a1b'],
                  'prob_data_type': ['sample']
@@ -31,13 +31,13 @@ _CONSTRAINTS_SETS = {
         },
     ('ukcp18', 'ukcp18-land-gcm-global-60km-mon'):
         {
-            'time': {'start': [2010, 1, 15]},
+            'time': {'start': [2010, 12, 15]},
             'facets':
                 {'scenario': ['rcp85']}
         },
     ('ukcp18', 'ukcp18-land-gcm-uk-60km-mon'):
         {
-            'time': {'start': [1901, 1, 1], 'end': [2100, 12, 30]},
+            'time': {'start': [1901, 12, 1], 'end': [2100, 12, 30]},
             'facets':
                 {'scenario': ['rcp85']}
         },
@@ -57,7 +57,7 @@ def main(project, dataset_id, constraints=None):
     if not constraints: constraints = _CONSTRAINTS_SETS[(project, dataset_id)]
 
     faker = DatasetMaker(project=project, dataset_id=dataset_id, constraints=constraints)
-    faker.generate(randomise=False) #, max_num=200)
+    faker.generate(randomise=False, max_num=3)
 
 
 if __name__ == "__main__":
@@ -79,6 +79,8 @@ if __name__ == "__main__":
         all_datasets = [DEFAULT_ARGS]
     elif args == ["--batch"]:
         print "Batch creating all..."
+    elif len(args) == 1:
+        all_datasets = [args[0].replace("recipes", "").replace("/", " ").split(".")[0].split()]
     elif len(args) == 2:
         all_datasets = [args]
     else:

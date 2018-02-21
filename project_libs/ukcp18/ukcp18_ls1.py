@@ -38,6 +38,7 @@ def load_coord_var(prob_data_type):
     else:
         return np.array(data[key], np.int32)
 
+
 def load_samples():
     """
     Load the values of the 'sample' coordinate variable.

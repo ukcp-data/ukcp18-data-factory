@@ -1,7 +1,7 @@
 {
-    "global_attributes": {
-        "Conventions": "CF-1.6"
-    },
-    "dataset_id_template": "{project}-{collection}-{domain}-{resolution}-all",
-    "path_template": "{project}/data/{collection}/{domain}/{resolution}/{scenario}/{prob_data_type}/{var_id}/{frequency}/{version}/{var_id}_{scenario}_{dataset_id}_{prob_data_type}_{frequency}_{__time_period__}.nc"
+  "global_attributes": {
+    "Conventions": "CF-1.6"
+  },
+  "dataset_id_template": "{project}-{collection}-{domain}-{resolution}-all",
+  "path_template": "{project}/data/{collection}/{domain}/{resolution}/{scenario}/{prob_data_type}/{var_id}/{frequency}/{version}/{var_id}_{scenario}_{dataset_id}_{prob_data_type}_{frequency}_{__time_period__}.nc"
 }

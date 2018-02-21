@@ -13,6 +13,7 @@ import importlib
 from itertools import product
 import json
 import random
+import calendar
 
 # Third-party imports
 from netCDF4 import Dataset
@@ -267,7 +268,7 @@ class DatasetMaker(object):
 
                     # Get output path and write output file
                     output_path = self._get_output_path(time_array, date_times, file_name_tmpl)
-                    self._write_output_file(output_path, time_array)
+                    self._write_output_file(output_path, time_array, date_times)
                     file_count += 1
 
                     time_array_len = len(time_array) # for reporting
@@ -295,8 +296,32 @@ class DatasetMaker(object):
         """
         # Define output file path
         time_format = self.get_setting('time', 'format')
-        fname_time_comp = "{}-{}".format(date_times[0].strftime(time_format),
-                                         date_times[-1].strftime(time_format))
+
+        start = date_times[0]
+        end = date_times[-1]
+
+        # Check if we should set dates in file name to day 1 of month at start
+        # and last day of final month (rather than day used in file).
+        span_month_days = self.get_setting('time', 'span_month_days', default=False)
+        _calendar = self.get_setting('time', 'attributes', 'calendar')
+
+        if span_month_days:
+
+            _start_time_format = time_format.replace('%d', '01')
+
+            if _calendar == "360_day":
+                _end_time_format = time_format.replace('%d', '30')
+            else:
+                days_in_end_month = calendar.monthrange(end.year, end.month)
+                _end_time_format = time_format.replace('%d', '{}'.format(days_in_end_month))
+
+            start = start.strftime(_start_time_format)
+            end = end.strftime(_end_time_format)
+
+        else:
+            start, end = [_dt.strftime(time_format) for _dt in start, end]
+
+        fname_time_comp = "{}-{}".format(start, end)
 
         # Add in the current time range to the file name template
         file_name_tmpl = file_name_tmpl.replace('__TIME_PERIOD__', fname_time_comp)
@@ -312,11 +337,11 @@ class DatasetMaker(object):
 
     def _get_coord_var_id_from_dim_id(self, dim_id):
         """
+        Returns coordinate variable ID from facet lookup of dimension ID.
 
-        :param dim_id:
-        :return:
+        :param dim_id: dimension ID
+        :return: coordinate variable ID
         """
-
         facet_id = dim_id.split(":")[-1]
         coord_var_id = self.current['facets'][facet_id]
         return coord_var_id
@@ -445,16 +470,16 @@ class DatasetMaker(object):
         return global_attrs
 
 
-    def _write_output_file(self, fpath, time_array):
+    def _write_output_file(self, fpath, time_array, date_times):
         """
+        Writes the output file to: `fpath`.
 
-        :param fpath:
-        :param variables:
-        :param dimensions:
-        :param fill_values:
-        :param time_array:
-        :param facet_dict:
-        :return:
+        Uses information saved in the settings and input data
+        and associates them with the times in the `time_array`.
+
+        :param time_array: list of time values (as numbers)
+        :param date_times: list of datetimes
+        :return: None
         """
         print "Starting to write to: {}".format(fpath)
         # Create output file and write contents to it
@@ -502,8 +527,23 @@ class DatasetMaker(object):
                 print "IGNORING WRITING: climatology_bounds - for now!"
                 continue
 
-            if var_id == self.get_setting('source', 'source_var'):
+            if var_id == "season_year":
+                # Assumes Met Office-style DJF, MAM, JJA, SON seasons
+                new_var_id = var_id
+                dtype = numpy.int32
 
+                # Extract
+                years = []
+                for _dt in date_times:
+                    _year = _dt.year
+                    if _dt.month == 12:
+                        _year += 1
+                    years.append(_year)
+
+                data = numpy.array(years, 'int32')
+                dims_list = ['time']
+
+            elif var_id == self.get_setting('source', 'source_var'):
                 new_var_id = self.current['facets']['var_id']
                 var_info = self.get_setting('variables', new_var_id)
                 var_attrs = var_info['attributes']
