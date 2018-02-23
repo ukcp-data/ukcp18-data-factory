@@ -27,7 +27,7 @@ def load_coord_var(prob_data_type):
     :param prob_data_type:
     :return:
     """
-    fpath = "{}/a1b_tas_jja_EAW_1961-1990.dat".format(BASEDIR)
+    fpath = "{}/source_others/a1b_tas_jja_EAW_1961-1990.dat".format(BASEDIR)
 
     with open(fpath, 'rb') as reader:
         data = cPickle.load(reader)
@@ -89,7 +89,7 @@ def _get_ls1_prob_site_data(var_id, year, scenario="a1b",
     for temporal_average in ("djf", "jja"):
         fname = "a1b_{var_id}_{temporal_average}_EAW_1961-1990.dat".format(
             scenario=scenario, var_id=var_id, temporal_average=temporal_average)
-        fpath = os.path.join(BASEDIR, fname)
+        fpath = os.path.join(BASEDIR, "source_others", fname)
 
         print "Reading data from: {0}".format(fpath)
 

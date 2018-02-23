@@ -4,7 +4,7 @@
       "recipes/ukcp18/_ls1_common.json"
     ],
     "source": {
-        "source_file": "inputs/eg_uk_ls1_mon_admin_region.nc",
+        "source_file": "inputs/source_ncs/ukcp18-land-prob-uk-region-all.nc",
         "source_var": "example_var",
         "source_time_var": "time"
     },
@@ -31,7 +31,7 @@
             }
         },
         "common_variable_attributes": {
-            "coordinates": "geo_region"
+            "coordinates": "geo_region season_year"
         }
     }
 }

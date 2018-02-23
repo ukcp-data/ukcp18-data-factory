@@ -14,6 +14,7 @@ from itertools import product
 import json
 import random
 import calendar
+import logging
 
 # Third-party imports
 from netCDF4 import Dataset
@@ -22,6 +23,10 @@ import numpy
 # Local imports
 from time_series_generator import TimeSeriesGenerator
 from nc4_maker import *
+
+
+logging.basicConfig()
+log = logging.getLogger(__name__)
 
 
 RECIPE_DIR = "recipes"
@@ -215,12 +220,15 @@ class DatasetMaker(object):
         :return:
         """
         if constraints:
+            log.info("Setting constraints")
             self.set_constraints(constraints)
 
         # Load up input data
+        log.info("Loading input data")
         self._load_input_data()
 
         # Set up facets
+        log.info("Setting up facets")
         self._setup_facets()
 
         # Get all permutations of all facets

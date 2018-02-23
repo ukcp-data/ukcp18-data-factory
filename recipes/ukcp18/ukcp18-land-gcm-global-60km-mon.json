@@ -1,54 +1,101 @@
 {
-    "__include_files__": [
-      "recipes/ukcp18/_ls2_common.json"
-    ],
-    "source": {
-        "source_file": "inputs/pr_global_ls2_mon.nc",
-        "source_var": "precipitation_flux",
-        "source_time_var": "time"
+  "__include_files__": [
+    "recipes/ukcp18/_common.json",
+    "recipes/ukcp18/_ls2_common.json"
+  ],
+  "source": {
+    "source_file": "inputs/source_ncs/ukcp18-land-gcm-global-60km-mon.nc",
+    "source_var": "precipitation_flux",
+    "source_time_var": "time"
+  },
+  "variables": {
+    "pr": {
+      "__include__": "common_variable_properties",
+      "attributes": {
+        "standard_name": "precipitation_flux",
+        "units": "kg m-2 s-1",
+        "long_name": "precipitation flux",
+        "__include__": "common_variable_attributes"
+      }
     },
-    "variables": {
-        "pr":     {
-                   "__include__": "common_variable_properties",
-                   "attributes": {
-                       "standard_name": "precipitation_flux",
-                       "units": "kg m-2 s-1",
-                       "long_name": "precipitation flux"
-                       }
-                  },
-        "tas":    {
-                   "__include__": "common_variable_properties",
-                   "attributes": {
-                       "standard_name": "air_temperature",
-                       "units": "K",
-                       "long_name": "air temperature"
-                       }
-                  }
-    },
-    "variables_by_facet": {
-        "ensemble_member": "project_libs.ukcp18.ukcp18_ls2#get_ensemble_values"
-    },
-    "facets": {
-        "project": ["ukcp18"],
-        "collection": ["land-gcm"],
-        "dataset_id": ["ukcp18-land-gcm-global-60km-mon"],
-        "resolution": ["60km"],
-        "domain": ["global"],
-        "scenario": ["rcp85"],
-        "ensemble_member": ["r1i1p1", "r1i1p2", "r1i1p3"],
-        "var_id": ["pr", "tas"],
-        "frequency": ["mon"],
-        "version": ["v20170331"]
-    },
-    "__inclusions__": {
-        "common_variable_properties": {
-                   "array_modifier": "project_libs.ukcp18.ukcp18_ls2#modify_global_60km",
-                   "dimensions": ["ensemble_member", "time", "latitude", "longitude"],
-                   "dtype": "float32"
-        },
-        "common_variable_attributes": {
-             "anomaly_type": "none"
-        }
+    "tas": {
+      "__include__": "common_variable_properties",
+      "attributes": {
+        "standard_name": "air_temperature",
+        "units": "K",
+        "long_name": "air temperature",
+        "__include__": "common_variable_attributes"
+      }
     }
-
+  },
+  "variables_by_facet": {
+    "ensemble_member": "project_libs.ukcp18.ukcp18_ls2#get_ensemble_values"
+  },
+  "facets": {
+    "project": [
+      "ukcp18"
+    ],
+    "collection": [
+      "land-gcm"
+    ],
+    "dataset_id": [
+      "ukcp18-land-gcm-global-60km-mon"
+    ],
+    "resolution": [
+      "60km"
+    ],
+    "domain": [
+      "global"
+    ],
+    "scenario": [
+      "rcp85"
+    ],
+    "ensemble_member": [
+      "r001i1p00000",
+      "r001i1p00090",
+      "r001i1p00605",
+      "r001i1p00834",
+      "r001i1p01113",
+      "r001i1p01554",
+      "r001i1p01649",
+      "r001i1p01843",
+      "r001i1p01935",
+      "r001i1p02089",
+      "r001i1p02123",
+      "r001i1p02242",
+      "r001i1p02305",
+      "r001i1p02335",
+      "r001i1p02491",
+      "r001i1p02753",
+      "r001i1p02832",
+      "r001i1p02868",
+      "r001i1p02884",
+      "r001i1p02914"
+    ],
+    "var_id": [
+      "pr",
+      "tas"
+    ],
+    "frequency": [
+      "mon"
+    ],
+    "version": [
+      "v20170331"
+    ]
+  },
+  "__inclusions__": {
+    "common_variable_properties": {
+      "array_modifier": "project_libs.ukcp18.ukcp18_ls2#modify_global_60km",
+      "dimensions": [
+        "ensemble_member",
+        "time",
+        "latitude",
+        "longitude"
+      ],
+      "dtype": "float32"
+    },
+    "common_variable_attributes": {
+      "anomaly_type": "none"
+    }
+  }
 }

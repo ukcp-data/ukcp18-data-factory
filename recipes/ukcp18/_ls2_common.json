@@ -1,13 +1,19 @@
 {
   "global_attributes": {
-    "Conventions": "CF-1.7",
+    "baseline_period": "1981-2000",
+    "institution": "Met Office Hadley Centre (MOHC), FitzRoy Road, Exeter, Devon, EX1 3PB, UK.",
+    "references": "https://www.metoffice.gov.uk/***NEW**UKCP**SITE***",
+    "source": "***The method of production of the original data. If it was model-generated, source should name the model and its version, as specifically as could be useful.***",
+    "title": "***Title of my data set***",
+    "version": "v20180331",
     "ensemble_member_id": "calculate_from:project_libs.ukcp18.ukcp18_general#map_ensemble_member",
     "__DO_NOT_SET__": [
-      "ensemble_member"
+      "ensemble_member",
+      "var_id"
     ]
   },
   "dataset_id_template": "{project}-{collection}-{domain}-{resolution}-{frequency}",
-  "path_template": "{project}/data/{collection}/{domain}/{resolution}/{scenario}/{ensemble_member}/{var_id}/{frequency}/{version}/{var_id}_{scenario}_{dataset_id}_{ensemble_member}_{frequency}_{__time_period__}.nc",
+  "path_template": "{project}/data/{collection}/{domain}/{resolution}/{scenario}/{ensemble_member}/{var_id}/{frequency}/{version}/{var_id}_{scenario}_{collection}_{domain}_{resolution}_{ensemble_member}_{frequency}_{__time_period__}.nc",
   "time": {
     "start": [
       2000,

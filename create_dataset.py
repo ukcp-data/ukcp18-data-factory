@@ -37,13 +37,19 @@ _CONSTRAINTS_SETS = {
         },
     ('ukcp18', 'ukcp18-land-gcm-uk-60km-mon'):
         {
-            'time': {'start': [1901, 12, 1], 'end': [2100, 12, 30]},
+            'time': {'start': [1901, 12, 15], 'end': [2099, 11, 15]},
             'facets':
                 {'scenario': ['rcp85']}
         },
     ('ukcp18', 'ukcp18-land-gcm-uk-river-mon'):
         {
-            'time': {'start': [1901, 1, 1], 'end': [2100, 12, 30]},
+            'time': {'start': [1901, 12, 15], 'end': [2099, 11, 15]},
+            'facets':
+                {'scenario': ['rcp85']}
+        },
+    ('ukcp18', 'ukcp18-land-gcm-uk-region-mon'):
+        {
+            'time': {'start': [1901, 12, 15], 'end': [2099, 11, 15]},
             'facets':
                 {'scenario': ['rcp85']}
         }

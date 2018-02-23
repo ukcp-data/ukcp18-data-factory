@@ -1,0 +1,3 @@
+ - Check 'season_year' is in all the 'ukcp18-land-gcm' LS2 source NC files, and in coordinates attribute.
+ - Should LS2 data all be anomaly? Or should only the global scale data (lat/lon) be future absolute values?
+ -  

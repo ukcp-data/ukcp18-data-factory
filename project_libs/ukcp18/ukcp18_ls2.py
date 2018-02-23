@@ -18,7 +18,28 @@ from numpy.ma.core import MaskedArray
 BASEDIR = 'inputs'
 
 # Global variables
-ALL_ENSEMBLE_MEMBERS = ['r1i1p{}'.format(i) for i in range(1, 21)]
+ALL_ENSEMBLE_MEMBERS = [
+      "r001i1p00000",
+      "r001i1p00090",
+      "r001i1p00605",
+      "r001i1p00834",
+      "r001i1p01113",
+      "r001i1p01554",
+      "r001i1p01649",
+      "r001i1p01843",
+      "r001i1p01935",
+      "r001i1p02089",
+      "r001i1p02123",
+      "r001i1p02242",
+      "r001i1p02305",
+      "r001i1p02335",
+      "r001i1p02491",
+      "r001i1p02753",
+      "r001i1p02832",
+      "r001i1p02868",
+      "r001i1p02884",
+      "r001i1p02914"
+]
 
 
 def _modify_variable(variable, date_times, **facets):
@@ -46,7 +67,7 @@ def _modify_variable(variable, date_times, **facets):
     # Set variable multipliers
     var_multipliers = {'pr': 1, 'tas': 2.5}
     var_additions = {'pr': 0, 'tas': 270}
-    ensemble_multipliers = [(100 + i) / 100. for _ in range(-20, 20)]
+    ensemble_multipliers = [(100 + i) / 100. for i in range(-20, 20)]
 
     # Create new array
     new_shape = tuple([len_e, required_n_times] + spatial_shape)
@@ -62,7 +83,8 @@ def _modify_variable(variable, date_times, **facets):
         in_range_t_index = endless_time_indices[t_index]
         data = array[:, in_range_t_index]
 
-        new_data = (data * var_multipliers[var_id] + var_additions[var_id]) * year_multiplier * ensemble_multipliers[ensemble_member - 1]
+        new_data = (data * var_multipliers[var_id] + var_additions[var_id]) * year_multiplier * \
+                   ensemble_multipliers[ensemble_member - 1]
         random_array = npr.random(data.shape) / 10. + 1
 
         result = new_data * random_array
