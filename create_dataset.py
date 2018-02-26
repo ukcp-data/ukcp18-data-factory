@@ -22,8 +22,6 @@ _CONSTRAINTS_SETS = {
          },
     ('ukcp18', 'ukcp18-land-prob-uk-region-all'):
         {
-            'time': {'start': [1960, 12, 15],
-                     'end': [2099, 11, 15]},
             'facets':
                 {'scenario': ['a1b'],
                  'prob_data_type': ['sample']

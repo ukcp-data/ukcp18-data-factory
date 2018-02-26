@@ -87,8 +87,12 @@ class DatasetMaker(object):
                 with open(fpath) as reader:
                     print "Parsing extra settings from: {}".format(fpath)
                     _settings = json.load(reader)
+
                     for key in _settings.keys():
-                        self.settings[key] = _settings[key]
+
+                        # Only override if setting does NOT already exist
+                        if key not in self.settings:
+                            self.settings[key] = _settings[key]
 
 
         # Update settings using "__includes__" in the JSON
@@ -264,13 +268,15 @@ class DatasetMaker(object):
 
             # Loop through time steps and write a new file whenever the number of times
             # matches the number allowed per file
-            for value, dt in time_generator:
+            time_items = [_tm for _tm in time_generator]
+            for value, dt in time_items:
 
                 count_per_file += 1
                 time_array.append(value)
                 date_times.append(dt)
 
-                if count_per_file == self.get_setting('time', 'per_file'):
+                if count_per_file == self.get_setting('time', 'per_file') or \
+                        (value, dt) == time_items[-1]:
 
                     self.current['date_times'] = date_times
 
