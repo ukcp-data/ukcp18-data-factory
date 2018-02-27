@@ -1,5 +1,44 @@
-	   
+
 # Guidance on construction of UKCP Land Strand 1 probabilistic datasets
+
+## Change log
+
+### Changes on 2018-02-27
+
+ - CF-Conventions: agreed to use "CF-1.5" (in global attribute: "Conventions") 
+   so that we can check against this convention with existing checkers
+ - The following global attributes have been removed from the specification:
+   - "var_id": agreed this duplicates the main variable in the file.
+   - "report": agreed that reports will not be ready before data production; 
+     the "references" attribute can point to relevant website to find reports.
+   - "history": this rarely ever gets populated fully and so tends to provide 
+     a partial history of the data production chain, rendering it meaningless.
+ - The "institution" global attribute will include the value: 
+    "Met Office Hadley Centre (MOHC), FitzRoy Road, Exeter, Devon, EX1 3PB, UK."
+ - The following global attributes have been added to the list:
+   - "institution_id": short ID for the institution ("MOHC")
+   - "contact": a common contact point (*need input from FF on this)
+   - "creator_name": name of the person who created the data
+   - "creator_email": e-mail address of the person who created the data
+   - "creation_date": date/time formatted as "<YYYY-mm-dd HH:MM:SS>"
+ - The "season_year" variable must now exist in all monthly data sets (to aid 
+   data extraction using Iris).
+ - The Example 25km gridded file now has the correct number of X and Y 
+   coordinates. These should now match those provided to everyone by Fai.
+ - In the naming-conventions the following changes have been made:
+   - The frequency values in files/attributes should be "mon", "seas" and 
+     "ann"
+   - The frequency was previously included in *both* the "dataset_id" and 
+     as a field in its own right in the file-name. It has been removed from 
+     the "dataset_id" component to avoid duplication in file names.
+   - "ukcp18" has been removed from the file names to shorten them.
+ - The date range in the file names has now been fixed to use the full daily 
+   range used to generate the files. E.g. 20201201-20211130
+ - The monthly gridded monthly data (1 year per file) has been changed to span 
+   from Dec-Nov: E.g. 20201201-20211130
+ - Fixed typo where "dataset_id" was shown as "var_id" 
+
+
 
 ## Overview
 
@@ -45,7 +84,7 @@ The data should be split into separate files along the following lines:
  - **main variable** (such as maximum temperature or precip)
  - **probabilistic data type**
  - **spatial representation** (which are 25km gridded, admin regions, river basins and uk countries)
- - **temporal frequency** (i.e. "monthly", "seasonal", "annual")
+ - **temporal frequency** (i.e. "mon", "seas", "ann")
  
 The **25km gridded data** variables should be split across multiple files as follows [with approx size]:
  - monthly (*per year*)  			[~400MB]
@@ -77,15 +116,13 @@ Values for most of the components can be found in the UKCP18 Controlled Vocabula
  
 The `dataset_id` is constructed as follows:
 
- `<project>-<collection>-<domain>-<resolution>-<frequency>`
+ `<collection>-<domain>-<resolution>`
  
 Values for those components will use the following vocabularies:
- - project: "ukcp18" (always)
  - scenario: as above
  - collection: "land-prob" (for all Land Strand 1 data)
  - domain: "uk" (for all Land Strand 1 data)
  - resolution: one of "25km", "country", "region", "river"
- - frequency: as above	
 	
 ## 4. Directory-naming convention	
 
@@ -121,22 +158,22 @@ be others that should be added. Please see the example files for the additional 
 
 Information about coordinate variables is held in a separate vocabulary at:
 
-
+ https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_coordinate.json
 
 Note that some of the attributes will reference coordinate variables that should also be included in the
-data files. Here are some CDL examples:
+data files. Here are some CDL examples.
 
 ### 5.1 Example 25km gridded file
 
 ```
-$ ncdump -h tasAnom_a1b_ukcp18-land-prob-uk-25km-all_sample_mon_20100115-20101215.nc
+$ ncdump -h tasAnom_a1b_land-prob-uk-25km_sample_mon_20101201-20111130.nc
 
-netcdf tasAnom_a1b_ukcp18-land-prob-uk-25km-all_sample_mon_20100115-20101215 {
+netcdf tasAnom_a1b_land-prob-uk-25km_sample_mon_20101201-20111130 {
 dimensions:
-        time = 12 ;
+        time = UNLIMITED ; // (12 currently)
         bnds = 2 ;
-        projection_y_coordinate = 58 ;
-        projection_x_coordinate = 36 ;
+        projection_y_coordinate = 52 ;
+        projection_x_coordinate = 39 ;
         sample = 2000 ;
 variables:
         double projection_y_coordinate_bnds(projection_y_coordinate, bnds) ;
@@ -156,7 +193,7 @@ variables:
                 tasAnom:grid_mapping = "transverse_mercator" ;
                 tasAnom:description = "Surface temperature anomaly at 1.5m (°c)" ;
                 tasAnom:baseline_period = "1981-2000" ;
-                tasAnom:coordinates = "latitude longitude" ;
+                tasAnom:coordinates = "latitude longitude season_year" ;
                 tasAnom:long_name = "Anomaly of air temperature" ;
                 tasAnom:standard_name = "air_temperature" ;
                 tasAnom:units = "K" ;
@@ -185,6 +222,10 @@ variables:
                 projection_y_coordinate:standard_name = "projection_y_coordinate" ;
                 projection_y_coordinate:bounds = "projection_y_coordinate_bnds" ;
                 projection_y_coordinate:axis = "Y" ;
+        int season_year(time) ;
+                season_year:units = "1" ;
+                season_year:long_name = "season_year" ;
+
 
 // global attributes:   ...NOT SHOWN HERE...
 }
@@ -194,36 +235,38 @@ variables:
 ### 5.2 Example spatially aggregated area files
 
 ```
-$ ncdump -v geo_region tasAnom_a1b_ukcp18-land-prob-uk-region-all_sample_mon_19591215-20991115.nc
-
-netcdf tasAnom_a1b_ukcp18-land-prob-uk-region-all_sample_mon_19591215-20991115 {
+$ ncdump -v season_year fakedata/ukcp18/data/land-prob/uk/region/a1b/sample/tasAnom/mon/v20180109/tasAnom_a1b_land-prob_uk_region_sample_mon_19601201-20991130.nc | more
+netcdf tasAnom_a1b_land-prob_uk_region_sample_mon_19601201-20991130 {
 dimensions:
         region = 16 ;
         strlen = 21 ;
-        time = UNLIMITED ; // (1680 currently)
+        time = UNLIMITED ; // (1668 currently)
         bnds = 2 ;
         sample = 2000 ;
 variables:
         int sample(sample) ;
                 sample:long_name = "sample" ;
+        int season_year(time) ;
+                season_year:units = "1" ;
+                season_year:long_name = "season_year" ;
         float tasAnom(time, region, sample) ;
                 tasAnom:_FillValue = 1.e+20f ;
                 tasAnom:anomaly_type = "absolute_change" ;
                 tasAnom:description = "Surface temperature anomaly at 1.5m (°c)" ;
-                tasAnom:coordinates = "geo_region" ;
+                tasAnom:coordinates = "geo_region season_year" ;
                 tasAnom:long_name = "Anomaly of air temperature" ;
                 tasAnom:standard_name = "air_temperature" ;
                 tasAnom:units = "K" ;
-        char geo_region(region, strlen) ;
-                geo_region:long_name = "Administrative Region" ;
-                geo_region:standard_name = "region" ;
         double time_bounds(time, bnds) ;
         float time(time) ;
-                time:units = "days since 1961-01-15 00:00:00" ;
+                time:units = "days since 1960-12-15 00:00:00" ;
                 time:long_name = "Time" ;
                 time:calendar = "360_day" ;
                 time:standard_name = "time" ;
                 time:bounds = "time_bounds" ;
+        char geo_region(region, strlen) ;
+                geo_region:long_name = "Administrative Region" ;
+                geo_region:standard_name = "region" ;
 
 // global attributes: ...NOT SHOWN HERE...
 
@@ -247,6 +290,7 @@ data:
   "channel_islands",
   "south_east_england" ;
 }
+
 ```
 
 The `geo_region:long_name` attribute should have one of the following values:
@@ -271,23 +315,25 @@ The following global attributes are mandatory:
 
  - baseline_period: "1981-2000"
  - collection: "land-prob"
- - Conventions: "CF-1.6" OR "1.7" - *we need to finalise this*
- - dataset_id: <var_id>
+ - contact: a common contact point (FF to provide)
+ - Conventions: "CF-1.5"
+ - creation_date: date/time formatted as "<YYYY-mm-dd HH:MM:SS>"
+ - creator_email: e-mail address of the person who created the data
+ - creator_name: name of the person who created the data
+ - dataset_id: <datset_id>
  - domain: "uk"
  - frequency: <frequency>
- - history: History of processing to generate the file, with each component as "YYYY-MM-DD hh:mm:ss: <description_of_processing>\n"
  - institution: use: "Met Office Hadley Centre (MOHC), FitzRoy Road, Exeter, Devon, EX1 3PB, UK."
+ - institution_id: use: "MOHC"
  - prob_data_type: <prob_data_type>
  - project: "ukcp18"
  - references: Published or web-based references that describe the data or methods used to produce it.
- - report: "Yet to be identified..."
  - resolution: <resolution>
  - scenario: <scenario>
  - source: The method of production of the original data. If it was model-generated, source should name the model and its version, as specifically as could be useful.
  - title: A succinct description of what is in the dataset.
- - var_id: <var_id>
  - version: "v<YYYYMMDD>" - where the date (<YYYYMMDD>) is an agreed date set the same for ALL files in this data set (i.e. all those with the same <dataset_id>.
-
+   
 Additionally, you can add more global attributes as you wish.
 
 **NOTE: We need to decide whether we want upper case/expanded versions of many Global attributes, such as "UKCP18 (UK Climate Projections)" instead of "ukcp18".**
@@ -309,7 +355,35 @@ $ ncdump -k tasAnom_rcp85_ukcp18-land-prob-uk-25km-all_percentile_mon_20010115-2
 netCDF-4 classic model
 ```
 
-## 8. Seasonal and annual files
+## 8. The "season_year" coordinate variable
+
+The "season_year" coordinate variable must now exist in all monthly data sets 
+(to aid data extraction using Iris). It should look like:
+
+*Metadata:*
+
+```
+        int season_year(time) ;
+                season_year:units = "1" ;
+                season_year:long_name = "season_year" ;
+```
+
+It will also be in listed in the "coordinates" attribute string of the main 
+variable in the file, e.g:
+
+```
+                tasAnom:coordinates = "geo_region season_year" ;
+```
+
+*Data:*
+
+```
+ season_year = 1961, 1961, 1961, 1961, 1961, 1961, 1961, 1961, 1961, 1961,
+               1961, 1961 ;
+```
+ 
+
+## 9. Seasonal and annual files
 
 More information will be provided regarding the formatting of seasonal and annual files and
 the specific attributes that are relevant.

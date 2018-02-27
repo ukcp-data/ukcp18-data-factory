@@ -1,7 +1,12 @@
 {
   "global_attributes": {
     "baseline_period": "1981-2000",
+    "contact": "***Required from Fai***",
+    "creation_date": "2018-03-31 12:00:00",
+    "creator_name": "***Your name***",
+    "creator_email": "***Your email***",
     "institution": "Met Office Hadley Centre (MOHC), FitzRoy Road, Exeter, Devon, EX1 3PB, UK.",
+    "institution_id": "MOHC",
     "references": "https://www.metoffice.gov.uk/***NEW**UKCP**SITE***",
     "source": "***The method of production of the original data. If it was model-generated, source should name the model and its version, as specifically as could be useful.***",
     "title": "***Title of my data set***",

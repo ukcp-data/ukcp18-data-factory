@@ -545,6 +545,7 @@ class DatasetMaker(object):
                 # Assumes Met Office-style DJF, MAM, JJA, SON seasons
                 new_var_id = var_id
                 dtype = numpy.int32
+                var_attrs = {'long_name': 'season_year', 'units': '1'}
 
                 # Extract
                 years = []
