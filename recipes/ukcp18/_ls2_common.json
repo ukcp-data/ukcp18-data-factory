@@ -18,7 +18,7 @@
     ]
   },
   "dataset_id_template": "{project}-{collection}-{domain}-{resolution}-{frequency}",
-  "path_template": "{project}/data/{collection}/{domain}/{resolution}/{scenario}/{ensemble_member}/{var_id}/{frequency}/{version}/{var_id}_{scenario}_{collection}_{domain}_{resolution}_{ensemble_member}_{frequency}_{__time_period__}.nc",
+  "path_template": "{project}/data/{collection}/{domain}/{resolution}/{scenario}/{ensemble_member}/{var_id}/{frequency}/latest/{var_id}_{scenario}_{collection}_{domain}_{resolution}_{ensemble_member}_{frequency}_{__time_period__}.nc",
   "time": {
     "start": [
       2000,

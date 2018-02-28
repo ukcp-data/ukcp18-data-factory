@@ -15,7 +15,7 @@
       "var_id"
     ]
   },
-  "path_template": "{project}/data/{collection}/{domain}/{resolution}/{scenario}/{prob_data_type}/{var_id}/{frequency}/{version}/{var_id}_{scenario}_{collection}_{domain}_{resolution}_{prob_data_type}_{frequency}_{__time_period__}.nc",
+  "path_template": "{project}/data/{collection}/{domain}/{resolution}/{scenario}/{prob_data_type}/{var_id}/{frequency}/latest/{var_id}_{scenario}_{collection}_{domain}_{resolution}_{prob_data_type}_{frequency}_{__time_period__}.nc",
   "variables": {
     "prAnom": {
       "__include__": "common_variable_properties",
