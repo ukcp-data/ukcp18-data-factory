@@ -58,7 +58,7 @@ def load_percentiles():
 
 
 def _get_ls1_prob_site_data(var_id, year, scenario="a1b",
-                            prob_data_type="sample", ##grid_res="25km",
+                            prob_data_type="sample",
                             temp_avg_type="mon"):
     """
     Extract and return example probabilistic data and a numpy array.
@@ -123,15 +123,15 @@ def modify_ls1_array(variable, date_times, **facets):
     var_id = facets["var_id"]
     scenario = facets["scenario"]
     prob_data_type = facets["prob_data_type"]
-##    grid_res = facets["resolution"]
+
     temp_avg_type = facets["frequency"]
     year = date_times[0].year
 
     eg_data = _get_ls1_prob_site_data(var_id, year, scenario=scenario,
-                                          prob_data_type=prob_data_type, ##grid_res=grid_res,
+                                          prob_data_type=prob_data_type,
                                           temp_avg_type=temp_avg_type)
 
-    array = variable[:]#.data
+    array = variable[:]
     spatial_dims = list(array.shape[1:])
 
     # Now broadcast the array to new fourth dimension
@@ -139,20 +139,26 @@ def modify_ls1_array(variable, date_times, **facets):
     new_shape = list(array.shape) + [len_prob_dim]
 
     if isinstance(array, MaskedArray):
+        print("ARRAY IS MASKED")
         new_array = numpy.ma.resize(array, new_shape)
+        mask = new_array.mask
     else:
         new_array = numpy.resize(array, new_shape)
+        mask = None
 
     dims_list = tuple(list(variable.dimensions) + [prob_data_type])
 
-    print "Building the new array..."
     if 0: # For DEBUGGING
         new_array = np.zeros(new_shape)
         return new_array, dims_list
 
+    print "Building the new array..."
     for t_index, values in enumerate(eg_data):
+
         print "...setting values for {} out of {} time steps...".format(t_index + 1, new_shape[0])
+
         for y_index in range(spatial_dims[0]):
+
             mult = (spatial_dims[0] + 0.5) / spatial_dims[0]
 
             # Work out shape of random array to be broadcasted
@@ -163,11 +169,16 @@ def modify_ls1_array(variable, date_times, **facets):
 
             random_array = _get_broadcasted_random_array(sub_shape)
             incremented_values = mult * random_array * values
-            new_array[t_index][y_index] = incremented_values
+
             if not var_id.startswith('tas'):
                 values = incremented_values
 
+            new_array[t_index][y_index] = incremented_values
+
     print
+    if isinstance(new_array, MaskedArray):
+        new_array.mask = mask
+
     return new_array, dims_list
 
 
@@ -184,7 +195,11 @@ def _get_broadcasted_random_array(shape):
 
 if __name__ == "__main__":
 
-    import datetime
-    print _get_ls1_prob_site_data('tas', datetime.datetime.now(), scenario="a1b",
-                            prob_data_type="mon", grid_res="25km",
-                            temp_avg_type="mon")
+    for var_id in ('tas', 'pr'):
+        array = _get_ls1_prob_site_data(var_id, 2000, scenario="a1b",
+                                prob_data_type="percentile",
+                                temp_avg_type="mon")
+        print array.shape
+        for y in range(array.shape[0]):
+            for x in range(array.shape[1]):
+                if numpy.ma.is_masked(array[y, x]): print array[y, x]

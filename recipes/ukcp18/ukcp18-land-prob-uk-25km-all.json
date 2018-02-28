@@ -67,7 +67,8 @@
     "common_variable_attributes": {
       "grid_mapping": "transverse_mercator",
       "coordinates": "latitude longitude season_year",
-      "baseline_period": "1981-2000"
+      "baseline_period": "1981-2000",
+      "cell_methods": "time: mean"
     }
   }
 }

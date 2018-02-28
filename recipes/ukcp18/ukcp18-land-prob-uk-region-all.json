@@ -88,7 +88,8 @@
       }
     },
     "common_variable_attributes": {
-      "coordinates": "geo_region season_year"
+      "coordinates": "geo_region season_year",
+      "cell_methods": "time: mean"
     }
   }
 }
