@@ -3,6 +3,11 @@
 
 ## Change log
 
+### Changes on 2018-03-01
+
+ - Added in the "cell_methods" attribute for the main variable:
+  - `cell_methods = "time: mean" ;`
+
 ### Changes on 2018-02-27
 
  - CF-Conventions: agreed to use "CF-1.5" (in global attribute: "Conventions") 
@@ -197,6 +202,7 @@ variables:
                 tasAnom:long_name = "Anomaly of air temperature" ;
                 tasAnom:standard_name = "air_temperature" ;
                 tasAnom:units = "K" ;
+                tasAnom:cell_methods = "time: mean" ;
         double time_bounds(time, bnds) ;
         float time(time) ;
                 time:units = "days since 2010-01-15 00:00:00" ;
@@ -257,6 +263,7 @@ variables:
                 tasAnom:long_name = "Anomaly of air temperature" ;
                 tasAnom:standard_name = "air_temperature" ;
                 tasAnom:units = "K" ;
+                tasAnom:cell_methods = "time: mean" ;
         double time_bounds(time, bnds) ;
         float time(time) ;
                 time:units = "days since 1960-12-15 00:00:00" ;
