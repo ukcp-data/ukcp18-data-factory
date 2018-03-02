@@ -140,22 +140,22 @@ def modify_ls1_array(variable, date_times, **facets):
 
     if isinstance(array, MaskedArray):
         print("ARRAY IS MASKED")
+        mask = array.mask
         new_array = numpy.ma.resize(array, new_shape)
-        mask = new_array.mask
     else:
         new_array = numpy.resize(array, new_shape)
         mask = None
 
     dims_list = tuple(list(variable.dimensions) + [prob_data_type])
 
-    if 0: # For DEBUGGING
+    if 0: # For DEBUGGING ONLY
         new_array = np.zeros(new_shape)
         return new_array, dims_list
 
     print "Building the new array..."
     for t_index, values in enumerate(eg_data):
 
-        print "...setting values for {} out of {} time steps...".format(t_index + 1, new_shape[0])
+        #print "...setting values for {} out of {} time steps...".format(t_index + 1, new_shape[0])
 
         for y_index in range(spatial_dims[0]):
 
@@ -177,7 +177,16 @@ def modify_ls1_array(variable, date_times, **facets):
 
     print
     if isinstance(new_array, MaskedArray):
-        new_array.mask = mask
+        print("Broadcasting and re-applying MASK")
+        print(mask.shape)
+
+        # Broadcast `mask` along the 3rd dimension to make it the same shape as `new_array`
+        _, big_mask = np.broadcast_arrays(new_array, mask[..., None])
+        new_array.mask = big_mask
+        nam = new_array.mask
+
+        for i in range(len(values)):
+            assert numpy.array_equal(nam[0,:,:,0], nam[0,:,:,i])
 
     return new_array, dims_list
 

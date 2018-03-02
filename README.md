@@ -1,20 +1,30 @@
 # ukcp18-data-factory
 
-Data Factory for creating example data
+Data Factory for creating example data for UKCP18.
 
 ## Example usage
 
+To test that all known recipes are generating output file:
+
+```
+./run_all.sh
 ```
 
+Or to generate some specific files for a given recipe:
+
+```
+python create_dataset.py recipes/ukcp18/ukcp18-land-prob-uk-25km-all.json
 ```
 
 ## Testing that data can be read
 
 ### UKCP18 LS1 example
 
-uick test for concatenating multiple files into one cube:
+Quick test for concatenating multiple files into one cube:
 
-`python project_libs/ukcp18/readers.py`
+```
+python project_libs/ukcp18/readers.py
+```
 
 ## Some useful conversion commands
 
