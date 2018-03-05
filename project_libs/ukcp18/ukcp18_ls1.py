@@ -155,8 +155,6 @@ def modify_ls1_array(variable, date_times, **facets):
     print "Building the new array..."
     for t_index, values in enumerate(eg_data):
 
-        #print "...setting values for {} out of {} time steps...".format(t_index + 1, new_shape[0])
-
         for y_index in range(spatial_dims[0]):
 
             mult = (spatial_dims[0] + 0.5) / spatial_dims[0]
@@ -176,6 +174,7 @@ def modify_ls1_array(variable, date_times, **facets):
             new_array[t_index][y_index] = incremented_values
 
     print
+    # Do some checking of the mask
     if isinstance(new_array, MaskedArray):
         print("Broadcasting and re-applying MASK")
         print(mask.shape)

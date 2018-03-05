@@ -42,7 +42,7 @@
       "ukcp18-land-gcm-uk-region-mon"
     ],
     "resolution": [
-      "admin_region"
+      "region"
     ],
     "domain": [
       "uk"
