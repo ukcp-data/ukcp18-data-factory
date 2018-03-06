@@ -327,7 +327,7 @@ The following global attributes are mandatory:
  - creation_date: date/time formatted as "<YYYY-mm-dd HH:MM:SS>"
  - creator_email: e-mail address of the person who created the data
  - creator_name: name of the person who created the data
- - dataset_id: <datset_id>
+ - dataset_id: <dataset_id>
  - domain: "uk"
  - frequency: <frequency>
  - institution: use: "Met Office Hadley Centre (MOHC), FitzRoy Road, Exeter, Devon, EX1 3PB, UK."

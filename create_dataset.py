@@ -29,7 +29,7 @@ _CONSTRAINTS_SETS = {
         },
     ('ukcp18', 'ukcp18-land-gcm-global-60km-mon'):
         {
-            'time': {'start': [2010, 12, 15]},
+            'time': {'start': [2010, 12, 15], 'end': [2021, 11, 15]},
             'facets':
                 {'scenario': ['rcp85']}
         },
@@ -54,14 +54,14 @@ _CONSTRAINTS_SETS = {
 }
 
 
-def main(project, dataset_id, constraints=None):
+def main(project, dataset_id, constraints=None, max_num=99999):
     if dataset_id.find("-") < 0:
         raise Exception("Please modify the JSON recipe to follow new rules - using dataset IDs.")
 
     if not constraints: constraints = _CONSTRAINTS_SETS[(project, dataset_id)]
 
     faker = DatasetMaker(project=project, dataset_id=dataset_id, constraints=constraints)
-    faker.generate(randomise=False, max_num=1000)
+    faker.generate(randomise=False, max_num=max_num)
 
 
 if __name__ == "__main__":
@@ -78,9 +78,14 @@ if __name__ == "__main__":
                     ('ukcp18', 'ukcp18-land-gcm-uk-river-mon')
     ]
 
+    kwargs = {}
+
     if len(args) == 0:
         print "Default args: {}".format(str(DEFAULT_ARGS))
         all_datasets = [DEFAULT_ARGS]
+    elif "--three-only" in args:
+        args.remove("--three-only")
+        kwargs["max_num"] = 3
     elif args == ["--batch"]:
         print "Batch creating all..."
     elif len(args) == 1:
@@ -92,4 +97,4 @@ if __name__ == "__main__":
 
     for args in all_datasets:
         print "Working on:", args
-        main(*args)
+        main(*args, **kwargs)

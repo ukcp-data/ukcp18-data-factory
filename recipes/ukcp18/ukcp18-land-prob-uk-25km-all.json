@@ -21,6 +21,9 @@
     "collection": [
       "land-prob"
     ],
+    "dataset_id": [
+      "land-prob-uk-25km-mon"
+    ],
     "resolution": [
       "25km"
     ],

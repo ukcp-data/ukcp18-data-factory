@@ -77,9 +77,9 @@ def _modify_variable(variable, date_times, **facets):
     else:
         new_array = numpy.resize(array, new_shape)
 
-    print "Build the new array..."
+    #print "Build the new array..."
     for t_index in range(required_n_times):
-        print "...setting values for {} out of {} time steps...".format(t_index + 1, required_n_times)
+        #print("...setting values for {} out of {} time steps...".format(t_index + 1, required_n_times))
         in_range_t_index = endless_time_indices[t_index]
         data = array[:, in_range_t_index]
 
