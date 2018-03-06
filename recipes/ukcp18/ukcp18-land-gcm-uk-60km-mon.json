@@ -4,7 +4,7 @@
     "recipes/ukcp18/_ls2_common.json"
   ],
   "source": {
-    "source_file": "inputs/source_ncs/ukcp18-land-gcm-uk-60km-mon.nc",
+    "source_file": "ukcp-test-inputs/inputs/source_ncs/ukcp18-land-gcm-uk-60km-mon.nc",
     "source_var": "example_var",
     "source_time_var": "time"
   },

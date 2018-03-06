@@ -15,7 +15,7 @@ import numpy.random as npr
 import numpy.ma
 from numpy.ma.core import MaskedArray
 
-BASEDIR = 'inputs'
+BASEDIR = 'ukcp-test-inputs/inputs'
 
 # Global variables
 ALL_ENSEMBLE_MEMBERS = [

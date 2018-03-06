@@ -4,7 +4,7 @@
     "recipes/ukcp18/_ls1_common.json"
   ],
   "source": {
-    "source_file": "inputs/source_ncs/ukcp18-land-prob-uk-region-all.nc",
+    "source_file": "ukcp-test-inputs/inputs/source_ncs/ukcp18-land-prob-uk-region-all.nc",
     "source_var": "example_var",
     "source_time_var": "time"
   },

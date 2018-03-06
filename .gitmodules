@@ -1,0 +1,3 @@
+[submodule "ukcp-test-inputs"]
+	path = ukcp-test-inputs
+	url = https://agstephens@github.com/cedadev/ukcp-test-inputs

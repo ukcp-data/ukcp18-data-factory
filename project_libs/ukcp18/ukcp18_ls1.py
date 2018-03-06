@@ -16,7 +16,7 @@ from numpy.ma.core import MaskedArray
 
 import cPickle
 
-BASEDIR = 'inputs'
+BASEDIR = 'ukcp-test-inputs/inputs'
 prob_data_map = {'sample': 'samp',
                  'percentile': 'prob'}
 
