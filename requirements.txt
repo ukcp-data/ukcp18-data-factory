@@ -5,3 +5,4 @@ cPickle
 ###################
 # For testing:
 pytest
+pytest-timeout

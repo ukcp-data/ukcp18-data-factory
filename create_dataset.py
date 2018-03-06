@@ -13,8 +13,8 @@ from data_factory.dataset_maker import DatasetMaker
 _CONSTRAINTS_SETS = {
     ('ukcp18', 'ukcp18-land-prob-uk-25km-all'):
         {
-            'time': {'start': [2000, 12, 15],
-                     'end': [2005, 11, 15]},
+            'time': {'start': [2007, 12, 15],
+                     'end': [2010, 11, 15]},
             'facets':
                   {'scenario': ['rcp85'],
                    'prob_data_type': ['percentile']
@@ -35,7 +35,7 @@ _CONSTRAINTS_SETS = {
         },
     ('ukcp18', 'ukcp18-land-gcm-uk-60km-mon'):
         {
-            'time': {'start': [1901, 12, 15], 'end': [2099, 11, 15]},
+            'time': {'start': [1901, 12, 15], 'end': [1921, 11, 15]},
             'facets':
                 {'scenario': ['rcp85']}
         },
@@ -61,7 +61,7 @@ def main(project, dataset_id, constraints=None):
     if not constraints: constraints = _CONSTRAINTS_SETS[(project, dataset_id)]
 
     faker = DatasetMaker(project=project, dataset_id=dataset_id, constraints=constraints)
-    faker.generate(randomise=False, max_num=3)
+    faker.generate(randomise=False, max_num=1000)
 
 
 if __name__ == "__main__":
