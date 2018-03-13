@@ -1,59 +1,16 @@
 
-# Guidance on construction of UKCP Land Strand 1 probabilistic datasets
+# Guidance on construction of UKCP Land Strand 2 simulations
 
 ## Change log
 
-### Changes on 2018-03-12
+### Changes on 2018-03-06
 
- - Changed numbering of sections (because index was out of sync with main sections).
- - Added `_FillValue` section.
-
-### Changes on 2018-03-01
-
- - Added in the "cell_methods" attribute for the main variable:
-  - `cell_methods = "time: mean" ;`
-
-### Changes on 2018-02-27
-
- - CF-Conventions: agreed to use "CF-1.5" (in global attribute: "Conventions") 
-   so that we can check against this convention with existing checkers
- - The following global attributes have been removed from the specification:
-   - "var_id": agreed this duplicates the main variable in the file.
-   - "report": agreed that reports will not be ready before data production; 
-     the "references" attribute can point to relevant website to find reports.
-   - "history": this rarely ever gets populated fully and so tends to provide 
-     a partial history of the data production chain, rendering it meaningless.
- - The "institution" global attribute will include the value: 
-    "Met Office Hadley Centre (MOHC), FitzRoy Road, Exeter, Devon, EX1 3PB, UK."
- - The following global attributes have been added to the list:
-   - "institution_id": short ID for the institution ("MOHC")
-   - "contact": a common contact point (*need input from FF on this)
-   - "creator_name": name of the person who created the data
-   - "creator_email": e-mail address of the person who created the data
-   - "creation_date": date/time formatted as "<YYYY-mm-dd HH:MM:SS>"
- - The "season_year" variable must now exist in all monthly data sets (to aid 
-   data extraction using Iris).
- - The Example 25km gridded file now has the correct number of X and Y 
-   coordinates. These should now match those provided to everyone by Fai.
- - In the naming-conventions the following changes have been made:
-   - The frequency values in files/attributes should be "mon", "seas" and 
-     "ann"
-   - The frequency was previously included in *both* the "dataset_id" and 
-     as a field in its own right in the file-name. It has been removed from 
-     the "dataset_id" component to avoid duplication in file names.
-   - "ukcp18" has been removed from the file names to shorten them.
- - The date range in the file names has now been fixed to use the full daily 
-   range used to generate the files. E.g. 20201201-20211130
- - The monthly gridded monthly data (1 year per file) has been changed to span 
-   from Dec-Nov: E.g. 20201201-20211130
- - Fixed typo where "dataset_id" was shown as "var_id" 
-
-
+ - First version
 
 ## Overview
 
 This guidance should be considered as provisional. It has been written to help
-the scientists generating NetCDF files for Land Strand 1 so that they can 
+the scientists generating NetCDF files for Land Strand 2 so that they can 
 provide data suitable for the CEDA Archive and the UKCP User Interface tools.
 
 It covers the following topics:
@@ -69,14 +26,16 @@ It covers the following topics:
  9. Seasonal and annual files
  10. Direction of 'latitude' coordinate variable
 
+ 
 ## 1. Data structure inside each file
 
-There are two main file structures:
- 1. 25km gridded data (on OSGB grid)
- 2. spatially aggregated areas: admin regions, river basins, UK countries
+There are 3 main file structures:
+ 1. 60km gridded global data (on regular latitude/longitude grid)
+ 2. 60km gridded UK data (on OSGB grid)
+ 3. spatially aggregated areas: admin regions, river basins, UK countries
  
-The **25km gridded files** (1) should be defined against the following coordinate variables:
-  - `(time, projection_y_coordinate, projection_x_coordinate, <probabilistic_coordinate>)`
+The **60km gridded files** (1) should be defined against the following coordinate variables:
+  - `(ensemble_member, projection_y_coordinate, projection_x_coordinate, <probabilistic_coordinate>)`
 
 The **spatially aggregated area files** (2) should be defined against the following coordinate variables:
   - `(time, region, <probabilistic_coordinate>)`
@@ -336,7 +295,6 @@ The following global attributes are mandatory:
  - frequency: <frequency>
  - institution: use: "Met Office Hadley Centre (MOHC), FitzRoy Road, Exeter, Devon, EX1 3PB, UK."
  - institution_id: use: "MOHC"
- - prob_data_type: <prob_data_type>
  - references: Published or web-based references that describe the data or methods used to produce it.
  - resolution: <resolution>
  - scenario: <scenario>
@@ -344,12 +302,9 @@ The following global attributes are mandatory:
  - title: A succinct description of what is in the dataset.
  - version: "v<YYYYMMDD>" - where the date (<YYYYMMDD>) is an agreed date set the same for ALL files in this data set (i.e. all those with the same <dataset_id>.
 
- 
 Currently being discussed with Fai *et al*:
  - project: *** "ukcp18" or "UKCP" ***?
 
-   
-Additionally, you can add more global attributes as you wish.
 
 ## 7. NetCDF properties
 
@@ -416,3 +371,11 @@ This is likely to include additional coordinate variables such as:
         season_year:units = "1" ;
         season_year:long_name = "season_year" ;
 ```
+
+## 10. Direction of 'latitude' coordinate variable
+
+The direction of the latitude coordinate variable should always be south-to-north 
+(low-to-high) values.
+
+This only applies to the global data in LS2 as the rest of the latitude values will
+be defined against the OSGB Y and X coordinates.
