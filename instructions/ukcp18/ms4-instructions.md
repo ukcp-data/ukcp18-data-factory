@@ -5,6 +5,11 @@
 ### Changes on 2018-03-07
 
  - First version
+ 
+### Changes on 2018-03-13
+
+ - Removed/revoked section specifying direction of latitude values
+ - Removed "prob_data_type" global attribute
 
 ### Questions/issues
 
@@ -37,7 +42,6 @@ It covers the following topics:
  5. Variable and coordinate variables
  6. Global attributes
  7. NetCDF properties
- 8. Direction of 'latitude' coordinate variable
 
 ## 1. Data structures inside each file
 
@@ -216,7 +220,6 @@ The following global attributes are mandatory:
  - frequency: <frequency> *** TO DISCUSS - SHOULD IT BE IN NAMING CONVENTION? ***
  - institution: use: "Met Office Hadley Centre (MOHC), FitzRoy Road, Exeter, Devon, EX1 3PB, UK."
  - institution_id: use: "MOHC"
- - prob_data_type: <prob_data_type>
  - references: Published or web-based references that describe the data or methods used to produce it.
  - source: The method of production of the original data. If it was model-generated, source should name the model and its version, as specifically as could be useful.
  - title: A succinct description of what is in the dataset.
@@ -275,9 +278,5 @@ Here are some general points regarding good CF-netCDF practice:
    - latitude_longitude: remove this variable
    - forecast_period: remove this variable
 
-## 8. Direction of 'latitude' coordinate variable
-
-The direction of the latitude coordinate variable should always be south-to-north 
-(low-to-high) values.
 
 
