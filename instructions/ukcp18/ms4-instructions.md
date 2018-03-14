@@ -2,6 +2,12 @@
 
 ## Change log
 
+### Changes on 2018-03-14
+
+ - Updated "project" global attribute
+ - Updated file-naming convention
+ - Removed "dataset_id" global attribute
+
 ### Changes on 2018-03-07
 
  - First version
@@ -147,18 +153,12 @@ The estimated sizes of each data set and file are:
 
 File names should follow the following convention:
 
- `<var_id>_<dataset_id>_<time_period>.nc`
+ `<var_id>_<collection>_<component-1>_<component-2>_<time_period>.nc`
  
 Values for most of the components can be found in the UKCP18 Controlled Vocabularies at:
  - var_id: use the keys in the data structure under:
    - https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_variable.json
    - NOTE: this vocabulary is not finalised yet
- 
-The `dataset_id` is constructed as follows:
-
- `<collection>-<component-1>-<component-2>`
- 
-Values for those components will use the following vocabularies:
  - collection: "marine-sim" (for all Marine Strand data)
  - component-1: such as "hist", "future", "event", "impact", "timeseries"
  - component-2: one of "hour", "6min", "15min, "analysis", "2100", "2300", "extremes"
@@ -215,18 +215,15 @@ The following global attributes are mandatory:
  - collection: "marine-sim"
  - contact: "ukcpproject@metoffice.gov.uk"
  - Conventions: "CF-1.5"
- - dataset_id: <dataset_id>
  - domain: "uk"
  - frequency: <frequency> *** TO DISCUSS - SHOULD IT BE IN NAMING CONVENTION? ***
  - institution: use: "Met Office Hadley Centre (MOHC), FitzRoy Road, Exeter, Devon, EX1 3PB, UK."
  - institution_id: use: "MOHC"
+ - project: use: "UKCP18"
  - references: Published or web-based references that describe the data or methods used to produce it.
  - source: The method of production of the original data. If it was model-generated, source should name the model and its version, as specifically as could be useful.
  - title: A succinct description of what is in the dataset.
- - version: "v<YYYYMMDD>" - where the date (<YYYYMMDD>) is an agreed date set the same for ALL files in this data set (i.e. all those with the same <dataset_id>.
- 
-Currently being discussed with Fai *et al*:
- - project: *** "ukcp18" or "UKCP" ***?
+ - version: `v<YYYYMMDD>` - where the date (`<YYYYMMDD>`) is an agreed date set the same for ALL files in this data set.
    
 Additionally, you can add more global attributes as you wish.
 

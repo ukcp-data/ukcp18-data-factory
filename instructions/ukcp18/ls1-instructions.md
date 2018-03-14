@@ -1,7 +1,12 @@
-
 # Guidance on construction of UKCP Land Strand 1 probabilistic datasets
 
 ## Change log
+
+### Changes on 2018-03-14
+
+ - Updated "project" global attribute
+ - Updated file-naming convention
+ - Removed "dataset_id" global attribute
 
 ### Changes on 2018-03-12
 
@@ -103,7 +108,7 @@ The **25km gridded data** variables should be split across multiple files as fol
  - seasonal (*per year*) 			[~125MB]
  - annual (*per year*)			 	[~42MB]
 
-A monthly file will contain January to December of the given year.
+A monthly file will contain December of the first year to November of the next year.
 A seasonal file will contain DJF, MAM, JJA, SON so the December will actually be pulled in from the previous year.
 An annual file is generated from the seasonal data so it will in reality span from December (the year before) to November (in the year specified).
  
@@ -116,26 +121,19 @@ The **spatially aggregated area** data (i.e. admin regions, river basins, uk cou
 
 File names should follow the following convention:
 
- `<var_id>_<scenario>_<dataset_id>_<prob_data_type>_<frequency>_<time_period>.nc`
+ `<var_id>_<scenario>_<collection>_<domain>_<resolution>_<prob_data_type>_<frequency>_<time_period>.nc`
  
 Values for most of the components can be found in the UKCP18 Controlled Vocabularies at:
  - var_id: use the keys in the data structure under:
    - https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_variable.json
    - NOTE: this vocabulary is not finalised yet
  - scenario: see: https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_scenario.json
- - prob_data_type: see: https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_prob_data_type.json
- - frequency: https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_frequency.json 
- 
-The `dataset_id` is constructed as follows:
-
- `<collection>-<domain>-<resolution>`
- 
-Values for those components will use the following vocabularies:
- - scenario: as above
  - collection: "land-prob" (for all Land Strand 1 data)
  - domain: "uk" (for all Land Strand 1 data)
  - resolution: one of "25km", "country", "region", "river"
-	
+ - prob_data_type: see: https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_prob_data_type.json
+ - frequency: https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_frequency.json 
+ 
 ## 4. Directory-naming convention	
 
 On the CEDA Archive, the data will be stored in the following structure:
@@ -331,24 +329,19 @@ The following global attributes are mandatory:
  - collection: "land-prob"
  - contact: "ukcpproject@metoffice.gov.uk"
  - Conventions: "CF-1.5"
- - dataset_id: <dataset_id>
  - domain: "uk"
  - frequency: <frequency>
  - institution: use: "Met Office Hadley Centre (MOHC), FitzRoy Road, Exeter, Devon, EX1 3PB, UK."
  - institution_id: use: "MOHC"
  - prob_data_type: <prob_data_type>
+ - project: use: "UKCP18"
  - references: Published or web-based references that describe the data or methods used to produce it.
  - resolution: <resolution>
  - scenario: <scenario>
  - source: The method of production of the original data. If it was model-generated, source should name the model and its version, as specifically as could be useful.
  - title: A succinct description of what is in the dataset.
- - version: "v<YYYYMMDD>" - where the date (<YYYYMMDD>) is an agreed date set the same for ALL files in this data set (i.e. all those with the same <dataset_id>.
-
+ - version: `v<YYYYMMDD>` - where the date (`<YYYYMMDD>`) is an agreed date set the same for ALL files in this data set.
  
-Currently being discussed with Fai *et al*:
- - project: *** "ukcp18" or "UKCP" ***?
-
-   
 Additionally, you can add more global attributes as you wish.
 
 ## 7. NetCDF properties
