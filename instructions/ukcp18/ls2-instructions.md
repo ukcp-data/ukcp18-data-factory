@@ -24,7 +24,8 @@ It covers the following topics:
  7. NetCDF properties
  8. The "season_year" coordinate variable
  9. Seasonal and annual files
- 
+ 10. Climatology files
+
 ## 1. Data structure inside each file
 
 There are 3 main file structures:
