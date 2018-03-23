@@ -3,6 +3,11 @@
 
 ## Change log
 
+### Changes on 2018-03-21
+
+ - Added "creation_date" global attribute
+ - Added section on "bounds" for coordinate variables
+
 ### Changes on 2018-03-06
 
  - First version
@@ -25,6 +30,7 @@ It covers the following topics:
  8. The "season_year" coordinate variable
  9. Seasonal and annual files
  10. Climatology files
+ 11. Bounds on coordinate variables
 
 ## 1. Data structure inside each file
 
@@ -296,6 +302,7 @@ The following global attributes are mandatory:
  - collection: "land-prob"
  - contact: "ukcpproject@metoffice.gov.uk"
  - Conventions: "CF-1.5"
+ - creation_date: formatted as: "YYYY-MM-DDThh:mm:ss"
  - domain: "uk" or "global"
  - ensemble_member: <ensemble_member>
  - frequency: <frequency>
@@ -307,7 +314,7 @@ The following global attributes are mandatory:
  - scenario: <scenario>
  - source: The method of production of the original data. If it was model-generated, source should name the model and its version, as specifically as could be useful.
  - title: A succinct description of what is in the dataset.
- - version: `v<YYYYMMDD>` - where the date (`<YYYYMMDD>`) is an agreed date set the same for ALL files in this data set.
+ - version: "v<YYYYMMDD>" - where the date ("<YYYYMMDD>") is an agreed date set the same for ALL files in this data set.
 
 ## 7. NetCDF properties
 
@@ -378,3 +385,14 @@ This is likely to include additional coordinate variables such as:
 ## 10. Climatology files
 
 More information to be provided for the plans for climatology files.
+
+## 11. Bounds on coordinate variables
+
+The following coordinates should include a `bounds` attribute that points to a 
+separate bounds variable in the file, called either "<coord_var_id>_bounds" or
+"<coord_var_id>_bnds":
+ - time
+ - latitude - when it is a direct coordinate of the main variable
+ - longitude - when it is a direct coordinate of the main variable
+ - projection_y_coordinate
+ - projection_x_coordinate

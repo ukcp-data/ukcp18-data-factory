@@ -2,6 +2,11 @@
 
 ## Change log
 
+### Changes on 2018-03-22
+
+ - Added "creation_date" global attribute
+ - Added section on "bounds" for coordinate variables
+
 ### Changes on 2018-03-14
 
  - Updated "project" global attribute
@@ -72,7 +77,7 @@ It covers the following topics:
  7. NetCDF properties
  8. The "season_year" coordinate variable
  9. Seasonal and annual files
- 10. Direction of 'latitude' coordinate variable
+ 10. Bounds on coordinate variables
 
 ## 1. Data structure inside each file
 
@@ -329,6 +334,7 @@ The following global attributes are mandatory:
  - collection: "land-prob"
  - contact: "ukcpproject@metoffice.gov.uk"
  - Conventions: "CF-1.5"
+ - creation_date: formatted as: "YYYY-MM-DDThh:mm:ss"
  - domain: "uk"
  - frequency: <frequency>
  - institution: use: "Met Office Hadley Centre (MOHC), FitzRoy Road, Exeter, Devon, EX1 3PB, UK."
@@ -409,3 +415,14 @@ This is likely to include additional coordinate variables such as:
         season_year:units = "1" ;
         season_year:long_name = "season_year" ;
 ```
+
+## 10. Bounds on coordinate variables
+
+The following coordinates should include a `bounds` attribute that points to a 
+separate bounds variable in the file, called either "<coord_var_id>_bounds" or
+"<coord_var_id>_bnds":
+ - time
+ - latitude - when it is a direct coordinate of the main variable
+ - longitude - when it is a direct coordinate of the main variable
+ - projection_y_coordinate
+ - projection_x_coordinate

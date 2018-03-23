@@ -2,6 +2,12 @@
 
 ## Change log
 
+### Changes on 2018-03-21
+
+ - Added "creation_date" global attribute
+ - Added section on "bounds" for coordinate variables
+ - Added use of "<model_name>" in the file-name components
+
 ### Changes on 2018-03-14
 
  - Updated "project" global attribute
@@ -48,6 +54,7 @@ It covers the following topics:
  5. Variable and coordinate variables
  6. Global attributes
  7. NetCDF properties
+ 8. Bounds on coordinate variables
 
 ## 1. Data structures inside each file
 
@@ -160,8 +167,15 @@ Values for most of the components can be found in the UKCP18 Controlled Vocabula
    - https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_variable.json
    - NOTE: this vocabulary is not finalised yet
  - collection: "marine-sim" (for all Marine Strand data)
- - component-1: such as "hist", "future", "event", "impact", "timeseries"
- - component-2: one of "hour", "6min", "15min, "analysis", "2100", "2300", "extremes"
+ - component-1: such as "<model_name>", "event", "impact", "timeseries"
+ - component-2: one of "hist", "future", "6min", "15min, "analysis", "2100", "2300", "extremes"
+ 
+The "<model_name>" can be:
+ - EC-EARTH
+ - HadGEM2-ES
+ - MPI-ESM-LR
+ - CNRM-CM5
+ - IPSL-CM5-MR ***NEEDS CHECKING***
 	
 ## 4. Directory-naming convention	
 
@@ -215,6 +229,7 @@ The following global attributes are mandatory:
  - collection: "marine-sim"
  - contact: "ukcpproject@metoffice.gov.uk"
  - Conventions: "CF-1.5"
+ - creation_date: formatted as: "YYYY-MM-DDThh:mm:ss"
  - domain: "uk"
  - frequency: <frequency> *** TO DISCUSS - SHOULD IT BE IN NAMING CONVENTION? ***
  - institution: use: "Met Office Hadley Centre (MOHC), FitzRoy Road, Exeter, Devon, EX1 3PB, UK."
@@ -275,5 +290,19 @@ Here are some general points regarding good CF-netCDF practice:
    - latitude_longitude: remove this variable
    - forecast_period: remove this variable
 
+## 8. Bounds on coordinate variables
 
+The following coordinates should include a `bounds` attribute that points to a 
+separate bounds variable in the file, called either "<coord_var_id>_bounds" or
+"<coord_var_id>_bnds":
+ - time
+ - latitude - when it is a direct coordinate of the main variable
+ - longitude - when it is a direct coordinate of the main variable
+ - projection_y_coordinate
+ - projection_x_coordinate
+ 
+### 8.1 Exclusions to using "bounds" 
 
+The `bounds` variables can be excluded for the following datasets:
+ - MS4.06: latitude, longitude, time
+ - MS4.08: latitude, longitude, time
