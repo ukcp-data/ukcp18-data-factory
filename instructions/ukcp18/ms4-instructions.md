@@ -2,11 +2,13 @@
 
 ## Change log
 
-### Changes on 2018-03-21
+### Changes on 2018-03-26
 
  - Added "creation_date" global attribute
  - Added section on "bounds" for coordinate variables
  - Added use of "<model_name>" in the file-name components
+ - Added more content in the variables section about attributes and time, latitude
+   and longitude coordinate variables.
 
 ### Changes on 2018-03-14
 
@@ -51,7 +53,7 @@ It covers the following topics:
  2. Sizes and split across files
  3. File-naming conventions
  4. Directory-naming convention	
- 5. Variable and coordinate variables
+ 5. Variables and coordinate variables
  6. Global attributes
  7. NetCDF properties
  8. Bounds on coordinate variables
@@ -215,6 +217,42 @@ Information about coordinate variables is held in a separate vocabulary at:
 
 Note that some of the attributes will reference coordinate variables that should also be included in the
 data files. 
+
+## 5.1 Variable attributes
+
+Main variable attributes should include:
+ - units: based on the variables spreadsheet
+ - description: based on spreadsheet
+ - long_name: based on spreadsheet
+ 
+Note that **anomaly** variables should also include:
+ - anomaly_type: typically "absolute_change"
+ - baseline_period: "1981-2000" 
+ - These should also be in the spreadsheet
+
+## 5.2 Time coordinate variable
+
+The "time" coordinate variable should:
+ - include "units" formatted like: "days since 2000-12-15 00:00:00"
+ - include: long_name = "Time" 
+ - include: standard_name = "time" 
+
+It should typically include a "bounds" variable and attribute, e.g.:
+ - `time:bounds = "time_bounds" ;`
+ - `float time_bounds(time, bnds)`
+      - where `bnds` is a NetCDF dimension of size 2
+      
+## 5.3 Latitude and longitude coordinate variables
+
+Latitude and longitude coordinate variables:
+ - Use "degrees_north" and "degrees_east" for the units (to match other UKCP data)
+ - Call the variables:  "latitude" and "longitude" (as their varible IDs (NOT: "lat" and "lon"))
+ 
+Typically, also include "bounds" to latitude and longitude, e.g.:
+ - via the "bounds" variable attribute
+ - and a separate 2D variable for each, e.g.:
+   - `float latitude_bounds(latitude, bnds)`
+      - where `bnds` is a NetCDF dimension of size 2
 
 ## 6. Global attributes
 
