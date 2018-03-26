@@ -9,6 +9,7 @@
  - Added use of "<model_name>" in the file-name components
  - Added more content in the variables section about attributes and time, latitude
    and longitude coordinate variables.
+ - Fixed IPSL model name.
 
 ### Changes on 2018-03-14
 
@@ -177,7 +178,7 @@ The "<model_name>" can be:
  - HadGEM2-ES
  - MPI-ESM-LR
  - CNRM-CM5
- - IPSL-CM5-MR ***NEEDS CHECKING***
+ - IPSL-CM5A-MR
 	
 ## 4. Directory-naming convention	
 
