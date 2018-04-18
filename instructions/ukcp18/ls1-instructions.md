@@ -2,6 +2,13 @@
 
 ## Change log
 
+### Changes on 2018-04-18
+
+ - Added section 6.2 on Global Attributes to avoid/remove.
+ - Updated variable attributes (5.3) in the example NC files to reflect variables in
+   controlled vocab file.
+ - Added info about naming `var_id` in files.
+
 ### Changes on 2018-03-22
 
  - Added "creation_date" global attribute
@@ -159,9 +166,14 @@ Our evolving table of variables is here:
 
  https://docs.google.com/spreadsheets/d/1Ij3R3skvYhKnMSqXB6KHaxH0BSST5R0DI8zp2Qi82vw/edit#gid=762056270
 
+Note that the variable ID (`var_id`) used in the file name must also be that used inside the file. This  
+known as the `var_name` in Iris. E.g. you should use:
+ - "tasmaxAnom" instead of "air_temperature".
+ - "hussAnom" instead of "specific_humidity".
+
 It is being honed and converted to this Controlled Vocabulary:
 
- https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_variable.json (**needs an update**)
+ https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_variable.json
 
 The content includes both variable IDs and common variable metadata.
 
@@ -175,8 +187,10 @@ Information about coordinate variables is held in a separate vocabulary at:
 
  https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_coordinate.json
 
+Check units for "latitude" and "longitude" coordinates are correct.
+
 Note that some of the attributes will reference coordinate variables that should also be included in the
-data files. Here are some CDL examples.
+data files. Here are some CDL examples...
 
 ### 5.1 Example 25km gridded file
 
@@ -206,12 +220,14 @@ variables:
                 tasAnom:_FillValue = 1.e+20f ;
                 tasAnom:anomaly_type = "absolute_change" ;
                 tasAnom:grid_mapping = "transverse_mercator" ;
-                tasAnom:description = "Surface temperature anomaly at 1.5m (°c)" ;
+                tasAnom:description = "Mean air temperature",
+                tasAnom:plot_label = "Mean air temperature anomaly at 1.5m (°c)",
                 tasAnom:baseline_period = "1981-2000" ;
                 tasAnom:coordinates = "latitude longitude season_year" ;
                 tasAnom:long_name = "Anomaly of air temperature" ;
                 tasAnom:standard_name = "air_temperature" ;
-                tasAnom:units = "K" ;
+                tasAnom:units = "degC" ;
+                tasAnom:label_units = "°c" ;
                 tasAnom:cell_methods = "time: mean" ;
         double time_bounds(time, bnds) ;
         float time(time) ;
@@ -266,14 +282,16 @@ variables:
                 season_year:units = "1" ;
                 season_year:long_name = "season_year" ;
         float tasAnom(time, region, sample) ;
-                tasAnom:_FillValue = 1.e+20f ;
                 tasAnom:anomaly_type = "absolute_change" ;
-                tasAnom:description = "Surface temperature anomaly at 1.5m (°c)" ;
+                tasAnom:description = "Mean air temperature",
+                tasAnom:plot_label = "Mean air temperature anomaly at 1.5m (°c)",
+                tasAnom:baseline_period = "1981-2000" ;
                 tasAnom:coordinates = "geo_region season_year" ;
                 tasAnom:long_name = "Anomaly of air temperature" ;
                 tasAnom:standard_name = "air_temperature" ;
                 tasAnom:units = "K" ;
-                tasAnom:cell_methods = "time: mean" ;
+                tasAnom:label_units = "°c" ;
+                tasAnom:cell_methods = "time: mean" ;               
         double time_bounds(time, bnds) ;
         float time(time) ;
                 time:units = "days since 1960-12-15 00:00:00" ;
@@ -320,6 +338,26 @@ The possible values for `geo_region` are defined in the vocabularies:
  - https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_country.json
  - https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_river_basin.json
 
+### 5.3 Variable attributes
+
+For each main variable, check that these attributes are set:
+ - anomaly_type
+ - description 
+ - plot_label 
+ - baseline_period
+ - coordinates
+ - long_name
+ - standard_name
+ - units 
+ - label_units 
+ - cell_methods  
+ - Refer to here for the correct contents:
+   https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_variable.json#L1592 
+	 
+Additionally, if the data is on the OSGB grid:
+ - _FillValue = 1.e+20f
+ - grid_mapping = "transverse_mercator"
+
 ## 6. Global attributes
 
 The global attributes for the project are categorised as either:
@@ -349,6 +387,13 @@ The following global attributes are mandatory:
  - version: `v<YYYYMMDD>` - where the date (`<YYYYMMDD>`) is an agreed date set the same for ALL files in this data set.
  
 Additionally, you can add more global attributes as you wish.
+
+### 6.2 Global attributes to REMOVE/AVOID
+
+Please AVOID setting the following global attributes:
+
+ - variable
+ - STASH
 
 ## 7. NetCDF properties
 

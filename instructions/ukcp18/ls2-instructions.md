@@ -3,6 +3,10 @@
 
 ## Change log
 
+### Changes on 2018-03-28
+
+ - Updated list of resolutions
+
 ### Changes on 2018-03-21
 
  - Added "creation_date" global attribute
@@ -72,6 +76,7 @@ The **spatially aggregated area files** (3) should be split by:
 The time-steps should be grouped as follows:
 
  i. **60km gridded global files:**
+ - daily ()
  - monthly (*entire time series in one file*)	[~1.4GB]
  - seasonal (*entire time series in one file*)	[~350MB]
  - annual (*entire time series in one file*)	[~116MB]
@@ -99,7 +104,7 @@ Values for most of the components can be found in the UKCP18 Controlled Vocabula
  - scenario: as above
  - collection: "land-gcm" (for all Land Strand 2 data)
  - domain: "uk" (for all Land Strand 1 data)
- - resolution: one of "country", "region", "river"
+ - resolution: one of "60km", "country", "region", "river"
  - scenario: see: https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_scenario.json
  - prob_data_type: see: https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_prob_data_type.json
  - frequency: https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_frequency.json 
