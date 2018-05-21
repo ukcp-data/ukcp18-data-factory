@@ -2,6 +2,9 @@
 
 ## Change log
 
+### Pending fixes
+ - MS4.06/08: use frequency = "ann" (not "annual") in file-names AND global attribute.
+
 ### Changes on 2018-03-26
 
  - Added "creation_date" global attribute
@@ -167,7 +170,7 @@ File names should follow the following convention:
  
 Values for most of the components can be found in the UKCP18 Controlled Vocabularies at:
  - var_id: use the keys in the data structure under:
-   - https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_variable.json
+   - https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_CVs/UKCP18_variable.json
    - NOTE: this vocabulary is not finalised yet
  - collection: "marine-sim" (for all Marine Strand data)
  - component-1: such as "<model_name>", "event", "impact", "timeseries"
@@ -202,7 +205,7 @@ Our evolving table of variables is here:
 
 It is being honed and converted to this Controlled Vocabulary:
 
- https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_variable.json (**needs an update**)
+ https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_CVs/UKCP18_variable.json (**needs an update**)
 
 The content includes both variable IDs and common variable metadata.
 
@@ -214,8 +217,8 @@ be others that should be added. Please see the example files for the additional 
 
 Information about coordinate variables is held in a separate vocabulary at:
 
- https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_coordinate.json - *** Needs UPDATING***
-
+ https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_CVs/UKCP18_coordinate.json 
+ 
 Note that some of the attributes will reference coordinate variables that should also be included in the
 data files. 
 
@@ -270,7 +273,7 @@ The following global attributes are mandatory:
  - Conventions: "CF-1.5"
  - creation_date: formatted as: "YYYY-MM-DDThh:mm:ss"
  - domain: "uk"
- - frequency: <frequency> *** TO DISCUSS - SHOULD IT BE IN NAMING CONVENTION? ***
+ - frequency: <frequency>
  - institution: use: "Met Office Hadley Centre (MOHC), FitzRoy Road, Exeter, Devon, EX1 3PB, UK."
  - institution_id: use: "MOHC"
  - project: use: "UKCP18"

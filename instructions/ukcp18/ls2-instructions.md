@@ -3,6 +3,17 @@
 
 ## Change log
 
+### Pending fixes
+ - PUT THEM HERE
+
+### Changes on 2018-04-24
+
+ - In example NetCDF, added variable attributes:
+  - label_units
+  - description
+  - plot_label
+  - cell_methods 
+
 ### Changes on 2018-03-28
 
  - Updated list of resolutions
@@ -99,15 +110,15 @@ File names should follow the following convention:
  
 Values for most of the components can be found in the UKCP18 Controlled Vocabularies at:
  - var_id: use the keys in the data structure under:
-   - https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_variable.json
+   - https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_CVs/UKCP18_variable.json
    - NOTE: this vocabulary is not finalised yet
  - scenario: as above
  - collection: "land-gcm" (for all Land Strand 2 data)
  - domain: "uk" (for all Land Strand 1 data)
  - resolution: one of "60km", "country", "region", "river"
- - scenario: see: https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_scenario.json
- - prob_data_type: see: https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_prob_data_type.json
- - frequency: https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_frequency.json 
+ - scenario: see: https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_CVs/UKCP18_scenario.json
+ - prob_data_type: see: https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_CVs/UKCP18_prob_data_type.json
+ - frequency: https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_CVs/UKCP18_frequency.json 
 	
 ## 4. Directory-naming convention	
 
@@ -131,7 +142,7 @@ Our evolving table of variables is here:
 
 It is being honed and converted to this Controlled Vocabulary:
 
- https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_variable.json 
+ https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_CVs/UKCP18_variable.json 
 
 The content includes both variable IDs and common variable metadata.
 
@@ -147,7 +158,7 @@ be others that should be added. Please see the example files for the additional 
 
 Information about coordinate variables is held in a separate vocabulary at:
 
- https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_coordinate.json
+ https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_CVs/UKCP18_coordinate.json
 
 Note that some of the attributes will reference coordinate variables that should also be included in the
 data files. Here are some CDL examples.
@@ -221,6 +232,10 @@ variables:
                 tas:long_name = "air temperature" ;
                 tas:standard_name = "air_temperature" ;
                 tas:units = "K" ;
+                tas:label_units = "°c" ;                
+                tas:description = "Mean air temperature" ;
+                tas:plot_label = ""Mean air temperature at 1.5m (°c)" ;
+                tas:cell_methods = "time: mean" ;                   
         double time_bounds(time, bnds) ;
         float time(time) ;
                 time:units = "days since 1901-12-15 00:00:00" ;
@@ -258,9 +273,9 @@ The `geo_region:long_name` attribute should have one of the following values:
  - "River Basin"
  
 The possible values for `geo_region` are defined in the vocabularies:
- - https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_admin_region.json
- - https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_country.json
- - https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_river_basin.json
+ - https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_CVs/UKCP18_admin_region.json
+ - https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_CVs/UKCP18_country.json
+ - https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_CVs/UKCP18_river_basin.json
 
 ### 5.3 Example spatially aggregated area files: admin regions, river basins, UK countries
 
