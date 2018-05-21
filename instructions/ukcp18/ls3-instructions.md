@@ -1,36 +1,24 @@
 
-# Guidance on construction of UKCP Land Strand 2 simulations
+# Guidance on construction of UKCP Land Strand 3 simulations
+
+## To discuss
+
+ - How should we manage time slices in directory structure?
+ - We need to standardise the ensemble members with LS2 - just using two digit codes.
 
 ## Change log
 
 ### Pending fixes
  - PUT THEM HERE
 
-### Changes on 2018-04-24
-
- - In example NetCDF, added variable attributes:
-  - label_units
-  - description
-  - plot_label
-  - cell_methods 
-
-### Changes on 2018-03-28
-
- - Updated list of resolutions
-
-### Changes on 2018-03-21
-
- - Added "creation_date" global attribute
- - Added section on "bounds" for coordinate variables
-
-### Changes on 2018-03-06
+### Changes on 2018-05-21
 
  - First version
 
 ## Overview
 
 This guidance should be considered as provisional. It has been written to help
-the scientists generating NetCDF files for Land Strand 2 so that they can 
+the scientists generating NetCDF files for Land Strand 3 so that they can 
 provide data suitable for the CEDA Archive and the UKCP User Interface tools.
 
 It covers the following topics:
@@ -50,14 +38,14 @@ It covers the following topics:
 ## 1. Data structure inside each file
 
 There are 3 main file structures:
- 1. 60km gridded global data (on regular latitude/longitude grid)
- 2. 60km gridded UK data (on OSGB grid)
+ 1. 12km gridded RCM data (on rotated pole grid)
+ 2. 12km gridded UK data (on OSGB grid)
  3. spatially aggregated areas: admin regions, river basins, UK countries
  
-The **60km gridded global files** (1) should be defined against the following coordinate variables:
-  - `(ensemble_member, time, latitude, longitude)`
+The **12km gridded RCM files** (1) should be defined against the following coordinate variables:
+  - `(ensemble_member, time, grid_latitude, grid_longitude)`
 
-The **60km gridded UK files** (2) should be defined against the following coordinate variables:
+The **12km gridded UK files** (2) should be defined against the following coordinate variables:
   - `(ensemble_member, time, projection_y_coordinate, projection_x_coordinate)`
   
 The **spatially aggregated area files** (3) should be defined against the following coordinate variables:
@@ -65,13 +53,14 @@ The **spatially aggregated area files** (3) should be defined against the follow
 
 ## 2. Splitting datasets across multiple files
 
-The **60km gridded global files** (1) should be split by:
+The **12km gridded RCM files** (1) should be split by:
  - main variable (such as "tas")
  - scenario (only RCP85 at present)
  - ensemble member 
  - temporal frequency (i.e. "mon", "seas", "ann")
+ - time slice (i.e. "ts1", "ts2", "ts3")
 
-The **60km gridded UK files** (2) should be split by:
+The **12km gridded UK files** (2) should be split by:
  - main variable (such as "tas")
  - scenario (only RCP85 at present)
  - ensemble member 
@@ -86,16 +75,16 @@ The **spatially aggregated area files** (3) should be split by:
 
 The time-steps should be grouped as follows:
 
- i. **60km gridded global files:**
- - daily ()
- - monthly (*entire time series in one file*)	[~1.4GB]
- - seasonal (*entire time series in one file*)	[~350MB]
- - annual (*entire time series in one file*)	[~116MB]
+ i. **12km gridded RCM files:**
+ - daily (*one decade in a single file*)    	[~1.1GB]
+ - monthly (*entire time series in one file*)	[~160MB]
+ - seasonal (*entire time series in one file*)	[~40MB]
+ - annual (*entire time series in one file*)	[~10MB]
 
- ii. **60km gridded UK files:**
- - monthly (*entire time series in one file*)	[~12MB]
- - seasonal (*entire time series in one file*)	[~3MB]
- - annual (*entire time series in one file*)	[~1MB]
+ ii. **12km gridded UK files:**
+ - monthly (*entire time series in one file*)	[~80MB]
+ - seasonal (*entire time series in one file*)	[~20MB]
+ - annual (*entire time series in one file*)	[~5MB]
  
  iii. **spatially aggregated area files:**
  - monthly (*entire time series in one file*)	[~1MB]
@@ -113,9 +102,9 @@ Values for most of the components can be found in the UKCP18 Controlled Vocabula
    - https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_CVs/UKCP18_variable.json
    - NOTE: this vocabulary is not finalised yet
  - scenario: as above
- - collection: "land-gcm" (for all Land Strand 2 data)
+ - collection: "land-rcm" (for all Land Strand 2 data)
  - domain: "uk" (for all Land Strand 1 data)
- - resolution: one of "60km", "country", "region", "river"
+ - resolution: one of "12km", "country", "region", "river"
  - scenario: see: https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_CVs/UKCP18_scenario.json
  - prob_data_type: see: https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_CVs/UKCP18_prob_data_type.json
  - frequency: https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_CVs/UKCP18_frequency.json 
@@ -128,7 +117,7 @@ On the CEDA Archive, the data will be stored in the following structure:
  
 At the Met Office you could store it in a similar structure such as:
 
- `/project/<project>/data/<collection>/<domain>/<resolution>/<scenario>/<ensemble_member>/<var_id>/<frequency>/<version>/`
+ `/project/<project>/data/<collection>/<domain>/<time_slice>/<resolution>/<scenario>/<ensemble_member>/<var_id>/<frequency>/<version>/`
 
 Values for the components match those given above, except `<version>`.
 
@@ -149,8 +138,8 @@ The content includes both variable IDs and common variable metadata.
 Note that the table separates out absolute values from anomaly values (which have variable IDs suffixed
 with "Anom" and _may_ have different units).
 
-**Land Strand 2 will deliver only absolute values rather than anomalies.** (The User
-Interface will generate anomalies by subtracting the climatologies from the absolute
+**Land Strand 3 will deliver only absolute values rather than anomalies.** (The User
+Interface will be able to generate anomalies by subtracting the climatologies from the absolute
 values).
 
 A common set of variable attributes are specified but, depending on the spatial representation, there might 
@@ -166,52 +155,29 @@ data files. Here are some CDL examples.
 ### 5.1 Example 60km gridded global file (on regular latitude/longitude grid)
 
 ```
-netcdf tas_rcp85_land-gcm_global_60km_r001i1p00000_mon_19001201-20991130 {
+netcdf tas_rcp85_land-rcm_eur_12km_01_mon_1917901-20211130 {
 dimensions:
-        time = UNLIMITED ; // (2376 currently)
+        time = UNLIMITED ; // (*** currently)
         bnds = 2 ;
         ensemble_member = 1 ;
-        latitude = 324 ;
-        longitude = 432 ;
+        latitude = *** ;
+        longitude = *** ;
+        ***
 variables:
-        float latitude(latitude) ;
-                latitude:units = "degrees_north" ;
-                latitude:long_name = "Latitude" ;
-                latitude:standard_name = "latitude" ;
-                latitude:axis = "Y" ;
-        float ensemble_member(ensemble_member) ;
-                ensemble_member:units = "" ;
-                ensemble_member:long_name = "Ensemble member" ;
-        float tas(ensemble_member, time, latitude, longitude) ;
-                tas:_FillValue = 1.e+20f ;
-                tas:units = "K" ;
-                tas:long_name = "air temperature" ;
-                tas:standard_name = "air_temperature" ;
-                tas:anomaly_type = "none" ;
-        float longitude(longitude) ;
-                longitude:units = "degrees_east" ;
-                longitude:long_name = "Longitude" ;
-                longitude:standard_name = "longitude" ;
-                longitude:axis = "X" ;
-        double time_bounds(time, bnds) ;
-        float time(time) ;
-                time:units = "days since 2010-12-15 00:00:00" ;
-                time:long_name = "Time" ;
-                time:calendar = "360_day" ;
-                time:standard_name = "time" ;
-                time:bounds = "time_bounds" ;
+***NEED TO BASE THIS ON CURRENT ROTATED POLE DATA***
+
 ```
 
 ### 5.2 Example  2. 60km gridded UK data (on OSGB grid)
 
 ```
-netcdf tas_rcp85_land-gcm_uk_60km_r001i1p00000_mon_19001201-20991130 {
+netcdf tas_rcp85_land-rcm_uk_12km_01_mon_1917901-20211130 {
 dimensions:
         ensemble_member = 1 ;
-        time = UNLIMITED ; // (2376 currently)
+        time = UNLIMITED ; // (*** currently)
         bnds = 2 ;
-        projection_y_coordinate = 25 ;
-        projection_x_coordinate = 15 ;
+        projection_y_coordinate = *** ;
+        projection_x_coordinate = *** ;
 variables:
         double projection_y_coordinate_bnds(projection_y_coordinate, bnds) ;
         double projection_x_coordinate(projection_x_coordinate) ;
@@ -220,7 +186,7 @@ variables:
                 projection_x_coordinate:bounds = "projection_x_coordinate_bnds" ;
                 projection_x_coordinate:axis = "X" ;
         double longitude(projection_y_coordinate, projection_x_coordinate) ;
-                longitude:units = "degree_east" ;
+                longitude:units = "degrees_east" ;
                 longitude:standard_name = "longitude" ;
         int season_year(time) ;
                 season_year:units = "1" ;
@@ -244,7 +210,7 @@ variables:
                 time:standard_name = "time" ;
                 time:bounds = "time_bounds" ;
         double latitude(projection_y_coordinate, projection_x_coordinate) ;
-                latitude:units = "degree_north" ;
+                latitude:units = "degrees_north" ;
                 latitude:standard_name = "latitude" ;
         float ensemble_member(ensemble_member) ;
                 ensemble_member:units = "" ;
@@ -280,23 +246,30 @@ The possible values for `geo_region` are defined in the vocabularies:
 ### 5.3 Example spatially aggregated area files: admin regions, river basins, UK countries
 
 ```
-netcdf tas_rcp85_land-gcm_uk_river_r001i1p00000_mon_19001201-20991130 {
+netcdf tas_rcp85_land-rcm_uk_river_00_mon_1917901-20211130 {
 dimensions:
         ensemble_member = 1 ;
         region = 26 ;
         strlen = 21 ;
-        time = UNLIMITED ; // (2376 currently)
+        time = UNLIMITED ; // (*** currently)
         bnds = 2 ;
 variables:
+*** Ensemble member to match DAVID'S DATA...***
         float ensemble_member(ensemble_member) ;
                 ensemble_member:units = "" ;
                 ensemble_member:long_name = "Ensemble member" ;
+        *** CHECK ABOVE ***
         float tas(ensemble_member, time, region) ;
                 tas:_FillValue = 1.e+20f ;
                 tas:units = "K" ;
                 tas:long_name = "air temperature" ;
                 tas:standard_name = "air_temperature" ;
                 tas:coordinates = "geo_region season_year" ;
+                tas:units = "K" ;
+                tas:label_units = "°c" ;                
+                tas:description = "Mean air temperature" ;
+                tas:plot_label = ""Mean air temperature at 1.5m (°c)" ;
+                tas:cell_methods = "time: mean" ;   
         char geo_region(region, strlen) ;
                 geo_region:long_name = "River basin" ;
                 geo_region:standard_name = "region" ;
