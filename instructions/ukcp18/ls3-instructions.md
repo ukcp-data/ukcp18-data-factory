@@ -295,7 +295,7 @@ The following global attributes are mandatory:
  - contact: "ukcpproject@metoffice.gov.uk"
  - Conventions: "CF-1.5"
  - creation_date: formatted as: "YYYY-MM-DDThh:mm:ss"
- - domain: "uk" or "global"
+ - domain: "uk" or "eur"
  - ensemble_member: <ensemble_member>
  - frequency: <frequency>
  - institution: use: "Met Office Hadley Centre (MOHC), FitzRoy Road, Exeter, Devon, EX1 3PB, UK."
