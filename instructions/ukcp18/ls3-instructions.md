@@ -102,8 +102,8 @@ Values for most of the components can be found in the UKCP18 Controlled Vocabula
    - https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_CVs/UKCP18_variable.json
    - NOTE: this vocabulary is not finalised yet
  - scenario: as above
- - collection: "land-rcm" (for all Land Strand 2 data)
- - domain: "uk" (for all Land Strand 1 data)
+ - collection: "land-rcm" (for all Land Strand 3 RCM data)
+ - domain: "uk" or "eur" (for Land Strand 3 data)
  - resolution: one of "12km", "country", "region", "river"
  - scenario: see: https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_CVs/UKCP18_scenario.json
  - prob_data_type: see: https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_CVs/UKCP18_prob_data_type.json
@@ -290,7 +290,7 @@ The global attributes for the project are categorised as either:
 
 The following global attributes are mandatory:
 
- - collection: "land-gcm"
+ - collection: "land-rcm"
  - contact: "ukcpproject@metoffice.gov.uk"
  - Conventions: "CF-1.5"
  - creation_date: formatted as: "YYYY-MM-DDThh:mm:ss"
