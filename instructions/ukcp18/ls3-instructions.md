@@ -57,7 +57,7 @@ The **12km gridded RCM files** (1) should be split by:
  - main variable (such as "tas")
  - scenario (only RCP85 at present)
  - ensemble member 
- - temporal frequency (i.e. "mon", "seas", "ann")
+ - temporal frequency (i.e. "day", "mon", "seas", "ann")
  - time slice (i.e. "ts1", "ts2", "ts3")
 
 The **12km gridded UK files** (2) should be split by:
@@ -265,7 +265,6 @@ variables:
                 tas:long_name = "air temperature" ;
                 tas:standard_name = "air_temperature" ;
                 tas:coordinates = "geo_region season_year" ;
-                tas:units = "K" ;
                 tas:label_units = "°c" ;                
                 tas:description = "Mean air temperature" ;
                 tas:plot_label = ""Mean air temperature at 1.5m (°c)" ;
@@ -296,14 +295,14 @@ The following global attributes are mandatory:
  - Conventions: "CF-1.5"
  - creation_date: formatted as: "YYYY-MM-DDThh:mm:ss"
  - domain: "uk" or "eur"
- - ensemble_member: <ensemble_member>
- - frequency: <frequency>
+ - ensemble_member: `<ensemble_member>`
+ - frequency: `<frequency>`
  - institution: use: "Met Office Hadley Centre (MOHC), FitzRoy Road, Exeter, Devon, EX1 3PB, UK."
  - institution_id: use: "MOHC"
  - project: use: "UKCP18"
  - references: Published or web-based references that describe the data or methods used to produce it.
- - resolution: <resolution>
- - scenario: <scenario>
+ - resolution: `<resolution>`
+ - scenario: `<scenario>`
  - source: The method of production of the original data. If it was model-generated, source should name the model and its version, as specifically as could be useful.
  - title: A succinct description of what is in the dataset.
  - version: "v<YYYYMMDD>" - where the date ("<YYYYMMDD>") is an agreed date set the same for ALL files in this data set.
