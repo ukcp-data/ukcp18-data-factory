@@ -117,7 +117,7 @@ On the CEDA Archive, the data will be stored in the following structure:
  
 At the Met Office you could store it in a similar structure such as:
 
- `/project/<project>/data/<collection>/<domain>/<time_slice>/<resolution>/<scenario>/<ensemble_member>/<var_id>/<frequency>/<version>/`
+ `/project/<project>/data/<collection>/<domain>/<resolution>/<scenario>/<ensemble_member>/<var_id>/<frequency>/<version>/`
 
 Values for the components match those given above, except `<version>`.
 
