@@ -3,35 +3,25 @@
 
 ## Change log
 
+### TO CHECK:
+ - Suggested "n216" as resolution instead of "60kmlatlon" - what to use?
+ - Is it appropriate to treat "specific warming level" (swl) as a "scenario" in terms 
+   of the file/directory-naming conventions?
+
 ### Pending fixes
  - PUT THEM HERE
 
-### Changes on 2018-04-24
-
- - In example NetCDF, added variable attributes:
-  - label_units
-  - description
-  - plot_label
-  - cell_methods 
-
-### Changes on 2018-03-28
-
- - Updated list of resolutions
-
-### Changes on 2018-03-21
-
- - Added "creation_date" global attribute
- - Added section on "bounds" for coordinate variables
-
-### Changes on 2018-03-06
+### Changes on 2018-07-19
 
  - First version
+
 
 ## Overview
 
 This guidance should be considered as provisional. It has been written to help
-the scientists generating NetCDF files for Land Strand 2 so that they can 
-provide data suitable for the CEDA Archive and the UKCP User Interface tools.
+the scientists generating NetCDF files for Land Strand 2 Synthetic Projections
+so that they can provide data suitable for the CEDA Archive and the UKCP User 
+Interface tools.
 
 It covers the following topics:
 
@@ -42,22 +32,21 @@ It covers the following topics:
  5. Variable and coordinate variables
  6. Global attributes
  7. NetCDF properties
- 8. The "season_year" coordinate variable
- 9. Seasonal and annual files
- 10. Climatology files
- 11. Bounds on coordinate variables
-
+ 8. Bounds on coordinate variables
+ 9. Managing time in the specific warming level files
+ 
+ 
 ## 1. Data structure inside each file
 
 There are 3 main file structures:
- 1. 60km gridded global data (on regular latitude/longitude grid)
+ 1. 60km gridded UK data (on N216 regular latitude/longitude grid)
  2. 60km gridded UK data (on OSGB grid)
  3. spatially aggregated areas: admin regions, river basins, UK countries
  
-The **60km gridded global files** (1) should be defined against the following coordinate variables:
+The **60km gridded UK files on N216** (1) should be defined against the following coordinate variables:
   - `(ensemble_member, time, latitude, longitude)`
 
-The **60km gridded UK files** (2) should be defined against the following coordinate variables:
+The **60km gridded UK files on OSGB** (2) should be defined against the following coordinate variables:
   - `(ensemble_member, time, projection_y_coordinate, projection_x_coordinate)`
   
 The **spatially aggregated area files** (3) should be defined against the following coordinate variables:
@@ -79,7 +68,7 @@ The **60km gridded UK files** (2) should be split by:
   
 The **spatially aggregated area files** (3) should be split by:
  - main variable (such as "tas")
- - scenario (only RCP85 at present)
+ - scenario: one of "rcp26", "rcp85", "swl2" and "swl4"
  - ensemble member 
  - temporal frequency (i.e. "mon", "seas", "ann")
  - spatial representation (which are admin regions, river basins and uk countries)
@@ -112,10 +101,9 @@ Values for most of the components can be found in the UKCP18 Controlled Vocabula
  - var_id: use the keys in the data structure under:
    - https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_CVs/UKCP18_variable.json
    - NOTE: this vocabulary is not finalised yet
- - scenario: see: https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_CVs/UKCP18_scenario.json
- - collection: "land-gcm" (for all Land Strand 2 data)
+ - collection: "land-synth" 
  - domain: "global" or "uk"
- - resolution: one of "60km", "country", "region", "river"
+ - resolution: one of "n216", "60km", "country", "region", "river"
  - ensemble_member: see: https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_CVs/UKCP18_ensemble_member.json
  - frequency: https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_CVs/UKCP18_frequency.json 
 	
@@ -162,10 +150,10 @@ Information about coordinate variables is held in a separate vocabulary at:
 Note that some of the attributes will reference coordinate variables that should also be included in the
 data files. Here are some CDL examples.
 
-### 5.1 Example 60km gridded global file (on regular latitude/longitude grid)
+### 5.1 Example 60km gridded UK file (on N216 regular latitude/longitude grid)
 
 ```
-netcdf tas_rcp85_land-gcm_global_60km_r001i1p00000_mon_19001201-20991130 {
+netcdf tas_rcp26_land-synth_uk_n216_01_mon_19001201-20991130 {
 dimensions:
         time = UNLIMITED ; // (2376 currently)
         bnds = 2 ;
@@ -204,7 +192,7 @@ variables:
 ### 5.2 Example  2. 60km gridded UK data (on OSGB grid)
 
 ```
-netcdf tas_rcp85_land-gcm_uk_60km_r001i1p00000_mon_19001201-20991130 {
+netcdf tas_rcp26_land-synth_uk_60km_01_mon_19001201-20991130 {
 dimensions:
         ensemble_member = 1 ;
         time = UNLIMITED ; // (2376 currently)
@@ -231,9 +219,9 @@ variables:
                 tas:long_name = "air temperature" ;
                 tas:standard_name = "air_temperature" ;
                 tas:units = "K" ;
-                tas:label_units = "°c" ;                
+                tas:label_units = "°C" ;                
                 tas:description = "Mean air temperature" ;
-                tas:plot_label = ""Mean air temperature at 1.5m (°c)" ;
+                tas:plot_label = ""Mean air temperature at 1.5m (°C)" ;
                 tas:cell_methods = "time: mean" ;                   
         double time_bounds(time, bnds) ;
         float time(time) ;
@@ -279,7 +267,7 @@ The possible values for `geo_region` are defined in the vocabularies:
 ### 5.3 Example spatially aggregated area files: admin regions, river basins, UK countries
 
 ```
-netcdf tas_rcp85_land-gcm_uk_river_r001i1p00000_mon_19001201-20991130 {
+netcdf tas_rcp26_land-synth_uk_river_01_mon_19001201-20991130 {
 dimensions:
         ensemble_member = 1 ;
         region = 26 ;
@@ -317,11 +305,11 @@ The global attributes for the project are categorised as either:
 
 The following global attributes are mandatory:
 
- - collection: "land-gcm"
+ - collection: "land-synth"
  - contact: "ukcpproject@metoffice.gov.uk"
  - Conventions: "CF-1.5"
  - creation_date: formatted as: "YYYY-MM-DDThh:mm:ss"
- - domain: "uk" or "global"
+ - domain: "uk"
  - ensemble_member: <ensemble_member>
  - frequency: <frequency>
  - institution: use: "Met Office Hadley Centre (MOHC), FitzRoy Road, Exeter, Devon, EX1 3PB, UK."
@@ -355,56 +343,7 @@ netCDF-4 classic model
 
 The `_FillValue` attribute should *always* be:  1.e+20f
 
-## 8. The "season_year" coordinate variable
-
-The "season_year" coordinate variable must now exist in all monthly data sets 
-(to aid data extraction using Iris). It should look like:
-
-*Metadata:*
-
-```
-        int season_year(time) ;
-                season_year:units = "1" ;
-                season_year:long_name = "season_year" ;
-```
-
-It will also be in listed in the "coordinates" attribute string of the main 
-variable in the file, e.g:
-
-```
-                tasAnom:coordinates = "geo_region season_year" ;
-```
-
-*Data:*
-
-```
- season_year = 1961, 1961, 1961, 1961, 1961, 1961, 1961, 1961, 1961, 1961,
-               1961, 1961, 1962, 1962, ...... ;
-```
- 
-
-## 9. Seasonal and annual files
-
-More information will be provided regarding the formatting of seasonal and annual files and
-the specific attributes that are relevant.
-
-This is likely to include additional coordinate variables such as:
-
-```
-    char clim_season(time, string64) ;
-        clim_season:units = "no_unit" ;
-        clim_season:long_name = "clim_season" ;
-
-	int64 season_year(time) ;
-        season_year:units = "1" ;
-        season_year:long_name = "season_year" ;
-```
-
-## 10. Climatology files
-
-More information to be provided for the plans for climatology files.
-
-## 11. Bounds on coordinate variables
+## 8. Bounds on coordinate variables
 
 The following coordinates should include a `bounds` attribute that points to a 
 separate bounds variable in the file, called either "<coord_var_id>_bounds" or
@@ -414,3 +353,45 @@ separate bounds variable in the file, called either "<coord_var_id>_bounds" or
  - longitude - when it is a direct coordinate of the main variable
  - projection_y_coordinate
  - projection_x_coordinate
+ 
+##  9. Managing time in the specific warming level files
+
+The "specific warming level" (swl) scenarios are for a synthetic time series during
+which the actual year is irrelevant. The entire 50-year period is representative of 
+the given warming level. It would therefore be misleading to label the time coordinate
+as a meaningful future year. 
+
+The "pre-industrial control" ("piControl") runs in CMIP5 were similar, and different
+arbitrary periods were used by the modellers, such as:
+
+```
+0001-0500
+2015-2310
+4324-4333
+0250-0499
+0300-0499
+1800-2799
+2000-2099
+3331-3355
+0700-0999
+0070-0291
+0096-0295
+```
+   
+We suggest that the year range 3001-3050 is used for the specific warming levels.
+This is appropriate because:
+ 1. It is not going to be interpreted as a relevant future period by users
+ 2. The time period is not in the past so will not suffer from historical issues
+    - this might be relevant to CMIP5 data using various calendars.
+ 
+
+
+
+
+
+
+
+
+
+
+
