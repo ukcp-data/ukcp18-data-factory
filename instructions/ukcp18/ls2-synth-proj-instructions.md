@@ -1,5 +1,4 @@
-
-# Guidance on construction of UKCP Land Strand 2 simulations
+# Guidance on construction of UKCP Land Strand 2 synthetic projections
 
 ## Change log
 
