@@ -309,14 +309,14 @@ The following global attributes are mandatory:
  - Conventions: "CF-1.5"
  - creation_date: formatted as: "YYYY-MM-DDThh:mm:ss"
  - domain: "uk"
- - ensemble_member: <ensemble_member>
- - frequency: <frequency>
+ - ensemble_member: `<ensemble_member>`
+ - frequency: `<frequency>`
  - institution: use: "Met Office Hadley Centre (MOHC), FitzRoy Road, Exeter, Devon, EX1 3PB, UK."
  - institution_id: use: "MOHC"
  - project: use: "UKCP18"
  - references: Published or web-based references that describe the data or methods used to produce it.
- - resolution: <resolution>
- - scenario: <scenario>
+ - resolution: `<resolution>`
+ - scenario: `<scenario>`
  - source: The method of production of the original data. If it was model-generated, source should name the model and its version, as specifically as could be useful.
  - title: A succinct description of what is in the dataset.
  - version: `v<YYYYMMDD>` - where the date (`<YYYYMMDD>`) is an agreed date set the same for ALL files in this data set.
