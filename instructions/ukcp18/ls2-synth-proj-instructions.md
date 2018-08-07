@@ -319,7 +319,7 @@ The following global attributes are mandatory:
  - scenario: <scenario>
  - source: The method of production of the original data. If it was model-generated, source should name the model and its version, as specifically as could be useful.
  - title: A succinct description of what is in the dataset.
- - version: "v<YYYYMMDD>" - where the date ("<YYYYMMDD>") is an agreed date set the same for ALL files in this data set.
+ - version: `v<YYYYMMDD>` - where the date (`<YYYYMMDD>`) is an agreed date set the same for ALL files in this data set.
 
 ## 7. NetCDF properties
 
