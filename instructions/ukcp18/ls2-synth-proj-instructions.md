@@ -67,7 +67,7 @@ The **60km gridded UK files** (2) should be split by:
   
 The **spatially aggregated area files** (3) should be split by:
  - main variable (such as "tas")
- - scenario: one of "rcp26", "rcp85", "swl2" and "swl4"
+ - scenario: one of "rcp26", "rcp85", "gwl2" and "gwl4"
  - ensemble member 
  - temporal frequency (i.e. "mon", "seas", "ann")
  - spatial representation (which are admin regions, river basins and uk countries)
