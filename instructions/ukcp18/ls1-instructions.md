@@ -141,7 +141,7 @@ The **spatially aggregated area** data (i.e. admin regions, river basins, uk cou
 
 File names should follow the following convention:
 
- `<var_id>_<scenario>_<collection>_<domain>_<resolution>_<prob_data_type>_<baseline>_<time_slice_type>_<frequency>_<time_period>.nc`
+ `<var_id>_<scenario>_<collection>_<domain>_<resolution>_<prob_data_type>_<baseline_period>_<time_slice_type>_<frequency>_<time_period>.nc`
  
 Values for most of the components can be found in the UKCP18 Controlled Vocabularies at:
  - var_id: use the keys in the data structure under:
@@ -158,11 +158,11 @@ Values for most of the components can be found in the UKCP18 Controlled Vocabula
 
 On the CEDA Archive, the data will be stored in the following structure:
 
- `/badc/<project>/data/<collection>/<domain>/<resolution>/<scenario>/<prob_data_type>/<baseline>/<time_slice_type>/<var_id>/<frequency>/<version>/`
+ `/badc/<project>/data/<collection>/<domain>/<resolution>/<scenario>/<prob_data_type>/<baseline_period>/<time_slice_type>/<var_id>/<frequency>/<version>/`
  
 At the Met Office you could store it in a similar structure such as:
 
- `/project/<project>/data/<collection>/<domain>/<resolution>/<scenario>/<prob_data_type>/<baseline>/<time_slice_type>/<var_id>/<frequency>/<version>/`
+ `/project/<project>/data/<collection>/<domain>/<resolution>/<scenario>/<prob_data_type>/<baseline_period>/<time_slice_type>/<var_id>/<frequency>/<version>/`
 
 Values for the components match those given above, except `<version>`.
 
