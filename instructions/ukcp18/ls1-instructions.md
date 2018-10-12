@@ -4,6 +4,11 @@
 
 ### Pending fixes
  - PUT THEM HERE
+ 
+### Changes on 2018-10-12
+
+ - Updated file-naming convention
+ - Updated global attributes section
 
 ### Changes on 2018-04-18
 
@@ -136,7 +141,7 @@ The **spatially aggregated area** data (i.e. admin regions, river basins, uk cou
 
 File names should follow the following convention:
 
- `<var_id>_<scenario>_<collection>_<domain>_<resolution>_<prob_data_type>_<frequency>_<time_period>.nc`
+ `<var_id>_<scenario>_<collection>_<domain>_<resolution>_<prob_data_type>_<baseline>_<time_slice_type>_<frequency>_<time_period>.nc`
  
 Values for most of the components can be found in the UKCP18 Controlled Vocabularies at:
  - var_id: use the keys in the data structure under:
@@ -153,11 +158,11 @@ Values for most of the components can be found in the UKCP18 Controlled Vocabula
 
 On the CEDA Archive, the data will be stored in the following structure:
 
- `/badc/<project>/data/<collection>/<domain>/<resolution>/<scenario>/<prob_data_type>/<var_id>/<frequency>/<version>/`
+ `/badc/<project>/data/<collection>/<domain>/<resolution>/<scenario>/<prob_data_type>/<baseline>/<time_slice_type>/<var_id>/<frequency>/<version>/`
  
 At the Met Office you could store it in a similar structure such as:
 
- `/project/<project>/data/<collection>/<domain>/<resolution>/<scenario>/<prob_data_type>/<var_id>/<frequency>/<version>/`
+ `/project/<project>/data/<collection>/<domain>/<resolution>/<scenario>/<prob_data_type>/<baseline>/<time_slice_type>/<var_id>/<frequency>/<version>/`
 
 Values for the components match those given above, except `<version>`.
 
@@ -198,9 +203,9 @@ data files. Here are some CDL examples...
 ### 5.1 Example 25km gridded file
 
 ```
-$ ncdump -h tasAnom_a1b_land-prob-uk-25km_sample_mon_20101201-20111130.nc
+$ ncdump -h tasAnom_a1b_land-prob-uk-25km_sample_b8100_1y_mon_20101201-20111130.nc
 
-netcdf tasAnom_a1b_land-prob-uk-25km_sample_mon_20101201-20111130 {
+netcdf tasAnom_a1b_land-prob-uk-25km_sample_b8100_1y_mon_20101201-20111130 {
 dimensions:
         time = UNLIMITED ; // (12 currently)
         bnds = 2 ;
@@ -270,8 +275,8 @@ variables:
 ### 5.2 Example spatially aggregated area files
 
 ```
-$ ncdump -v season_year fakedata/ukcp18/data/land-prob/uk/region/a1b/sample/tasAnom/mon/v20180109/tasAnom_a1b_land-prob_uk_region_sample_mon_19601201-20991130.nc | more
-netcdf tasAnom_a1b_land-prob_uk_region_sample_mon_19601201-20991130 {
+$ ncdump -v season_year tasAnom_a1b_land-prob_uk_region_sample_b8100_1y_mon_19601201-20991130.nc | more
+netcdf tasAnom_a1b_land-prob_uk_region_sample_b8100_1y_mon_19601201-20991130 {
 dimensions:
         region = 16 ;
         strlen = 21 ;
@@ -377,15 +382,16 @@ The following global attributes are mandatory:
  - Conventions: "CF-1.5"
  - creation_date: formatted as: "YYYY-MM-DDThh:mm:ss"
  - domain: "uk"
- - frequency: <frequency>
+ - frequency: `<frequency>`
  - institution: use: "Met Office Hadley Centre (MOHC), FitzRoy Road, Exeter, Devon, EX1 3PB, UK."
  - institution_id: use: "MOHC"
- - prob_data_type: <prob_data_type>
+ - prob_data_type: `<prob_data_type>`
  - project: use: "UKCP18"
  - references: Published or web-based references that describe the data or methods used to produce it.
- - resolution: <resolution>
- - scenario: <scenario>
+ - resolution: `<resolution>`
+ - scenario: `<scenario>`
  - source: The method of production of the original data. If it was model-generated, source should name the model and its version, as specifically as could be useful.
+ - time_slice_type: `<time_slice_type>`
  - title: A succinct description of what is in the dataset.
  - version: `v<YYYYMMDD>` - where the date (`<YYYYMMDD>`) is an agreed date set the same for ALL files in this data set.
  
