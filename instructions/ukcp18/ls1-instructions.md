@@ -203,9 +203,9 @@ data files. Here are some CDL examples...
 ### 5.1 Example 25km gridded file
 
 ```
-$ ncdump -h tasAnom_a1b_land-prob-uk-25km_sample_b8100_1y_mon_20101201-20111130.nc
+$ ncdump -h tasAnom_a1b_land-prob_uk_25km_sample_b8100_1y_mon_20101201-20111130.nc
 
-netcdf tasAnom_a1b_land-prob-uk-25km_sample_b8100_1y_mon_20101201-20111130 {
+netcdf tasAnom_a1b_land-prob_uk_25km_sample_b8100_1y_mon_20101201-20111130 {
 dimensions:
         time = UNLIMITED ; // (12 currently)
         bnds = 2 ;
