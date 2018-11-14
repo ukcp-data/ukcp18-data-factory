@@ -1,4 +1,4 @@
-# Guidance on construction of UKCP Land Strand 2 synthetic projections
+# Guidance on construction of UKCP Land Strand 2 derived projections
 
 ## Change log
 
@@ -18,7 +18,7 @@
 ## Overview
 
 This guidance should be considered as provisional. It has been written to help
-the scientists generating NetCDF files for Land Strand 2 Synthetic Projections
+the scientists generating NetCDF files for Land Strand 2 Derived Projections
 so that they can provide data suitable for the CEDA Archive and the UKCP User 
 Interface tools.
 
@@ -100,7 +100,7 @@ Values for most of the components can be found in the UKCP18 Controlled Vocabula
  - var_id: use the keys in the data structure under:
    - https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_CVs/UKCP18_variable.json
    - NOTE: this vocabulary is not finalised yet
- - collection: "land-synth" 
+ - collection: "land-derived" 
  - domain: "global" or "uk"
  - resolution: one of "n216", "60km", "country", "region", "river"
  - ensemble_member: see: https://github.com/ukcp-data/UKCP18_CVs/blob/master/UKCP18_CVs/UKCP18_ensemble_member.json
@@ -152,7 +152,7 @@ data files. Here are some CDL examples.
 ### 5.1 Example 60km gridded UK file (on N216 regular latitude/longitude grid)
 
 ```
-netcdf tas_rcp26_land-synth_uk_n216_01_mon_19001201-20991130 {
+netcdf tas_rcp26_land-derived_uk_n216_01_mon_19001201-20991130 {
 dimensions:
         time = UNLIMITED ; // (2376 currently)
         bnds = 2 ;
@@ -191,7 +191,7 @@ variables:
 ### 5.2 Example  2. 60km gridded UK data (on OSGB grid)
 
 ```
-netcdf tas_rcp26_land-synth_uk_60km_01_mon_19001201-20991130 {
+netcdf tas_rcp26_land-derived_uk_60km_01_mon_19001201-20991130 {
 dimensions:
         ensemble_member = 1 ;
         time = UNLIMITED ; // (2376 currently)
@@ -266,7 +266,7 @@ The possible values for `geo_region` are defined in the vocabularies:
 ### 5.3 Example spatially aggregated area files: admin regions, river basins, UK countries
 
 ```
-netcdf tas_rcp26_land-synth_uk_river_01_mon_19001201-20991130 {
+netcdf tas_rcp26_land-derived_uk_river_01_mon_19001201-20991130 {
 dimensions:
         ensemble_member = 1 ;
         region = 26 ;
@@ -304,7 +304,7 @@ The global attributes for the project are categorised as either:
 
 The following global attributes are mandatory:
 
- - collection: "land-synth"
+ - collection: "land-derived"
  - contact: "ukcpproject@metoffice.gov.uk"
  - Conventions: "CF-1.5"
  - creation_date: formatted as: "YYYY-MM-DDThh:mm:ss"
