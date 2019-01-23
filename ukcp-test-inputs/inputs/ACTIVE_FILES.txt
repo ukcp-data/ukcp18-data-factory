@@ -1,0 +1,10 @@
+source_ncs/ukcp18-land-prob-uk-25km-all.nc
+source_ncs/ukcp18-land-prob-uk-region-all.nc
+source_ncs/ukcp18-land-gcm-uk-60km-mon.nc
+source_ncs/ukcp18-land-gcm-global-60km-mon.nc
+source_ncs/ukcp18-land-gcm-uk-river-mon.nc
+source_ncs/ukcp18-land-gcm-uk-region-mon.nc
+source_others/a1b_pr_djf_EAW_1961-1990.dat
+source_others/a1b_pr_jja_EAW_1961-1990.dat
+source_others/a1b_tas_djf_EAW_1961-1990.dat
+source_others/a1b_tas_jja_EAW_1961-1990.dat

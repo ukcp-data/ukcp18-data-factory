@@ -1,0 +1,90 @@
+netcdf ukcp18-land-gcm-uk-region-mon {
+dimensions:
+	ensemble_member = 1 ;
+	region = 16 ;
+	strlen = 21 ;
+	time = 12 ;
+	bnds = 2 ;
+variables:
+	float ensemble_member(ensemble_member) ;
+		ensemble_member:units = "" ;
+		ensemble_member:long_name = "Ensemble member" ;
+	float example_var(ensemble_member, time, region) ;
+		example_var:_FillValue = 1.e+20f ;
+		example_var:standard_name = "air_temperature" ;
+		example_var:long_name = "Monthly mean air temperature" ;
+		example_var:units = "degC" ;
+		example_var:cell_methods = "time: mid_range within days time: mean over days" ;
+		example_var:coordinates = "geo_region" ;
+	char geo_region(region, strlen) ;
+		geo_region:standard_name = "region" ;
+		geo_region:long_name = "Administrative Region" ;
+	double time(time) ;
+		time:axis = "T" ;
+		time:units = "hours since 1851-01-01 00:00:00" ;
+		time:standard_name = "time" ;
+		time:calendar = "standard" ;
+	int season_year(time) ;
+		season_year:units = "1" ;
+		season_year:long_name = "season_year" ;
+
+// global attributes:
+		:comment = "These data are part of the test suite for the data-factory." ;
+		:references = "" ;
+		:short_name = "temp data" ;
+		:source = "a project" ;
+		:title = "Great data at your service" ;
+		:Conventions = "CF-1.5" ;
+data:
+
+ ensemble_member = 1 ;
+
+ example_var =
+  2.98, 5.71, 3.83, 3.91, 5.97, 4.21, 2.1, 3.47, 3.48, 6.07, 2.78, 2.15, 1.7, 
+    1.87, 5.48, 4.5,
+  3.31, 9.07, 9.4, 8.88, 8.86, 8.04, 8.93, 9.72, 9.27, 8.26, 8.56, 9.38, 
+    8.85, 8.16, 4.47, 7.59,
+  7.77, 8.44, 8.61, 9.02, 6.33, 8.06, 8.38, 8.19, 8.95, 8.36, 8.5, 5.98, 
+    8.72, 7.41, 8.89, 8.51,
+  8.45, 8.68, 6.25, 8.69, 8.23, 8.71, 7.38, 8.23, 7.77, 8.24, 8.42, 6.58, 
+    6.16, 8.23, 7.92, 7.47,
+  6.42, 6.65, 6.77, 8.24, 6.82, 5.03, 7.49, 5.98, 6.21, 7.84, 6.13, 4.42, 
+    5.71, 5.73, 7.86, 4.93,
+  4.24, 3.79, 4.02, 7.36, 6.39, 5.36, 11.61, 12.26, 11.71, 11.88, 11.25, 
+    12.2, 13.07, 12.5, 11.45, 11.76,
+  12.71, 12.13, 11.12, 7.62, 10.36, 11.08, 11.61, 11.82, 12.24, 9.33, 11.14, 
+    11.62, 11.31, 12.1, 11.59, 11.67,
+  8.91, 11.79, 10.57, 12.02, 11.62, 11.51, 11.85, 9.66, 11.73, 11.21, 12, 
+    10.52, 11.27, 10.46, 10.89, 11,
+  9.53, 9.05, 10.93, 10.43, 10.32, 9.25, 9.56, 9.45, 11.02, 9.7, 7.83, 9.97, 
+    8.95, 9.23, 10.43, 8.86,
+  7.42, 8.62, 8.43, 10.45, 7.79, 6.97, 6.48, 6.88, 9.81, 9.07, 7.94, 13.98, 
+    14.83, 14.21, 14.65, 13.97,
+  15, 15.93, 15.4, 14.34, 14.68, 15.68, 15.1, 13.64, 10.02, 13.26, 14.01, 
+    14.58, 14.81, 15.23, 11.88, 13.96,
+  14.45, 14.26, 15.05, 14.5, 14.63, 11.41, 14.49, 13.29, 14.95, 14.53, 14.34, 
+    14.41, 12.19, 14.7, 14.2, 14.5 ;
+
+ geo_region =
+  "west_scotland",
+  "south_west_england",
+  "isle_of_man",
+  "east_of_england",
+  "west_midlands",
+  "northern_ireland",
+  "yorkshire_and_humber",
+  "east_scotland",
+  "east_midlands",
+  "north_east_england",
+  "london",
+  "north_west_england",
+  "north_scotland",
+  "wales",
+  "channel_islands",
+  "south_east_england" ;
+
+ time = 1586976, 1587720, 1588392, 1589136, 1589856, 1590600, 1591320, 
+    1592064, 1592808, 1593528, 1594272, 1594992 ;
+
+ season_year = 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 ;
+}
